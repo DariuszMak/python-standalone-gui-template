@@ -15,7 +15,7 @@ docker compose up
 
 Build images before starting containers and force recreate containers even if their configuration and image haven't changed:
 ```
-docker compose up --build --force-recreate
+docker compose up --build --force-recreate --always-recreate-deps
 ```
 
 After the job is done (optionally)
