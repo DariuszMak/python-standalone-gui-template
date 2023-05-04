@@ -15,6 +15,11 @@ docker-compose up -d --build
 docker-compose run app
 ```
 
+To run tests:
+```
+docker-compose run test pytest
+```
+
 ## Another useful Docker commands
 
 Regular usage:
