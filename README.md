@@ -2,18 +2,20 @@
 
 ## Dependencies
 
-- Python 3.9.x
+- Python 3.10.10
 - Docker
 
 
-### Running the container service
+### Running Docker container service
 
-To specify run containers:
+Basic usage:
 
 ```
 docker-compose up -d --build
 docker-compose run app
 ```
+
+## Another useful Docker commands
 
 Regular usage:
 ```
