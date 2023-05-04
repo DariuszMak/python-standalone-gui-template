@@ -8,6 +8,17 @@
 
 ### Running the container service
 
+Regular usage:
+```
+docker compose up
+```
+
+Build images before starting containers and force recreate containers even if their configuration and image haven't changed:
 ```
 docker compose up --build --force-recreate
+```
+
+After the job is done (optionally)
+```
+docker compose down
 ```
