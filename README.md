@@ -8,6 +8,13 @@
 
 ### Running the container service
 
+To specify run containers:
+
+```
+docker-compose up -d --build
+docker-compose run app
+```
+
 Regular usage:
 ```
 docker compose up
