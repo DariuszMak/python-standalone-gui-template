@@ -5,6 +5,48 @@
 - Python 3.10.10
 - Docker
 
+### Local configuration:
+```
+python -m pip install virtualenv
+python -m virtualenv venv
+```
+
+On Unix or MacOS, using the bash shell: `source venv/bin/activate`
+
+On Unix or MacOS, using the csh shell: `source venv/bin/activate.csh`
+
+On Unix or MacOS, using the fish shell: `source venv/bin/activate.fish`
+
+On Windows using the Command Prompt: `venv\Scripts\activate.bat`
+
+On Windows using PowerShell: `venv\Scripts\Activate.ps1`
+
+```
+python -m pip install -r requirements.txt
+```
+
+Uninstalling all packages:
+```
+python -m pip uninstall -r requirements.txt -y
+```
+
+Exporting pip packages to file from local environment:
+```
+python -m pip freeze --local > requirements.txt
+```
+
+Exporting pip packages to file:
+```
+python -m pip freeze > requirements.txt
+```
+
+
+Alternatively you can use pipenv to create virtual environment:
+```
+pip install pipenv
+pipenv install
+pipenv shell
+```
 
 ### Running Docker container service
 
