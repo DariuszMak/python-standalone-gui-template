@@ -1,3 +1,6 @@
-The project is a simple standalone GUI template.
+# Python Standalone GUI template
 
-This uses Docker.
+## Dependencies
+
+- Python 3.9.x
+- Docker
