@@ -48,7 +48,25 @@ pipenv install
 pipenv shell
 ```
 
-### Running Docker container service
+## GUI files specification
+
+<mark>.qrc</mark> - resources file edited in QT Designer
+
+<mark>.ui</mark> - QT Designer form
+
+<mark>ui_*.py</mark> - QT Designer generated tools
+
+## Standalone compiling by PyInstaller
+
+Make sure you added PyInstaller to system path, and then run:
+
+```
+cd .\standalone_build\
+
+.\standalone_build.bat
+```
+
+## Running Docker container service
 
 Basic usage:
 
