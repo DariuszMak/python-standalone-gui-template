@@ -7,6 +7,7 @@
 
 ### Local configuration:
 ```
+python -m pip install --upgrade pip
 python -m pip install virtualenv
 python -m virtualenv venv
 ```
@@ -20,6 +21,8 @@ On Unix or MacOS, using the fish shell: `source venv/bin/activate.fish`
 On Windows using the Command Prompt: `venv\Scripts\activate.bat`
 
 On Windows using PowerShell: `venv\Scripts\Activate.ps1`
+
+###### Or just set it in IDE as current environment
 
 ```
 python -m pip install -r requirements.txt
