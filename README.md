@@ -80,7 +80,7 @@ docker-compose run app
 
 To run tests:
 ```
-docker-compose run test pytest
+docker-compose run test
 ```
 
 ## Another useful Docker commands
