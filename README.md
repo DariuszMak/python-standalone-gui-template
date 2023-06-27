@@ -12,21 +12,57 @@ python -m pip install virtualenv
 python -m virtualenv venv
 ```
 
-On Unix or MacOS, using the bash shell: `source venv/bin/activate`
+- On Unix or MacOS, using the bash shell: `source venv/bin/activate`
+- On Unix or MacOS, using the csh shell: `source venv/bin/activate.csh`
+- On Unix or MacOS, using the fish shell: `source venv/bin/activate.fish`
+- On Windows using the Command Prompt: `venv\Scripts\activate.bat`
+- On Windows using PowerShell: `venv\Scripts\Activate.ps1`
 
-On Unix or MacOS, using the csh shell: `source venv/bin/activate.csh`
-
-On Unix or MacOS, using the fish shell: `source venv/bin/activate.fish`
-
-On Windows using the Command Prompt: `venv\Scripts\activate.bat`
-
-On Windows using PowerShell: `venv\Scripts\Activate.ps1`
-
-###### Or just set it in IDE as current environment
+Or just set it in IDE as current environment.
 
 ```commandline
 python -m pip install -r requirements.txt
 ```
+
+## Installing pre-commit hooks
+
+File ```.pre-commit-config.yaml``` contains the definition of checks that will be run during the pipeline deployment
+phase. In order to keep the pipeline happy ;) (and also to make sure we conform to one, centrally defined coding
+standard) every developer should install the pre-commit-hooks in their local environment to ensure that every commit
+that is pushed to the remote repository passes the checks.
+
+- first, install pre-commit library into your python environment:
+
+```commandline
+pip install pre-commit
+```
+
+- then, install ```pre-commit``` hooks defined in the ```.yaml``` file:
+
+```commandline
+pre-commit install
+```
+
+This should automatically detect and install all dependencies required by ```.pre-commit-config.yaml```, and also now
+pre-commit will run automatically on every ```git commit```!
+
+- run pre-commit for all files:
+
+```commandline
+pre-commit run --all-files
+```
+- update hooks:
+
+```commandline
+pre-commit install-hooks
+```
+
+- if you want to ignore errors from changes, use "n" flag:
+
+```commandline
+git commit -n -m "commit message"
+```
+## Another useful pip commands
 
 Uninstalling all packages:
 ```commandline
@@ -114,42 +150,3 @@ It is recommended also to turn off paging file of virtual memory in operating sy
 <mark>.ui</mark> - QT Designer form
 
 <mark>ui_*.py</mark> - QT Designer generated tools
-
-## Installing pre-commit hooks
-
-File ```.pre-commit-config.yaml``` contains the definition of checks that will be run during the pipeline deployment
-phase. In order to keep the pipeline happy ;) (and also to make sure we conform to one, centrally defined coding
-standard) every developer should install the pre-commit-hooks in their local environment to ensure that every commit
-that is pushed to the remote repository passes the checks.
-
-- first, install pre-commit library into your python environment:
-
-```commandline
-pip install pre-commit
-```
-
-- then, install ```pre-commit``` hooks defined in the ```.yaml``` file:
-
-```commandline
-pre-commit install
-```
-
-This should automatically detect and install all dependencies required by ```.pre-commit-config.yaml```, and also now
-pre-commit will run automatically on every ```git commit```!
-
-- run pre-commit for all files:
-
-```commandline
-pre-commit run --all-files
-```
-- update hooks:
-
-```commandline
-pre-commit install-hooks
-```
-
-- if you want to ignore errors from changes, use "n" flag:
-
-```commandline
-git commit -n -m "commit message"
-```
