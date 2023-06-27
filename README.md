@@ -141,8 +141,6 @@ In order to set up max memory range create a file `%UserProfile%/.wslconfig` and
 memory=8GB
 ```
 
-It is recommended also to turn off paging file of virtual memory in operating system.
-
 ## GUI files specification
 
 <mark>.qrc</mark> - resources file edited in QT Designer
