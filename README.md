@@ -120,9 +120,14 @@ Build images before starting containers and force recreate containers even if th
 docker compose up --build --force-recreate --always-recreate-deps
 ```
 
-After the job is done (optionally)
+After the job is done (optionally):
 ```commandline
 docker compose down
+```
+
+To prune docker:
+```commandline
+docker system prune --all
 ```
 
 ## Docker issues
