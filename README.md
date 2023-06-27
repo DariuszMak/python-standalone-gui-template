@@ -30,7 +30,7 @@ python -m pip install -r requirements.txt
 
 Uninstalling all packages:
 ```
-python -m pip uninstall -r requirements.txt -y
+pip freeze > packages.txt; pip uninstall -y -r packages.txt; del packages.txt
 ```
 
 Exporting pip packages to file from local environment:
