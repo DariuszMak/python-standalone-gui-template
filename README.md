@@ -79,12 +79,16 @@ Exporting pip packages to file:
 python -m pip freeze > requirements.txt
 ```
 
-
 Alternatively you can use pipenv to create virtual environment:
 ```commandline
 pip install pipenv
 pipenv install
 pipenv shell
+```
+
+## PyCharm not finding unit tests fix
+```commandline
+python -m pip install nose
 ```
 
 ## Running Docker container service
