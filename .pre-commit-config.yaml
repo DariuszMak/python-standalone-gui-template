@@ -41,6 +41,7 @@ repos:
     rev: "v0.910"
     hooks:
     -   id: mypy
+        args: [--disallow-untyped-defs, --disallow-incomplete-defs, --disallow-untyped-calls]
         additional_dependencies:
             - "types-PyYAML"
 -   repo: https://github.com/pre-commit/mirrors-pylint

@@ -3,6 +3,6 @@
 from app import application
 
 
-def test_app_hello_world():
+def test_app_hello_world() -> None:
     """Hello world test."""
     assert application.hello_world() == "Hello World!"

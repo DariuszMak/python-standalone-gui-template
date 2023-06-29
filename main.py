@@ -3,4 +3,4 @@
 from app import application
 
 if __name__ == "__main__":
-    print(application.run())
+    application.run()
