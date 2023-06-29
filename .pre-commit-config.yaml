@@ -7,15 +7,12 @@ repos:
     rev: v4.0.1
     hooks:
     -   id: check-added-large-files
+        exclude: app/ui/forms/fonts/
     -   id: check-ast
     -   id: check-docstring-first
     -   id: check-executables-have-shebangs
     -   id: check-merge-conflict
     -   id: check-shebang-scripts-are-executable
-        exclude: |
-            (?x)^(
-                px_pxlus_pipeline/database/psql_import.sh
-            )$
     -   id: check-symlinks
     -   id: check-xml
     -   id: check-yaml
@@ -50,6 +47,7 @@ repos:
     rev: "v3.0.0a4"
     hooks:
     -   id: pylint
+        exclude: app/ui/auto_generated
         args: [--rcfile=setup.cfg]
 -   repo: https://github.com/pycqa/flake8
     rev: "6.0.0"
