@@ -10,13 +10,17 @@ class StyleLoader:
     """Loads style from files."""
 
     @staticmethod
-    def get_project_absolute_path(relative_path: str) -> str:
+    def get_real_path_from_relative_path(relative_path: str) -> str:
         """Gets absolute path of project and concatenate with provided path."""
-        base_path = os.path.abspath(".")
-        joined_path = os.path.join(base_path, relative_path)
-        real_path = os.path.realpath(joined_path)
+        return os.path.realpath(relative_path)
 
-        return real_path
+    @staticmethod
+    def load_file_content(path: str) -> str:
+        """Loads text file content from specified file in path."""
+        with open(StyleLoader.get_real_path_from_relative_path(path), "r") as f:
+            content = f.read()
+
+        return content
 
     @staticmethod
     def get_qss_from_file() -> str:
@@ -24,16 +28,8 @@ class StyleLoader:
         return StyleLoader.load_file_content("app/ui/themes/main_theme.qss")
 
     @staticmethod
-    def load_file_content(path: str) -> str:
-        """Loads text file content from specified file in path."""
-        with open(StyleLoader.get_project_absolute_path(path), "r") as f:
-            style = f.read()
-
-        return style
-
-    @staticmethod
     def setup_stylesheets(window: QMainWindow) -> None:
         """Sets new stylesheet to provided window."""
-        stylesheet_from_file = StyleLoader.get_qss_from_file()
+        stylesheet_content = StyleLoader.get_qss_from_file()
 
-        window.setStyleSheet(stylesheet_from_file)
+        window.setStyleSheet(stylesheet_content)

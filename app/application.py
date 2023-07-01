@@ -25,8 +25,3 @@ def run() -> None:
     window.show()
 
     sys.exit(app.exec())
-
-
-def hello_world() -> str:
-    """Function just for test."""
-    return "Hello World!"

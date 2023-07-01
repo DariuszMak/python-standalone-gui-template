@@ -90,6 +90,9 @@ pipenv shell
 ```commandline
 python -m pip install nose
 ```
+Open `Run/Debug Configurations` > `Python tests` > click + button > Pytest > In target: choose script path > e.g.: `D:/Repos/python-standalone-gui-template/test`
+
+Run tests again with new configuration.
 
 ## Running Docker container service
 
