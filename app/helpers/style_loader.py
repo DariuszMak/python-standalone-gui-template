@@ -11,13 +11,13 @@ class StyleLoader:
     main_theme_path = os.path.join("app", "ui", "themes", "main_theme.qss")
 
     @staticmethod
-    def get_qss_from_file(path: str = main_theme_path) -> str:
-        """Loads qss theme from file."""
-        return IOFile.load_file_content(path)
-
-    @staticmethod
     def setup_stylesheets(window: QMainWindow) -> None:
         """Sets new stylesheet to provided window."""
         stylesheet_content = StyleLoader.get_qss_from_file()
 
         window.setStyleSheet(stylesheet_content)
+
+    @staticmethod
+    def get_qss_from_file(path: str = main_theme_path) -> str:
+        """Loads qss theme from file."""
+        return IOFile.load_file_content(path)
