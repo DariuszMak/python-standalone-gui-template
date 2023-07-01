@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QMainWindow
 class StyleLoader:
     """Loads style from files."""
 
-    main_theme_path = os.path.join("app", "ui", "themes", "main_theme.qss")
+    MAIN_THEME_PATH = os.path.join("app", "ui", "themes", "main_theme.qss")
 
     @staticmethod
     def setup_stylesheets(window: QMainWindow) -> None:
@@ -18,6 +18,6 @@ class StyleLoader:
         window.setStyleSheet(stylesheet_content)
 
     @staticmethod
-    def get_qss_from_file(path: str = main_theme_path) -> str:
+    def get_qss_from_file(path: str = MAIN_THEME_PATH) -> str:
         """Loads qss theme from file."""
         return IOFile.load_file_content(path)
