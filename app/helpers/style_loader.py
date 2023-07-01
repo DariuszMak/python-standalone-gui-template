@@ -1,31 +1,19 @@
 # -*- coding: utf-8 -*-
 """Style loader module."""
 
-import os
-
+from app.helpers.io_file import IOFile
 from PySide6.QtWidgets import QMainWindow
 
 
 class StyleLoader:
     """Loads style from files."""
 
-    @staticmethod
-    def get_real_path_from_relative_path(relative_path: str) -> str:
-        """Gets absolute path of project and concatenate with provided path."""
-        return os.path.realpath(relative_path)
+    main_theme_path = "app/ui/themes/main_theme.qss"
 
     @staticmethod
-    def load_file_content(path: str) -> str:
-        """Loads text file content from specified file in path."""
-        with open(StyleLoader.get_real_path_from_relative_path(path), "r") as f:
-            content = f.read()
-
-        return content
-
-    @staticmethod
-    def get_qss_from_file() -> str:
+    def get_qss_from_file(path: str = main_theme_path) -> str:
         """Loads qss theme from file."""
-        return StyleLoader.load_file_content("app/ui/themes/main_theme.qss")
+        return IOFile.load_file_content(path)
 
     @staticmethod
     def setup_stylesheets(window: QMainWindow) -> None:
