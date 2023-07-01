@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Style loader module."""
-
+import os
 from app.helpers.io_file import IOFile
 from PySide6.QtWidgets import QMainWindow
 
@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QMainWindow
 class StyleLoader:
     """Loads style from files."""
 
-    main_theme_path = "app/ui/themes/main_theme.qss"
+    main_theme_path = os.path.join("app", "ui", "themes", "main_theme.qss")
 
     @staticmethod
     def get_qss_from_file(path: str = main_theme_path) -> str:

@@ -90,7 +90,7 @@ pipenv shell
 ```commandline
 python -m pip install nose
 ```
-Open `Run/Debug Configurations` > `Python tests` > click + button > Pytest > In target: choose script path > e.g.: `D:/Repos/python-standalone-gui-template/test`
+Open `Run/Debug Configurations` > `Python tests` > click + button > Pytest > In target: choose script path > e.g.: `D:/Repos/python-standalone-gui-template`
 
 Run tests again with new configuration.
 
