@@ -42,7 +42,19 @@ repos:
     rev: "v0.910"
     hooks:
     -   id: mypy
-        args: [--disallow-untyped-defs, --disallow-incomplete-defs, --disallow-untyped-calls]
+        args: [--warn-unused-configs,
+               --warn-redundant-casts,
+               --warn-unused-ignores,
+               --strict-equality,
+               --check-untyped-defs,
+               --disallow-subclassing-any,
+               --disallow-untyped-decorators,
+               --disallow-any-generics,
+               --disallow-untyped-calls,
+               --disallow-incomplete-defs,
+               --disallow-untyped-defs,
+               --no-implicit-reexport,
+               --warn-return-any]
         additional_dependencies:
             - "types-PyYAML"
 -   repo: https://github.com/pre-commit/mirrors-pylint
