@@ -2,19 +2,9 @@
 """Application module."""
 import sys
 
-from PySide6.QtWidgets import QApplication, QMainWindow
-from app.helpers.style_loader import StyleLoader
-from app.ui.auto_generated.main_window import Ui_MainWindow  # type: ignore
+from PySide6.QtWidgets import QApplication
 
-
-class MainWindow(QMainWindow):
-    """MainWindow class."""
-
-    def __init__(self) -> None:
-        super().__init__()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
-        StyleLoader.setup_stylesheets(self)
+from app.ui.main_window import MainWindow
 
 
 def run() -> None:

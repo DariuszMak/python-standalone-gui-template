@@ -2,7 +2,6 @@
 """Style loader class test module."""
 import pytest  # type: ignore
 
-
 from app.helpers.style_loader import StyleLoader
 
 

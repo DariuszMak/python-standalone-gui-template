@@ -9,12 +9,12 @@ class IOFile:
 
     @staticmethod
     def get_real_path_from_relative_path(relative_path: str) -> str:
-        """Gets absolute path of project and concatenate with provided path."""
+        """Get absolute path of project and concatenate with provided path."""
         return os.path.realpath(relative_path)
 
     @staticmethod
     def load_file_content(path: str) -> str:
-        """Loads text file content from specified file in path."""
+        """Load text file content from specified file in path."""
         with open(IOFile.get_real_path_from_relative_path(path), "r") as f:
             content = f.read()
 
