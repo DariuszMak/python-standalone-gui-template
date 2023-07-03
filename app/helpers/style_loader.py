@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Style loader module."""
 import os
+import typing as t
 
 from PySide6.QtWidgets import QApplication, QWidget
 
@@ -25,7 +26,7 @@ class StyleLoader:
         return IOFile.load_file_content(path)
 
     @staticmethod
-    def center_window(current_window: QWidget, parent_obj: QWidget = None) -> None:
+    def center_window(current_window: QWidget, parent_obj: t.Optional[QWidget] = None) -> None:
         """Center window according to provided widget."""
         if parent_obj is not None:
             current_window.move(parent_obj.geometry().center() - current_window.rect().center())
