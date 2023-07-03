@@ -46,6 +46,11 @@ pre-commit install
 This should automatically detect and install all dependencies required by ```.pre-commit-config.yaml```, and also now
 pre-commit will run automatically on every ```git commit```!
 
+- unistall pre-commit:
+```commandline
+pre-commit uninstall
+```
+
 - run pre-commit for all files:
 
 ```commandline
