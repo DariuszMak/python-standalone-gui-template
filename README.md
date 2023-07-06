@@ -12,9 +12,9 @@ python -m pip install virtualenv
 python -m virtualenv venv
 ```
 
-- On Unix or MacOS, using the bash shell: `source venv/bin/activate`
-- On Unix or MacOS, using the csh shell: `source venv/bin/activate.csh`
-- On Unix or MacOS, using the fish shell: `source venv/bin/activate.fish`
+- On Unix or macOS, using the bash shell: `source venv/bin/activate`
+- On Unix or macOS, using the csh shell: `source venv/bin/activate.csh`
+- On Unix or macOS, using the fish shell: `source venv/bin/activate.fish`
 - On Windows using the Command Prompt: `venv\Scripts\activate.bat`
 - On Windows using PowerShell: `venv\Scripts\Activate.ps1`
 

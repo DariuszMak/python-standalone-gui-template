@@ -25,7 +25,7 @@ class WarningDialog(QDialog):
 
         self.parent_obj: t.Optional[QWidget] = parent
 
-        self.dragPos: QtCore.QPoint
+        self.dragPos: QtCore.QPoint = QtCore.QPoint()
 
         self.setup_window_properties(parent)
         self.content_initialization()
@@ -53,7 +53,7 @@ class WarningDialog(QDialog):
         self.ui.label_warning.setPixmap(pixmap.scaled(40, 40, QtGui.Qt.AspectRatioMode.KeepAspectRatio))
 
     def mousePressEvent(self, event: QEvent) -> None:
-        """Update position of mouse coursor."""
+        """Update position of mouse cursor."""
         self.dragPos = event.globalPosition().toPoint()
 
     def changeEvent(self, event: QEvent) -> None:
