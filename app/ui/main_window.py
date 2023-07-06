@@ -15,6 +15,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         StyleLoader.setup_stylesheets(self)
+        self.ui.pushButton.setText("Click to open dialog window")
         self.ui.pushButton.clicked.connect(self.show_warning_dialog)
 
     def show_warning_dialog(self) -> None:

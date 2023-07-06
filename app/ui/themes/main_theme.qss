@@ -282,7 +282,7 @@ QComboBox::drop-down {
     border-bottom-right-radius: 3px;
     background-image: url(:/16x16/icons/16x16/cil-arrow-bottom.png);
     background-position: center;
-    background-repeat: no-reperat;
+    background-repeat: no-repeat;
 }
 QComboBox QAbstractItemView {
     color: rgb(85, 170, 255);
@@ -317,7 +317,7 @@ QSizeGrip {
     padding: 0px;
 	background-image: url(:/16x16/icons/16x16/cil-size-grip.png);
 	background-position: right bottom;;
-	background-repeat: no-reperat;
+	background-repeat: no-repeat;
 }
 
 
@@ -473,7 +473,7 @@ QPushButton#btn_maximize_restore:pressed {
 QPushButton#btn_toggle_menu {
 	background-image: url(:/24x24/icons/24x24/cil-menu.png);
 	background-position: center;
-	background-repeat: no-reperat;
+	background-repeat: no-repeat;
 	border: none;
 	background-color: rgb(27, 29, 35);
 }
