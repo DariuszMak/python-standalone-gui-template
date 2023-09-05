@@ -11,5 +11,3 @@ services:
       dockerfile: Dockerfile-test
     volumes:
       - .:/app
-    depends_on:
-      - app
