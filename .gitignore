@@ -1,5 +1,5 @@
 app/ui/auto_generated*
-!app/ui/auto_generated/replace_generated.bat
+!app/ui/auto_generated/replace_generated*
 
 __pycache__
 *.py[cod]

@@ -17,6 +17,9 @@ WORKDIR /app
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
+RUN apt update \
+ && apt install -y sudo
+
 ARG UID=10001
 RUN adduser \
     --disabled-password \
@@ -26,6 +29,9 @@ RUN adduser \
     --no-create-home \
     --uid "${UID}" \
     appuser
+
+RUN adduser appuser sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
@@ -38,9 +44,11 @@ RUN apt update && apt install -y \
     libglib2.0-0 \
     libfontconfig \
     libdbus-1-3
+
+RUN python -m venv /opt/venv
 RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    python -m pip install -r requirements.txt
+    . /opt/venv/bin/activate && python -m pip install -r requirements.txt
 
 # Switch to the non-privileged user to run the application.
 USER appuser
@@ -50,4 +58,5 @@ COPY . ./app
 
 ADD . /app
 WORKDIR /app
-CMD ["python3", "main.py"]
+
+CMD . /opt/venv/bin/activate && ./app/ui/auto_generated/replace_generated.sh && exec python main.py

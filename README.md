@@ -139,7 +139,7 @@ docker compose down
 
 To prune docker:
 ```commandline
-docker system prune --all
+docker system df ; docker stop $(docker ps -a -q) ; docker rm $(docker ps -a -q) ; docker system prune -a ; docker system df
 ```
 
 ## Docker issues
