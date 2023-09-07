@@ -20,4 +20,5 @@ docker rm $(docker ps -a -q)
 docker system prune -a
 docker system df
 
+docker-compose build
 docker-compose run app

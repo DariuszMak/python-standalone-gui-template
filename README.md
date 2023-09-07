@@ -101,15 +101,19 @@ Run tests again with new configuration.
 
 ## Running Docker container service
 
-Basic usage:
-
+Build project:
 ```commandline
-docker-compose up -d --build
+docker-compose build
 ```
 
 Run app:
 ```commandline
 docker-compose run app
+```
+
+Build before running:
+```commandline
+docker-compose run --build app
 ```
 
 ## Another useful Docker commands
