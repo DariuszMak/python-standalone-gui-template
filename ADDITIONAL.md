@@ -33,6 +33,35 @@ Open `Run/Debug Configurations` > `Python tests` > click + button > Pytest > In 
 
 Run tests again with new configuration.
 
+## Add to system path if needed
+
+If you don't want to use local environment for files e.g. ```pyside6-rcc.exe``` or ```pyside6-uic.exe```, you can add these paths to system path:
+```commandline
+C:\Users\%Username%\AppData\Roaming\Python\Python310\Scripts
+C:\Users\%Username%\AppData\Roaming\Python\Python310\site-packages
+
+C:\Program Files\Python310\Scripts
+C:\Program Files\Python310\Lib\site-packages
+C:\Program Files\Python310\
+```
+
+## Prune project
+
+First approach:
+
+```commandline
+git fetch
+git reset --hard
+git clean -x -d -f
+```
+
+Second approach:
+
+```commandline
+git fetch --prune origin
+git reset --hard origin/master
+git clean -f -d
+```
 
 ## Useful Docker commands
 
