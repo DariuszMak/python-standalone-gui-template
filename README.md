@@ -18,7 +18,7 @@ python -m virtualenv venv
 - On Windows using the Command Prompt: `venv\Scripts\activate.bat`
 - On Windows using PowerShell: `venv\Scripts\Activate.ps1`
 
-Or just set it in IDE as current environment.
+Or just set it in IDE as current environment and then:
 
 ```commandline
 python -m pip install -r requirements.txt
@@ -85,6 +85,25 @@ Build before running:
 docker-compose run --build app
 ```
 
+## Setup entire project from scratch (Windows)
+
+Make sure, that everything is committed or stashed and (optionally):
+
+```commandline
+git clean -x -d -f
+```
+
+then
+
+```commandline
+.\setup_project_from_scratch.bat
+```
+
+
+In order to replace generated ```ui``` files manually (if docker didn't do it before) run:
+```commandline
+venv\Scripts\Activate.ps1 ; .\app\ui\auto_generated\replace_generated.bat
+```
 
 ## GUI files specification
 
