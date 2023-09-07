@@ -5,9 +5,3 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/app
-  test:
-    build:
-      context: .
-      dockerfile: Dockerfile-test
-    volumes:
-      - .:/app
