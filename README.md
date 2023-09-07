@@ -105,12 +105,11 @@ Basic usage:
 
 ```commandline
 docker-compose up -d --build
-docker-compose run app
 ```
 
-To run tests:
+Run app:
 ```commandline
-docker-compose run test
+docker-compose run app
 ```
 
 ## Another useful Docker commands
@@ -137,7 +136,7 @@ After the job is done (optionally):
 docker compose down
 ```
 
-To prune docker:
+Prune docker:
 ```commandline
 docker system df ; docker stop $(docker ps -a -q) ; docker rm $(docker ps -a -q) ; docker system prune -a ; docker system df
 ```
@@ -145,7 +144,7 @@ docker system df ; docker stop $(docker ps -a -q) ; docker rm $(docker ps -a -q)
 ## Docker issues
 
 ### "Vmmem" process consuming a lot of memory
-To free some resources temporarily:
+Free some resources temporarily:
 
 ```commandline
 wsl --shutdown
