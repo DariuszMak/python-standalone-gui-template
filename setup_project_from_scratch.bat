@@ -14,7 +14,7 @@ python -m virtualenv venv
 @REM .\venv\Scripts\activate.bat
 venv\Scripts\Activate.ps1
 
-python -m pip install -r requirements.txt
+python -m pip install -r requirements_dev.txt
 
 docker-compose build
 docker-compose run app

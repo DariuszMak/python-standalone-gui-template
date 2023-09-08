@@ -61,4 +61,4 @@ COPY . ./app
 ADD . /app
 WORKDIR /app
 
-CMD . /opt/venv/bin/activate && ./app/ui/auto_generated/replace_generated.sh && pytest && exec python main.py
+CMD . /opt/venv/bin/activate && ./app/ui/auto_generated/replace_generated.sh && exec python main.py
