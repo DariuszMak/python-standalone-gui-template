@@ -57,7 +57,7 @@ pre-commit run --all-files
 All in one:
 
 ```
-isort . ; black . ; pre-commit run --all-files ; mypy --strict .
+pre-commit run --all-files ; mypy --strict .
 ```
 
 ## Installing pre-commit hooks
