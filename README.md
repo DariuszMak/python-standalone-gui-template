@@ -85,6 +85,10 @@ Build before running:
 docker-compose run --build app
 ```
 
+Run tests:
+```commandline
+docker-compose run app . /opt/venv/bin/activate ; pip install -r requirements_dev.txt ; pytest
+```
 ## Setup entire project from scratch (Windows)
 
 Make sure, that everything is committed or stashed and (optionally):
