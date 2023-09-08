@@ -33,7 +33,7 @@ pytest
 Mypy
 
 ```commandline
- mypy --strict .
+ mypy .
 ```
 
 Isort
@@ -57,7 +57,7 @@ pre-commit run --all-files
 All in one:
 
 ```
-pre-commit run --all-files ; mypy --strict .
+pre-commit run --all-files ; mypy .
 ```
 
 ## Installing pre-commit hooks
