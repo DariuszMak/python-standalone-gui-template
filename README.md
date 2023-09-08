@@ -21,7 +21,43 @@ python -m virtualenv venv
 Or just set it in IDE as current environment and then:
 
 ```commandline
-python -m pip install -r requirements.txt
+pip install -r requirements_dev.txt
+```
+
+Run tests:
+
+```commandline
+pytest
+```
+
+Mypy
+
+```commandline
+ mypy --strict .
+```
+
+Isort
+
+```commandline
+isort .
+```
+
+Black
+
+```commandline
+black .
+```
+
+Pre-commit
+
+```commandline
+pre-commit run --all-files
+```
+
+All in one:
+
+```
+isort . ; black . ; pre-commit run --all-files ; mypy --strict .
 ```
 
 ## Installing pre-commit hooks
