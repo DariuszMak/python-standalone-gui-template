@@ -92,6 +92,25 @@ Prune docker:
 docker system df ; docker stop $(docker ps -a -q) ; docker rm $(docker ps -a -q) ; docker system prune -a ; docker system df
 ```
 
+## Virtual environment in docker
+
+We can specify manually Python virtual environment:
+```commandline
+RUN virtualenv env                       # setup env
+RUN which python                         # -> /usr/bin/python
+RUN . /env/bin/activate && which python  # -> /env/bin/python
+RUN which python                         # -> /usr/bin/python
+```
+
+Or if we really need to activate virtualenv for the whole Dockerfile you need to do something like this:
+
+```commandline
+RUN virtualenv env
+ENV VIRTUAL_ENV /env                     # activating environment
+ENV PATH /env/bin:$PATH                  # activating environment
+RUN which python                         # -> /env/bin/python
+```
+
 ## Docker issues
 
 ### "Vmmem" process consuming a lot of memory
