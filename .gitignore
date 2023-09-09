@@ -1,5 +1,5 @@
-app/ui/auto_generated*
-!app/ui/auto_generated/replace_generated*
+moc_*.py
+files_rc.py
 
 __pycache__
 *.py[cod]
