@@ -3,7 +3,7 @@
 from PySide6.QtWidgets import QMainWindow
 
 from app.helpers.style_loader import StyleLoader
-from app.ui.auto_generated.main_window import Ui_MainWindow  # type: ignore
+from app.ui.forms.moc_main_window import Ui_MainWindow  # type: ignore
 from app.ui.warning_dialog import WarningDialog
 
 

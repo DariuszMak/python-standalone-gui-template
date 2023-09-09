@@ -63,7 +63,11 @@ repos:
     rev: "v3.0.0a4"
     hooks:
     -   id: pylint
-        exclude: app/ui/auto_generated
+        exclude: |
+            (?x)^(
+                moc_*.py|
+                files_rc.py
+            )$
         args: [--rcfile=setup.cfg]
 -   repo: https://github.com/pycqa/flake8
     rev: "6.0.0"
