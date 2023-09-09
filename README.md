@@ -30,6 +30,14 @@ Run tests:
 pytest
 ```
 
+## Code autoformat
+
+All in one:
+
+```
+pre-commit run --all-files ; mypy .
+```
+
 Mypy
 
 ```commandline
@@ -52,12 +60,6 @@ Pre-commit
 
 ```commandline
 pre-commit run --all-files
-```
-
-All in one:
-
-```
-pre-commit run --all-files ; mypy .
 ```
 
 ## Installing pre-commit hooks
