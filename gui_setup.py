@@ -9,7 +9,7 @@ class UiExtensions(str, Enum):
     QRC = ".qrc"
 
 
-def create_moc(dir_path, file_name, extension):
+def create_moc(dir_path: str, file_name:str, extension:UiExtensions) -> None:
     input_file = os.path.join(dir_path, file_name)
     output_file = None
 
@@ -49,7 +49,7 @@ def create_moc(dir_path, file_name, extension):
         )
 
 
-def create_mocs():
+def create_mocs() -> None:
     for root, dirs, files in os.walk(os.path.dirname(os.path.abspath(__file__))):
         for file in files:
             for extension in UiExtensions:

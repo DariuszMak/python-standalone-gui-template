@@ -35,7 +35,7 @@ pytest
 All in one:
 
 ```
-pre-commit run --all-files ; mypy .
+pre-commit run --all-files ; mypy --strict .
 ```
 
 Mypy
