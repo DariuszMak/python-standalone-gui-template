@@ -61,4 +61,6 @@ COPY . ./app
 ADD . /app
 WORKDIR /app
 
+ENV PYTHONPATH "${PYTHONPATH}:/app"
+
 CMD . /opt/venv/bin/activate && python src/gui_setup.py && python src/main.py
