@@ -29,6 +29,11 @@ Run tests:
 ```commandline
 pytest
 ```
+Run tests with coverage report:
+
+```commandline
+pytest . --cov=.
+```
 
 ## Code autoformat
 
@@ -125,7 +130,7 @@ docker-compose run --build app
 
 Run tests:
 ```commandline
-docker-compose run app . /opt/venv/bin/activate ; pip install -r requirements_dev.txt ; pytest
+docker-compose run app . /opt/venv/bin/activate ; pip install -r requirements_dev.txt ; pytest . --cov=. 
 ```
 ## Setup entire project from scratch (Windows)
 
