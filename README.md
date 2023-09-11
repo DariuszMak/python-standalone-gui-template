@@ -137,7 +137,7 @@ docker-compose run app . /opt/venv/bin/activate ; pip install -r requirements_de
 Make sure, that everything is committed or stashed and (optionally):
 
 ```commandline
-git clean -x -d -f
+git reset --hard HEAD ; git clean -x -d -f
 ```
 
 then
