@@ -2,7 +2,7 @@
 """Style loader class test module."""
 import pytest
 
-from helpers.style_loader import StyleLoader
+from src.helpers.style_loader import StyleLoader
 
 
 def test_get_qss_from_file() -> None:

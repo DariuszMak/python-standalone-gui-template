@@ -5,7 +5,7 @@ import typing as t
 
 from PySide6.QtWidgets import QApplication, QWidget
 
-from helpers.io_file import IOFile
+from src.helpers.io_file import IOFile
 
 
 class StyleLoader:
