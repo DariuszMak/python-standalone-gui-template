@@ -7,8 +7,8 @@ from PySide6.QtCore import QEvent, Qt
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QDialog, QWidget
 
-from app.helpers.style_loader import StyleLoader
-from app.ui.forms.moc_warning_dialog import Ui_Dialog  # type: ignore
+from src.helpers.style_loader import StyleLoader
+from src.ui.forms.moc_warning_dialog import Ui_Dialog  # type: ignore
 
 
 class WarningDialog(QDialog):

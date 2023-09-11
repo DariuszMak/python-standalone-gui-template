@@ -2,9 +2,9 @@
 """MainWindow module."""
 from PySide6.QtWidgets import QMainWindow
 
-from app.helpers.style_loader import StyleLoader
-from app.ui.forms.moc_main_window import Ui_MainWindow
-from app.ui.warning_dialog import WarningDialog
+from src.helpers.style_loader import StyleLoader
+from src.ui.forms.moc_main_window import Ui_MainWindow
+from src.ui.warning_dialog import WarningDialog
 
 
 class MainWindow(QMainWindow):

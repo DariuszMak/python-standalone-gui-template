@@ -7,7 +7,7 @@ repos:
     rev: v4.0.1
     hooks:
     -   id: check-added-large-files
-        exclude: app/ui/forms/fonts/
+        exclude: src/ui/forms/fonts/
     -   id: check-ast
     -   id: check-docstring-first
     -   id: check-executables-have-shebangs

@@ -3,7 +3,7 @@
 import os
 
 import gui_setup
-from app import application
+from src import application
 
 TRUE_ENV_VARIABLES_VALUES = "true", "1", "t"
 

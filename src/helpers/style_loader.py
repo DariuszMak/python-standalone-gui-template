@@ -5,13 +5,13 @@ import typing as t
 
 from PySide6.QtWidgets import QApplication, QWidget
 
-from app.helpers.io_file import IOFile
+from src.helpers.io_file import IOFile
 
 
 class StyleLoader:
     """Load style from files."""
 
-    MAIN_THEME_PATH = os.path.join("app", "ui", "themes", "main_theme.qss")
+    MAIN_THEME_PATH = os.path.join("src", "ui", "themes", "main_theme.qss")
 
     @staticmethod
     def setup_stylesheets(window: QWidget) -> None:
