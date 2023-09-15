@@ -152,6 +152,15 @@ In order to replace generated ```ui``` files manually (if docker didn't do it be
 venv\Scripts\Activate.ps1 ; python src\gui_setup.py
 ```
 
+
+## Running executable application
+
+In order to generate executable application, run:
+```commandline
+.\standalone_build.bat
+```
+
+
 ## GUI files specification
 
 <mark>.qrc</mark> - resources file edited in QT Designer
