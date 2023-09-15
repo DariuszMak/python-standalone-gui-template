@@ -2,8 +2,7 @@
 """Main module."""
 import os
 
-from src import gui_setup
-from src import  application
+from src import application, gui_setup
 
 TRUE_ENV_VARIABLES_VALUES = "true", "1", "t"
 
