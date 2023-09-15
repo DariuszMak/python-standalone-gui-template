@@ -9,14 +9,14 @@ class UiExtensions(str, Enum):
     QRC = ".qrc"
 
 
-def create_moc(dir_path: str, file_name:str, extension:UiExtensions) -> None:
+def create_moc(dir_path: str, file_name: str, extension: UiExtensions) -> None:
     input_file = os.path.join(dir_path, file_name)
     output_file = None
 
     if extension == UiExtensions.UI:
-        output_file = os.path.join(dir_path, "moc_" + (os.path.splitext(file_name)[0]) + ".py")
+        output_file = os.path.join(dir_path, f"""moc_{(os.path.splitext(file_name)[0])}.py""")
     elif extension == UiExtensions.QRC:
-        output_file = os.path.join(dir_path, (os.path.splitext(file_name)[0]) + "_rc.py")
+        output_file = os.path.join(dir_path, f"""{(os.path.splitext(file_name)[0])}_rc.py""")
 
     if os.path.isfile(output_file):
         ui_file_modification_time = os.path.getmtime(input_file)
