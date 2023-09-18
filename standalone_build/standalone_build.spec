@@ -36,6 +36,7 @@ exe = EXE(
     upx_exclude=[],
     runtime_tmpdir=None,
     console=False,
+    icon='..\\src\\ui\\forms\\icons\\images\\program_icon.ico',
 )
 
 coll = COLLECT(exe,

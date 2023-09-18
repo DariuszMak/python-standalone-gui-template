@@ -153,7 +153,7 @@ venv\Scripts\Activate.ps1 ; python src\gui_setup.py
 ```
 
 
-## Running executable application
+## Running executable application via PyInstaller
 
 In order to generate executable application, run:
 ```commandline
