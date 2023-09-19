@@ -2,10 +2,13 @@
 """Style loader class test module."""
 import os
 import sys
+
 import pytest
+
 from src.helpers.io_file import IOFile  # Import the class that contains the method
 
-def test_get_real_path_from_relative_path():
+
+def test_get_real_path_from_relative_path() -> None:
     # Create an instance of IOFile
     your_instance = IOFile()
 
