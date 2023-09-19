@@ -21,7 +21,7 @@ class WarningDialog(QDialog):
 
         self.ui.setupUi(self)
 
-        StyleLoader.setup_stylesheets(self)
+        StyleLoader.style_window(self)
 
         self.parent_obj: t.Optional[QWidget] = parent
 
