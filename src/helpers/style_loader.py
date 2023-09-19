@@ -3,9 +3,9 @@
 import os
 import typing as t
 
-from PySide6.QtWidgets import QApplication, QWidget
 from PySide6.QtCore import QSize
 from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QApplication, QWidget
 
 from src.helpers.io_file import IOFile
 
@@ -23,7 +23,7 @@ class StyleLoader:
     @staticmethod
     def set_main_program_icon(window: QWidget) -> None:
         icon = QIcon()
-        icon.addFile(u":/logos/icons/images/program_icon.ico", QSize(64, 64), QIcon.Normal, QIcon.Off)
+        icon.addFile(":/logos/icons/images/program_icon.ico", QSize(64, 64), QIcon.Normal, QIcon.Off)
         window.setWindowIcon(icon)
 
     @staticmethod
