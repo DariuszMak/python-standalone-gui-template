@@ -4,6 +4,8 @@ import os
 import typing as t
 
 from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtCore import QSize
+from PySide6.QtGui import QIcon
 
 from src.helpers.io_file import IOFile
 
@@ -12,6 +14,17 @@ class StyleLoader:
     """Load style from files."""
 
     MAIN_THEME_PATH = os.path.join("src", "ui", "themes", "main_theme.qss")
+
+    @staticmethod
+    def style_window(window: QWidget) -> None:
+        StyleLoader.setup_stylesheets(window)
+        StyleLoader.set_main_program_icon(window)
+
+    @staticmethod
+    def set_main_program_icon(window: QWidget) -> None:
+        icon = QIcon()
+        icon.addFile(u":/logos/icons/images/program_icon.ico", QSize(64, 64), QIcon.Normal, QIcon.Off)
+        window.setWindowIcon(icon)
 
     @staticmethod
     def setup_stylesheets(window: QWidget) -> None:

@@ -253,6 +253,7 @@
   <qresource prefix="logos">
     <file>icons/images/warning.png</file>
     <file>icons/images/attention.png</file>
+    <file>icons/images/program_icon.ico</file>
   </qresource>
   <qresource prefix="24x24">
     <file>icons/24x24/cil-check-alt.png</file>
