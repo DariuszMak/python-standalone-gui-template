@@ -63,4 +63,4 @@ WORKDIR /app
 
 ENV PYTHONPATH "${PYTHONPATH}:/app"
 
-CMD . /opt/venv/bin/activate && python src/gui_setup.py && python src/main.py
+CMD sudo chmod +x /opt/venv/bin/activate && . /opt/venv/bin/activate && python src/gui_setup.py && python src/main.py
