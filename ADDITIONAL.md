@@ -92,6 +92,22 @@ Prune docker:
 docker system df ; docker stop $(docker ps -a -q) ; docker rm $(docker ps -a -q) ; docker system prune -a ; docker system df
 ```
 
+### ```Makefile``` usage
+
+You can also use ```Makefile``` and define in it commands, then use:
+
+```commandline
+make all
+```
+
+#### Install make on Windows:
+
+```commandline
+winget install GnuWin32.Make
+```
+Also, be sure to add the install path to your system PATH:
+```C:\Program Files (x86)\GnuWin32\bin```
+
 ## Virtual environment in docker
 
 We can specify manually Python virtual environment:
