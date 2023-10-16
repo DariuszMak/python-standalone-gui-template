@@ -1,0 +1,3 @@
+[submodule "markdown_tips"]
+	path = markdown_tips
+	url = https://github.com/DariuszMak/markdown-tips.git
