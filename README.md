@@ -147,7 +147,7 @@ then
 ```
 
 
-In order to replace generated ```ui``` files manually (if docker didn't do it before) run:
+##### In order to replace generated ```ui``` files manually (if docker didn't do it before) run:
 ```commandline
 venv\Scripts\Activate.ps1 ; python src\gui_setup.py ; 
 ```
