@@ -80,33 +80,33 @@ pytest . --cov=. ;
 #### All in one
 
 ```
-pre-commit run --all-files ; mypy --strict .
+pre-commit run --all-files ; mypy --strict . ; 
 ```
 
 #### Single commands
 
-Mypy
+##### Mypy
 
 ```commandline
- mypy .
+ mypy . ; 
 ```
 
-Isort
+##### Isort
 
 ```commandline
-isort .
+isort . ; 
 ```
 
-Black
+##### Black
 
 ```commandline
-black .
+black . ; 
 ```
 
-Pre-commit
+##### Pre-commit
 
 ```commandline
-pre-commit run --all-files
+pre-commit run --all-files ; 
 ```
 
 ## Installing pre-commit hooks
@@ -119,35 +119,37 @@ that is pushed to the remote repository passes the checks.
 - first, install pre-commit library into your python environment:
 
 ```commandline
-pip install pre-commit
+pip install pre-commit ; 
 ```
 
 - then, install ```pre-commit``` hooks defined in the ```.yaml``` file:
 
 ```commandline
-pre-commit install
+pre-commit install ; 
 ```
 
 This should automatically detect and install all dependencies required by ```.pre-commit-config.yaml```, and also now
 pre-commit will run automatically on every ```git commit```!
 
 - unistall pre-commit:
+
 ```commandline
-pre-commit uninstall
+pre-commit uninstall ; 
 ```
 
 - run pre-commit for all files:
 
 ```commandline
-pre-commit run --all-files
+pre-commit run --all-files ; 
 ```
+
 - update hooks:
 
 ```commandline
-pre-commit install-hooks
+pre-commit install-hooks ; 
 ```
 
-- if you want to ignore errors from changes, use "n" flag:
+- if you want to ignore errors from changes, use `n` flag:
 
 ```commandline
 git commit -n -m "commit message"
@@ -155,24 +157,24 @@ git commit -n -m "commit message"
 
 ## Running Docker container service
 
-Build project:
+##### Build project
 ```commandline
-docker-compose build
+docker-compose build ; 
 ```
 
-Run app:
+##### Run app
 ```commandline
-docker-compose run app
+docker-compose run app ; 
 ```
 
-Build before running:
+##### Build before running
 ```commandline
-docker-compose run --build app
+docker-compose run --build app ; 
 ```
 
-Run tests:
+##### Run tests
 ```commandline
-docker-compose run app . /opt/venv/bin/activate ; pip install -r requirements_dev.txt ; pytest . --cov=.
+docker-compose run app . /opt/venv/bin/activate ; pip install -r requirements_dev.txt ; pytest . --cov=. ; 
 ```
 
 
