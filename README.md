@@ -143,13 +143,29 @@ git reset --hard HEAD ; git clean -x -d -f ;
 ##### Setup local environment and install dependencies
 
 ```commandline
-.\setup_local_project_from_scratch.bat ; 
+rmdir /s /q .\venv
+
+python -m pip install --upgrade pip
+python -m pip install virtualenv
+python -m virtualenv venv
+
+# .\venv\Scripts\activate.bat
+venv\Scripts\Activate.ps1
+
+python -m pip install -r requirements_dev.txt
 ```
 
 ##### Run the application (compile mocks) from Docker
 
 ```commandline
-.\setup_docker_from_scratch.bat ;
+docker system df ; 
+docker stop $(docker ps -a -q) ; 
+docker rm $(docker ps -a -q) ; 
+docker system prune -a ; 
+docker system df ; 
+
+docker-compose build ; 
+docker-compose run app ; 
 ```
 
 ##### Docker should compile ```ui``` files, but you can do it manually
@@ -165,7 +181,7 @@ python src\gui_setup.py ;
 
 In order to generate executable application, run:
 ```commandline
-.\standalone_build.bat ; 
+pyinstaller --clean .\standalone_build\standalone_build.spec ; 
 ```
 
 
