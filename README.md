@@ -140,14 +140,20 @@ Make sure, that everything is committed or stashed and (optionally):
 git reset --hard HEAD ; git clean -x -d -f ; 
 ```
 
-then
+##### Setup local environment and install dependencies
 
 ```commandline
-.\setup_docker_from_scratch.bat ; .\setup_local_project_from_scratch.bat ; 
+.\setup_local_project_from_scratch.bat ; 
 ```
 
+##### Run the application (compile mocks) from Docker
 
-##### In order to replace generated ```ui``` files manually (if docker didn't do it before) run:
+```commandline
+.\setup_docker_from_scratch.bat ;
+```
+
+##### Docker should compile ```ui``` files, but you can do it manually
+
 ```commandline
 $env:PYTHONPATH="." ; 
 venv\Scripts\Activate.ps1 ; 
@@ -155,7 +161,7 @@ python src\gui_setup.py ;
 ```
 
 
-## Running executable application via PyInstaller
+## Running executable application via PyInstaller (install dependencies)
 
 In order to generate executable application, run:
 ```commandline
