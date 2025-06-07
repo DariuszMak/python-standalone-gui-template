@@ -137,13 +137,14 @@ docker-compose run app . /opt/venv/bin/activate ; pip install -r requirements_de
 Make sure, that everything is committed or stashed and (optionally):
 
 ```commandline
-git reset --hard HEAD ; git clean -x -d -f ; 
+git reset --hard HEAD ; 
+git clean -x -d -f ; 
 ```
 
 ##### Setup local environment and install dependencies
 
 ```commandline
-rmdir /s /q .\venv ; 
+Remove-Item -Recurse -Force .\venv ; 
 
 python -m pip install --upgrade pip ; 
 python -m pip install virtualenv ; 
@@ -173,6 +174,7 @@ docker-compose run app ;
 ```commandline
 $env:PYTHONPATH="." ; 
 venv\Scripts\Activate.ps1 ; 
+
 python src\gui_setup.py ; 
 ```
 
@@ -181,6 +183,9 @@ python src\gui_setup.py ;
 
 In order to generate executable application, run:
 ```commandline
+$env:PYTHONPATH="." ; 
+venv\Scripts\Activate.ps1 ; 
+
 pyinstaller --clean .\standalone_build\standalone_build.spec ; 
 ```
 
