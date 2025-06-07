@@ -137,19 +137,19 @@ docker-compose run app . /opt/venv/bin/activate ; pip install -r requirements_de
 Make sure, that everything is committed or stashed and (optionally):
 
 ```commandline
-git reset --hard HEAD ; git clean -x -d -f
+git reset --hard HEAD ; git clean -x -d -f ; 
 ```
 
 then
 
 ```commandline
-.\setup_docker_from_scratch.bat ; .\setup_local_project_from_scratch.bat
+.\setup_docker_from_scratch.bat ; .\setup_local_project_from_scratch.bat ; 
 ```
 
 
 In order to replace generated ```ui``` files manually (if docker didn't do it before) run:
 ```commandline
-venv\Scripts\Activate.ps1 ; python src\gui_setup.py
+venv\Scripts\Activate.ps1 ; python src\gui_setup.py ; 
 ```
 
 
@@ -157,7 +157,7 @@ venv\Scripts\Activate.ps1 ; python src\gui_setup.py
 
 In order to generate executable application, run:
 ```commandline
-.\standalone_build.bat
+.\standalone_build.bat ; 
 ```
 
 
