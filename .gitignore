@@ -23,6 +23,7 @@ wheels/
 .installed.cfg
 *.egg
 *.manifest
+*.bak
 
 # Log files
 pip-log.txt
