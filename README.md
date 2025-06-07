@@ -63,44 +63,27 @@ pyinstaller --clean .\standalone_build\standalone_build.spec ;
 ```
 
 
-## Local configuration:
+## Run tests:
 
 ```commandline
-python -m pip install --upgrade pip
-python -m pip install virtualenv
-python -m virtualenv venv
+pytest -vv ; 
 ```
 
-- On Unix or macOS, using the bash shell: `source venv/bin/activate`
-- On Unix or macOS, using the csh shell: `source venv/bin/activate.csh`
-- On Unix or macOS, using the fish shell: `source venv/bin/activate.fish`
-- On Windows using the Command Prompt: `venv\Scripts\activate.bat`
-- On Windows using PowerShell: `venv\Scripts\Activate.ps1`
-
-Or just set it in IDE as current environment and then:
-
-```commandline
-pip install -r requirements_dev.txt
-```
-
-Run tests:
-
-```commandline
-pytest
-```
 Run tests with coverage report:
 
 ```commandline
-pytest . --cov=.
+pytest . --cov=. ; 
 ```
 
 ## Code autoformat
 
-All in one:
+#### All in one
 
 ```
 pre-commit run --all-files ; mypy --strict .
 ```
+
+#### Single commands
 
 Mypy
 
