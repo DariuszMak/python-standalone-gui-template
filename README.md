@@ -38,8 +38,7 @@ docker rm $(docker ps -a -q) ;
 docker system prune -a ; 
 docker system df ; 
 
-docker-compose build ; 
-docker-compose run app ; 
+docker-compose run --build app ; 
 ```
 
 ##### Docker should compile ```ui``` files, but you can do it manually
@@ -149,7 +148,7 @@ pre-commit run --all-files ;
 pre-commit install-hooks ; 
 ```
 
-- if you want to ignore errors from changes, use `n` flag:
+- if you want to ignore errors from pre-commit check, use `n` flag:
 
 ```commandline
 git commit -n -m "commit message"
@@ -172,7 +171,7 @@ docker-compose run app ;
 docker-compose run --build app ; 
 ```
 
-##### Run tests
+##### Run tests in Docker
 ```commandline
 docker-compose run app . /opt/venv/bin/activate ; pip install -r requirements_dev.txt ; pytest . --cov=. ; 
 ```
