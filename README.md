@@ -143,16 +143,16 @@ git reset --hard HEAD ; git clean -x -d -f ;
 ##### Setup local environment and install dependencies
 
 ```commandline
-rmdir /s /q .\venv
+rmdir /s /q .\venv ; 
 
-python -m pip install --upgrade pip
-python -m pip install virtualenv
-python -m virtualenv venv
+python -m pip install --upgrade pip ; 
+python -m pip install virtualenv ; 
+python -m virtualenv venv ; 
 
-# .\venv\Scripts\activate.bat
-venv\Scripts\Activate.ps1
+# .\venv\Scripts\activate.bat ; 
+venv\Scripts\Activate.ps1 ; 
 
-python -m pip install -r requirements_dev.txt
+python -m pip install -r requirements_dev.txt ; 
 ```
 
 ##### Run the application (compile mocks) from Docker
