@@ -1,9 +1,11 @@
 # Python Standalone GUI template
 
+
 ## Dependencies
 
 - Python 3.10.10
 - Docker
+
 
 ## Setup entire project from scratch (Windows PowerShell)
 
@@ -74,39 +76,6 @@ Run tests with coverage report:
 pytest . --cov=. ; 
 ```
 
-## Code autoformat
-
-#### All in one
-
-```
-pre-commit run --all-files ; mypy --strict . ; 
-```
-
-#### Single commands
-
-##### Mypy
-
-```commandline
- mypy . ; 
-```
-
-##### Isort
-
-```commandline
-isort . ; 
-```
-
-##### Black
-
-```commandline
-black . ; 
-```
-
-##### Pre-commit
-
-```commandline
-pre-commit run --all-files ; 
-```
 
 ## Installing pre-commit hooks
 
@@ -151,8 +120,44 @@ pre-commit install-hooks ;
 - if you want to ignore errors from pre-commit check, use `n` flag:
 
 ```commandline
-git commit -n -m "commit message"
+git commit -n -m "commit message" ; 
 ```
+
+
+## Code autoformat
+
+#### All in one
+
+```
+pre-commit run --all-files ; mypy --strict . ; 
+```
+
+#### Single commands
+
+##### Mypy
+
+```commandline
+ mypy . ; 
+```
+
+##### Isort
+
+```commandline
+isort . ; 
+```
+
+##### Black
+
+```commandline
+black . ; 
+```
+
+##### Pre-commit
+
+```commandline
+pre-commit run --all-files ; 
+```
+
 
 ## Running Docker container service
 
