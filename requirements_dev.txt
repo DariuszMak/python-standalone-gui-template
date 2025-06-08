@@ -2,7 +2,6 @@
 black==23.7.0
 isort==3.8.1
 mypy==1.5.1
-pre-commit==3.4.0
 
 pyinstaller==5.13.2
 
