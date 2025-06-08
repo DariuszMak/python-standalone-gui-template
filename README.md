@@ -5,6 +5,20 @@
 
 - Python 3.10.10
 - Docker
+- Qt Designer
+
+
+## Install Qt Designer
+
+```commandline
+pip install pyqt6-tools ; 
+pyqt6-tools designer ;
+```
+
+```commandline
+pip install pyqt5-tools ; 
+pyqt5-tools designer ; 
+```
 
 
 ## Setup entire project from scratch (Windows PowerShell)
