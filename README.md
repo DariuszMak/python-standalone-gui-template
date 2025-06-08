@@ -66,8 +66,16 @@ venv\Scripts\Activate.ps1 ;
 python src\gui_setup.py ; 
 ```
 
+### Running application natively
 
-### Running executable application via PyInstaller (install dependencies)
+```commandline
+$env:PYTHONPATH="." ; 
+venv\Scripts\Activate.ps1 ; 
+
+python src\main.py ; 
+```
+
+### Running executable application via PyInstaller (install dependencies before the step)
 
 In order to generate executable application, run:
 ```commandline
