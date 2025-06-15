@@ -19,16 +19,10 @@ git clean -x -d -f ;
 ##### Setup local environment and install dependencies
 
 ```commandline
-Remove-Item -Recurse -Force .\venv ; 
-
-python -m pip install --upgrade pip ; 
-python -m pip install virtualenv ; 
-python -m virtualenv venv ; 
-
-# .\venv\Scripts\activate.bat ; 
-venv\Scripts\Activate.ps1 ; 
-
-python -m pip install -r requirements_dev.txt ; 
+sudo rm -r .venv ; 
+sudo rm uv.lock ; 
+uv sync --dev ; 
+uv lock ; 
 ```
 
 ##### Run the application (compile mocks) from Docker
