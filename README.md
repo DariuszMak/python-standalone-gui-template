@@ -26,6 +26,7 @@ git clean -x -d -f ;
 ##### Setup local environment and install dependencies
 
 ```commandline 
+uv python pin 3.11 ; 
 uv sync --dev ; 
 uv lock ; 
 ```
@@ -102,6 +103,7 @@ uv run pip-audit ;
 
 uv run ruff check ; 
 uv run mypy --explicit-package-bases . ; 
+uv run mypy --explicit-package-bases --check-untyped-defs ; 
 
 uv run ruff check --fix ; 
 uv run ruff check --fix --unsafe-fixes ; 
@@ -128,7 +130,7 @@ docker-compose run --build app ;
 
 ##### Run tests in Docker
 ```commandline
-docker-compose run app uv sync --dev && uv run pytest . --cov=. ; 
+docker-compose run app sh -c "uv sync --dev && uv run pytest . --cov=." ; 
 ```
 
 
