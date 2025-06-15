@@ -126,7 +126,7 @@ docker-compose run --build app ;
 
 ##### Run tests in Docker
 ```commandline
-docker-compose run app uv sync --dev ; uv run pytest . --cov=. ; 
+docker-compose run app uv sync --dev && uv run pytest . --cov=. ; 
 ```
 
 
