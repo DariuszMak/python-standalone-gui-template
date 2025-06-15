@@ -95,6 +95,9 @@ uv run pyqt6-tools designer src\ui\forms\warning_dialog.ui ;
 ## Code autoformat
 
 ```commandline
+$env:PYTHONPATH="." ; 
+.venv\Scripts\Activate.ps1 ; 
+
 uv run pip-audit ; 
 
 uv run ruff format ; 
