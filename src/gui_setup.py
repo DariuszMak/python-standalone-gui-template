@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import subprocess
 from enum import Enum
@@ -22,7 +21,7 @@ def create_moc(dir_path: str, file_name: str, extension: UiExtensions) -> None:
         ui_file_modification_time = os.path.getmtime(input_file)
         moc_file_modification_time = os.path.getmtime(output_file)
         if moc_file_modification_time > ui_file_modification_time:
-            print("Skipping mocking of file {}, older than moc file".format(input_file))
+            print(f"Skipping mocking of file {input_file}, older than moc file")
             return
 
     try:

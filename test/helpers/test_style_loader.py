@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Style loader class test module."""
 
 import pytest

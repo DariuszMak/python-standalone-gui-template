@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
 """Style loader class test module."""
 
 import os
-import sys
-
-import pytest
 
 from src.helpers.io_file import IOFile  # Import the class that contains the method
 

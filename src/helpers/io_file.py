@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Style loader module."""
 
 import os
@@ -23,7 +22,7 @@ class IOFile:
     @staticmethod
     def load_file_content(path: str) -> str:
         """Load text file content from specified file in path."""
-        with open(IOFile.get_real_path_from_relative_path(path), "r") as f:
+        with open(IOFile.get_real_path_from_relative_path(path)) as f:
             content = f.read()
 
         return content

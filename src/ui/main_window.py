@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """MainWindow module."""
 
 from PySide6.QtWidgets import QMainWindow
