@@ -5,7 +5,6 @@ description = "Simple template project for Python Standalone GUI Application"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "mypy>=1.16.0",
     "pyside6>=6.9.1",
 ]
 
