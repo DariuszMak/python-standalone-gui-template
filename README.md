@@ -100,7 +100,7 @@ $env:PYTHONPATH="." ;
 
 uv run ruff check ; 
 uv run pip-audit ; 
-uv run mypy --explicit-package-bases ; 
+uv run mypy --explicit-package-bases . ; 
 
 uv run ruff format ; 
 uv run ruff check --fix ; 
