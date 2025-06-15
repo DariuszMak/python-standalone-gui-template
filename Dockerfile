@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1
 
-ARG PYTHON_VERSION=3.10.10
-FROM python:${PYTHON_VERSION}-slim as base
+ARG PYTHON_VERSION=3.11.13
+FROM python:${PYTHON_VERSION}-slim
 
+ENV PYTHONPATH="${PYTHONPATH}:/app"
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
 
@@ -14,23 +15,30 @@ ENV DOCKER_RUNTIME=1
 
 ENV QT_QPA_PLATFORM=minimal
 
+ENV UV_PROJECT_ENVIRONMENT="/venv"
+
+ENV UV_CACHE_DIR="/tmp/uv-cache"
 
 WORKDIR /app
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
 RUN apt update \
- && apt install -y sudo
+&& apt install -y sudo \
+&& pip install uv
+
+COPY pyproject.toml uv.lock /app/
+COPY . ./app/
 
 ARG UID=10001
 RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
+--disabled-password \
+--gecos "" \
+--home "/nonexistent" \
+--shell "/sbin/nologin" \
+--no-create-home \
+--uid "${UID}" \
+appuser
 
 RUN adduser appuser sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
@@ -40,27 +48,23 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 # Leverage a bind mount to requirements.txt to avoid having to copy them into
 # into this layer.
 RUN apt update && apt install -y \
-    libgl1-mesa-glx \
-    libxkbcommon-x11-0 \
-    libgl1-mesa-dev \
-    libglib2.0-0 \
-    libfontconfig \
-    libdbus-1-3
+libgl1-mesa-glx \
+libxkbcommon-x11-0 \
+libgl1-mesa-dev \
+libglib2.0-0 \
+libfontconfig \
+libdbus-1-3
 
-RUN python -m venv /opt/venv
-RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    . /opt/venv/bin/activate && python -m pip install -r requirements.txt
-
-# Switch to the non-privileged user to run the application.
 USER appuser
 
-# Copy the source code into the container.
-COPY . ./app
+RUN sudo mkdir -p /venv \
+&& sudo chown -R 10001:10001 /venv \
+&& sudo mkdir -p /tmp/uv-cache \
+&& sudo chown -R 10001:10001 /tmp/uv-cache
 
-ADD . /app
-WORKDIR /app
+USER root
 
-ENV PYTHONPATH "${PYTHONPATH}:/app"
+RUN uv sync --no-dev --locked --no-cache
+RUN uv add debugpy
 
-CMD sudo chmod +x /opt/venv/bin/activate && . /opt/venv/bin/activate && python src/gui_setup.py && python src/main.py
+CMD uv run python src/gui_setup.py && uv run python src/main.py
