@@ -3,8 +3,8 @@
 
 ## Dependencies
 
-- UV package manager
-- Docker
+- [UV](https://github.com/astral-sh/uv) package manager
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
 
 ## Setup entire project from scratch (Windows PowerShell)
