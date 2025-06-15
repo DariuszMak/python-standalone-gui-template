@@ -88,8 +88,8 @@ pytest . --cov=. ;
 ## Edit `ui` forms with QT Designer:
 
 ```commandline
-pyqt6-tools designer src\ui\forms\main_window.ui ;
-pyqt6-tools designer src\ui\forms\warning_dialog.ui ;
+uv run pyqt6-tools designer src\ui\forms\main_window.ui ;
+uv run pyqt6-tools designer src\ui\forms\warning_dialog.ui ;
 ```
 
 
