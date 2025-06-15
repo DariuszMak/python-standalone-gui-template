@@ -64,7 +64,7 @@ RUN sudo mkdir -p /venv \
 
 USER root
 
-RUN uv sync --no-dev --locked --no-cache
+RUN uv sync --no-dev --no-cache
 RUN uv add debugpy
 
 CMD uv run python src/gui_setup.py && uv run python src/main.py
