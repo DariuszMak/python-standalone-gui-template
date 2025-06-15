@@ -9,7 +9,8 @@
 Install python 3.11:
 
 ```commandline
-uv python install 3.11
+uv python install 3.11 ; 
+uv python pin 3.11 ; 
 ```
 
 
