@@ -45,7 +45,7 @@ def create_moc(dir_path: str, file_name: str, extension: UiExtensions) -> None:
     return_code = process.returncode
     if return_code != 0:
         raise Exception(
-            "Mocing ui file failed! (" + file_name + "). " "cout: " + str(output_bin) + ". cerr: " + str(err_bin)
+            "Mocing ui file failed! (" + file_name + "). cout: " + str(output_bin) + ". cerr: " + str(err_bin)
         )
 
 

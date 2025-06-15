@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Style loader class test module."""
+
 import os
 import sys
 
