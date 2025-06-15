@@ -53,7 +53,7 @@ $env:PYTHONPATH="." ;
 uv run python src\main.py ; 
 ```
 
-### Running executable application via PyInstaller (install dependencies before the step)
+### Running executable application via PyInstaller (generate UI forms before !!!)
 
 In order to generate executable application, run:
 ```commandline
