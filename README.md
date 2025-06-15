@@ -87,25 +87,16 @@ uv run pyqt6-tools designer src\ui\forms\warning_dialog.ui ;
 
 ## Code autoformat
 
-##### Mypy
-
 ```commandline
-mypy . ; 
-mypy --strict . ; 
+uv run pip-audit ; 
+
+uv run ruff format ; 
+uv run ruff check ; 
+uv run ruff check --fix ; 
+uv run ruff check --fix --unsafe-fixes ; 
+uv run ruff check --fix --select I ; 
+uv run mypy --explicit-package-bases ; 
 ```
-
-##### Isort
-
-```commandline
-isort . ; 
-```
-
-##### Black
-
-```commandline
-black . ; 
-```
-
 
 ## Running Docker container service
 
