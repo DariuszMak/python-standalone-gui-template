@@ -28,7 +28,6 @@ git clean -x -d -f ;
 ```commandline 
 uv python pin 3.11 ; 
 uv sync --dev ; 
-uv lock ; 
 ```
 
 ##### Run the application (compile mocks) from Docker
