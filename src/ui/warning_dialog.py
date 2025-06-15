@@ -1,6 +1,5 @@
 """WarningDialog module."""
 
-
 from PySide6 import QtCore, QtGui
 from PySide6.QtCore import QEvent, Qt
 from PySide6.QtGui import QPixmap
