@@ -126,7 +126,7 @@ docker-compose run --build app ;
 
 ##### Run tests in Docker
 ```commandline
-docker-compose run app . /opt/venv/bin/activate ; pip install -r requirements_dev.txt ; pytest . --cov=. ; 
+docker-compose run app uv sync --dev ; uv run pytest . --cov=. ; 
 ```
 
 
