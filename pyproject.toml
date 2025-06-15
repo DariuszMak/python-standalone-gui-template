@@ -12,9 +12,11 @@ dependencies = [
 dev = [
     "mypy>=1.16.0",
     "pyinstaller>=6.14.1",
+    "pip-audit>=2.9.0",
     "pyqt6-tools>=6.4.2.3.3",
     "pytest>=8.4.0",
     "pytest-cov>=6.2.1",
+    "ruff>=0.11.13",
     "setuptools>=80.9.0",
 ]
 
