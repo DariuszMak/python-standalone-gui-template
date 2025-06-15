@@ -68,6 +68,7 @@ __pypackages__/
 env/
 venv/
 ENV/
+Pipfile
 
 # If you are using PyCharm #
 .idea/
