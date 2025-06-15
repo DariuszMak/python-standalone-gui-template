@@ -67,7 +67,7 @@ uv run pyinstaller --clean .\standalone_build\standalone_build.spec ;
 ## Run tests:
 
 ```commandline
-pytest -vv ; 
+uv run pytest -vv ; 
 ```
 
 Run tests with coverage report:
