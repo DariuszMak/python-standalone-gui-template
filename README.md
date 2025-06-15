@@ -103,10 +103,10 @@ uv run pip-audit ;
 uv run ruff check ; 
 uv run mypy --explicit-package-bases . ; 
 
-uv run ruff format ; 
 uv run ruff check --fix ; 
 uv run ruff check --fix --unsafe-fixes ; 
 uv run ruff check --fix --select I ; 
+uv run ruff format ; 
 ```
 
 ## Running Docker container service
