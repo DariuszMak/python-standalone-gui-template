@@ -6,6 +6,12 @@
 - [UV](https://github.com/astral-sh/uv) package manager
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
+Install python 3.11:
+
+```commandline
+uv python install 3.11
+```
+
 
 ## Setup entire project from scratch (Windows PowerShell)
 
