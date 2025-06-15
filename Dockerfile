@@ -27,7 +27,7 @@ RUN apt update \
 && apt install -y sudo \
 && pip install uv
 
-COPY pyproject.toml uv.lock /app/
+COPY pyproject.toml /app/
 COPY . ./app/
 
 ARG UID=10001
