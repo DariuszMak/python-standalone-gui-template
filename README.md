@@ -39,18 +39,18 @@ docker-compose run --build app ;
 
 ```commandline
 $env:PYTHONPATH="." ; 
-venv\Scripts\Activate.ps1 ; 
+.venv\Scripts\Activate.ps1 ; 
 
-python src\gui_setup.py ; 
+uv run python src\gui_setup.py ; 
 ```
 
 ### Running application natively
 
 ```commandline
 $env:PYTHONPATH="." ; 
-venv\Scripts\Activate.ps1 ; 
+.venv\Scripts\Activate.ps1 ; 
 
-python src\main.py ; 
+uv run python src\main.py ; 
 ```
 
 ### Running executable application via PyInstaller (install dependencies before the step)
@@ -58,9 +58,9 @@ python src\main.py ;
 In order to generate executable application, run:
 ```commandline
 $env:PYTHONPATH="." ; 
-venv\Scripts\Activate.ps1 ; 
+.venv\Scripts\Activate.ps1 ; 
 
-pyinstaller --clean .\standalone_build\standalone_build.spec ; 
+uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
 ```
 
 
