@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Application module."""
+
 import sys
 
 from PySide6.QtCore import Qt

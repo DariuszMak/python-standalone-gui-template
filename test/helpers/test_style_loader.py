@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Style loader class test module."""
+
 import pytest
 
 from src.helpers.style_loader import StyleLoader

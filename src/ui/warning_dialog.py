@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """WarningDialog module."""
+
 import typing as t
 
 from PySide6 import QtCore, QtGui
