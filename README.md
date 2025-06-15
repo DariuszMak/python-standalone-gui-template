@@ -18,9 +18,7 @@ git clean -x -d -f ;
 
 ##### Setup local environment and install dependencies
 
-```commandline
-sudo rm -r .venv ; 
-sudo rm uv.lock ; 
+```commandline 
 uv sync --dev ; 
 uv lock ; 
 ```
