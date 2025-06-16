@@ -23,13 +23,6 @@ git reset --hard HEAD ;
 git clean -x -d -f ; 
 ```
 
-##### Setup local environment and install dependencies
-
-```commandline 
-uv python pin 3.11 ; 
-uv sync --dev ; 
-```
-
 ##### Run the application (compile mocks) from Docker
 
 ```commandline
@@ -40,6 +33,13 @@ docker system prune -a ;
 docker system df ; 
 
 docker-compose run --build app ; 
+```
+
+##### Setup local environment and install dependencies
+
+```commandline 
+uv python pin 3.11 ; 
+uv sync --dev ; 
 ```
 
 ##### Docker should compile ```ui``` files, but you can do it manually
