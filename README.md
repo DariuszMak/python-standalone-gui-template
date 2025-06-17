@@ -1,12 +1,36 @@
 # Python Standalone GUI template
 
+## Shortest sequece of commands to setup project from scratch:
 
-## Dependencies
+```commandline
+uv python pin 3.11 ; 
+
+git reset --hard HEAD ; 
+git clean -x -d -f ; 
+
+docker system df ; 
+docker stop $(docker ps -a -q) ; 
+docker rm $(docker ps -a -q) ; 
+docker system prune -a ; 
+docker system df ; 
+docker-compose run --build app ; 
+
+uv sync --dev ; 
+
+$env:PYTHONPATH="." ; 
+.venv\Scripts\Activate.ps1 ; 
+
+pytest . --cov=. ; 
+
+uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
+```
+
+## Requirements
 
 - [UV](https://github.com/astral-sh/uv) package manager
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
-Install Python 3.11:
+#### Install Python 3.11:
 
 ```commandline
 uv python install 3.11 ; 
