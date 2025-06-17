@@ -3,7 +3,6 @@
 ## Shortest sequece of commands to setup project from scratch:
 
 ```commandline
-uv python pin 3.11 ; 
 
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
@@ -15,6 +14,7 @@ docker system prune -a ;
 docker system df ; 
 docker-compose run --build app ; 
 
+uv python pin 3.11 ; 
 uv sync --dev ; 
 
 $env:PYTHONPATH="." ; 
