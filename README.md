@@ -3,7 +3,6 @@
 ## Shortest sequece of commands to setup project from scratch:
 
 ```commandline
-
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
 
