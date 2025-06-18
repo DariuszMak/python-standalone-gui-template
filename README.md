@@ -13,6 +13,7 @@ docker system prune -a ;
 docker system df ; 
 docker-compose run --build app ; 
 
+uv python install 3.11 ; 
 uv python pin 3.11 ; 
 uv sync --dev ; 
 
