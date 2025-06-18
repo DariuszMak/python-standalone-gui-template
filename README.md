@@ -1,5 +1,8 @@
 # Python Standalone GUI template
 
+[![Preview Image](images/Runtime_screenshot.png)](https://github.com/DariuszMak/python-standalone-gui-template/releases/download/0.5.0/GUI_client.exe)
+
+
 ## Requirements
 
 - [UV](https://github.com/astral-sh/uv) package manager
