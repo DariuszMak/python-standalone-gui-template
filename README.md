@@ -1,5 +1,11 @@
 # Python Standalone GUI template
 
+## Requirements
+
+- [UV](https://github.com/astral-sh/uv) package manager
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+
+
 ## Shortest sequece of commands to setup project from scratch:
 
 ```commandline
@@ -25,18 +31,6 @@ pytest . --cov=. ;
 uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
 ```
 
-## Requirements
-
-- [UV](https://github.com/astral-sh/uv) package manager
-- [Docker Desktop](https://www.docker.com/products/docker-desktop)
-
-#### Install Python 3.11:
-
-```commandline
-uv python install 3.11 ; 
-uv python pin 3.11 ; 
-```
-
 
 ## Setup entire project from scratch (Windows PowerShell)
 
@@ -45,6 +39,13 @@ Make sure, that everything is committed or stashed and (optionally):
 ```commandline
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
+```
+
+#### Install Python 3.11:
+
+```commandline
+uv python install 3.11 ; 
+uv python pin 3.11 ; 
 ```
 
 ##### Run the application (compile mocks) from Docker
