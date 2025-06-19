@@ -8,7 +8,7 @@
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
 
-## Shortest sequece of commands to setup project from scratch:
+## Shortest sequece of commands to setup project from scratch (PowerShell):
 
 ```commandline
 git reset --hard HEAD ; 
