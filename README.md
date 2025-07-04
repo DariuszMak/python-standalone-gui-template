@@ -71,7 +71,7 @@ uv python pin 3.11 ;
 uv sync --dev ; 
 ```
 
-##### Docker should compile ```ui``` files, but you can do it manually
+##### Docker should compile ```ui``` files, but as an alternative you can do it manually
 
 ```commandline
 $env:PYTHONPATH="." ; 
