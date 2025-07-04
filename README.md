@@ -14,15 +14,8 @@
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
 
-docker system df ; 
-docker stop $(docker ps -a -q) ; 
-docker rm $(docker ps -a -q) ; 
-docker system prune -a ; 
-docker system df ; 
-docker-compose run --build app ; 
-
-uv python install 3.11 ; 
-uv python pin 3.11 ; 
+uv python install 3.13 ; 
+uv python pin 3.13 ; 
 uv sync --dev ; 
 
 $env:PYTHONPATH="." ; 
@@ -30,10 +23,7 @@ $env:PYTHONPATH="." ;
 
 pytest . --cov=. ; 
 
-uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
 ```
-
-Go to `dist` catalogue and run `.exe` file.
 
 
 ## Setup entire project from scratch (Windows PowerShell)
