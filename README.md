@@ -121,7 +121,7 @@ uv run pip-audit ;
 
 uv run ruff check ; 
 uv run mypy --explicit-package-bases . ; 
-uv run mypy --explicit-package-bases --check-untyped-defs ; 
+uv run mypy --explicit-package-bases --check-untyped-defs . ; 
 
 uv run ruff check --fix ; 
 uv run ruff check --fix --unsafe-fixes ; 
