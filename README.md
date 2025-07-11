@@ -23,7 +23,7 @@ uv sync --dev ;
 $env:PYTHONPATH="." ; 
 .venv\Scripts\Activate.ps1 ; 
 
-pytest . --cov=. ; 
+pytest tests/ --cov=. ; 
 
 ```
 
@@ -95,13 +95,13 @@ uv run pyinstaller --clean .\standalone_build\standalone_build.spec ;
 ## Run tests:
 
 ```commandline
-uv run pytest -vv ; 
+uv run pytest tests/ -vv ; 
 ```
 
 Run tests with coverage report:
 
 ```commandline
-pytest . --cov=. ; 
+pytest tests/ --cov=. ; 
 ```
 
 
