@@ -113,7 +113,7 @@ uv run pyqt6-tools designer src\ui\forms\warning_dialog.ui ;
 ```
 
 
-## Code autoformat
+## Code lint and autoformat
 
 ```commandline
 $env:PYTHONPATH="." ; 
