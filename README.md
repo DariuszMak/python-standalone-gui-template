@@ -119,16 +119,19 @@ uv run pyqt6-tools designer src\ui\forms\warning_dialog.ui ;
 $env:PYTHONPATH="." ; 
 .venv\Scripts\Activate.ps1 ; 
 
-uv run pip-audit ; 
-
 uv run ruff check ; 
-uv run mypy --explicit-package-bases . ; 
-uv run mypy --explicit-package-bases --check-untyped-defs . ; 
+
+uv run ruff format ; 
 
 uv run ruff check --fix ; 
 uv run ruff check --fix --unsafe-fixes ; 
 uv run ruff check --fix --select I ; 
-uv run ruff format ; 
+
+uv run mypy --explicit-package-bases . ; 
+uv run mypy --explicit-package-bases --check-untyped-defs . ; 
+
+uv run pip-audit ; 
+
 ```
 
 ## Running Docker container service
