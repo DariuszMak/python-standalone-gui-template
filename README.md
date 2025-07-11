@@ -11,6 +11,8 @@
 ## Shortest sequece of commands to setup project from scratch (PowerShell):
 
 ```commandline
+deactivate;
+
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
 
