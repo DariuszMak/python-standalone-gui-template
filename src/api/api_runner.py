@@ -1,11 +1,7 @@
 import uvicorn
-from litestar import Litestar, get
+from litestar import Litestar
 
-
-@get("/ping")
-def ping() -> dict:
-    return {"message": "pong"}
-
+from src.api.routes import ping
 
 app = Litestar(route_handlers=[ping])
 
