@@ -1,5 +1,3 @@
-"""MainWindow module."""
-
 from PySide6.QtWidgets import QMainWindow
 
 from src.helpers.style_loader import StyleLoader
@@ -8,7 +6,6 @@ from src.ui.warning_dialog import WarningDialog
 
 
 class MainWindow(QMainWindow):
-    """MainWindow class."""
 
     def __init__(self) -> None:
         super().__init__()
@@ -19,7 +16,6 @@ class MainWindow(QMainWindow):
         self.ui.pushButton.clicked.connect(self.show_warning_dialog)
 
     def show_warning_dialog(self) -> None:
-        """Show warning dialog."""
         dlg = WarningDialog(self)
         dlg.ui.label_title_bar_top.setText("Warning title")
         dlg.ui.label_info.setText("Warning message")

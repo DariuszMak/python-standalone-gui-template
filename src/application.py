@@ -9,7 +9,6 @@ from src.ui.main_window import MainWindow
 
 
 def run() -> None:
-    """Main function that runs application."""
     app = QApplication(sys.argv)
 
     pixmap = QPixmap(":/logos/icons/images/program_icon.ico").scaled(
