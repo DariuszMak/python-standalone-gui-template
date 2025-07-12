@@ -3,7 +3,6 @@ import sys
 
 
 class IOFile:
-
     @staticmethod
     def get_real_path_from_relative_path(relative_path: str) -> str:
         base_path = None
