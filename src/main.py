@@ -3,7 +3,7 @@ import sys
 import threading
 
 from src import application, gui_setup
-from src.api_runner import run_api 
+from src.api_runner import run_api
 
 TRUE_ENV_VARIABLES_VALUES = "true", "1", "t"
 
