@@ -37,7 +37,7 @@ uv run pyinstaller --clean .\standalone_build\standalone_build.spec ;
 
 Start-Process ".\dist\GUI_client.exe" ; 
 
-Start-Sleep -Seconds 5 ; 
+Start-Sleep -Seconds 8 ; 
 
 newman run collections\Python_GUI.postman_collection.json ; 
 ```
