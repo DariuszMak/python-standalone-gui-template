@@ -7,6 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "litestar>=2.16.0",
     "pyside6>=6.9.1",
+    "uvicorn>=0.35.0",
 ]
 
 [dependency-groups]
