@@ -1,5 +1,3 @@
-"""Style loader class test module."""
-
 import os
 
 from src.helpers.io_file import IOFile  # Import the class that contains the method
