@@ -1,12 +1,15 @@
+import logging
+
 from PySide6.QtWidgets import QMainWindow
 
 from src.helpers.style_loader import StyleLoader
 from src.ui.forms.moc_main_window import Ui_MainWindow
 from src.ui.warning_dialog import WarningDialog
 
+logger = logging.getLogger(__name__)
+
 
 class MainWindow(QMainWindow):
-
     def __init__(self) -> None:
         super().__init__()
         self.ui = Ui_MainWindow()
@@ -21,6 +24,6 @@ class MainWindow(QMainWindow):
         dlg.ui.label_info.setText("Warning message")
 
         if dlg.exec_():
-            print("Accepted")
+            logger.info("Accepted")
         else:
-            print("Cancelled")
+            logger.info("Cancelled")

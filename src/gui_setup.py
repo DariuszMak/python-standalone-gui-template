@@ -1,6 +1,9 @@
+import logging
 import os
 import subprocess
 from enum import Enum
+
+logger = logging.getLogger(__name__)
 
 
 class UiExtensions(str, Enum):
@@ -21,11 +24,11 @@ def create_moc(dir_path: str, file_name: str, extension: UiExtensions) -> None:
         ui_file_modification_time = os.path.getmtime(input_file)
         moc_file_modification_time = os.path.getmtime(output_file)
         if moc_file_modification_time > ui_file_modification_time:
-            print(f"Skipping mocking of file {input_file}, older than moc file")
+            logger.info(f"Skipping mocking of file {input_file}, older than moc file")
             return
 
     try:
-        print("Remove old moc file: %s" % output_file)
+        logger.info(f"Remove old moc file: {output_file}")
         os.remove(output_file)
     except OSError:
         pass
@@ -37,7 +40,7 @@ def create_moc(dir_path: str, file_name: str, extension: UiExtensions) -> None:
     elif extension == UiExtensions.QRC:
         command = f'pyside6-rcc "{input_file}"  -o  "{output_file}"'
 
-    print("Mocking file %s..." % input_file)
+    logger.info(f"Mocking file {input_file}...")
 
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     (output_bin, err_bin) = process.communicate(timeout=10)
@@ -54,7 +57,7 @@ def create_mocs() -> None:
             for extension in UiExtensions:
                 if file.endswith(extension):
                     create_moc(root, file, extension)
-    print("Mocking finished!")
+    logger.info("Mocking finished!")
 
 
 if __name__ == "__main__":
