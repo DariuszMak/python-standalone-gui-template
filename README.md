@@ -34,6 +34,8 @@ $env:PYTHONPATH="." ;
 pytest . --cov=. ; 
 
 uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
+
+newman run collections\Python_GUI.postman_collection.json ; 
 ```
 
 Go to `dist` catalogue and run `.exe` file.
