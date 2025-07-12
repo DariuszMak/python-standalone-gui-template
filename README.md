@@ -142,7 +142,6 @@ uv run mypy --explicit-package-bases . ;
 uv run mypy --explicit-package-bases --check-untyped-defs . ; 
 
 uv run pip-audit ; 
-
 ```
 
 ## Running Docker container service
