@@ -172,6 +172,10 @@ docker-compose run --build app ;
 docker-compose run app sh -c "uv sync --dev && uv run pytest . --cov=." ; 
 ```
 
+##### Run Newman tests from saved collection (run application before execution)
+```commandline
+newman run collections\Python_GUI.postman_collection.json ; 
+```
 
 ## GUI files specification
 
