@@ -8,7 +8,6 @@ from src.ui.forms.moc_warning_dialog import Ui_Dialog  # type: ignore
 
 
 class WarningDialog(QDialog):
-
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__()
 
