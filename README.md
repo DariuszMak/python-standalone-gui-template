@@ -42,7 +42,7 @@ Start-Sleep -Seconds 8 ;
 newman run collections\Python_GUI.postman_collection.json ; 
 ```
 
-Go to `http://127.0.0.1:8000/schema/swagger` to see API schema.
+Go to `http://127.0.0.1:8000/schema/swagger` or `http://127.0.0.1:8000/schema/redoc` to see API schema.
 
 
 ## Setup entire project from scratch (Windows PowerShell)
