@@ -39,7 +39,7 @@ Start-Process ".\dist\GUI_client.exe" ;
 
 Start-Sleep -Seconds 8 ; 
 
-newman run collections\Python_GUI.postman_collection.json ; 
+newman run collections\Python_GUI.postman_collection.json --bail; 
 
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
