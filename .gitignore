@@ -25,6 +25,11 @@ wheels/
 *.manifest
 *.bak
 
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
 # Log files
 pip-log.txt
 pip-delete-this-directory.txt
