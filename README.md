@@ -32,10 +32,10 @@ uv sync --dev ;
 $env:PYTHONPATH="." ; 
 .venv\Scripts\Activate.ps1 ; 
 
-uv run ruff check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run mypy --explicit-package-bases test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-
 uv run pip-audit ; 
+uv run ruff check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
+uv run ruff format --check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
+uv run mypy --explicit-package-bases test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
 
 pytest test/ --cov=. ; 
 docker-compose run app sh -c "uv sync --dev && uv run pytest test/ --cov=." ; 
