@@ -19,9 +19,10 @@ git clean -x -d -f ;
 
 docker system df ; 
 docker stop $(docker ps -a -q) ; 
-docker rm $(docker ps -a -q) ; 
-docker system prune -a -f ; 
+docker rm -f $(docker ps -a -q) ; 
+docker system prune --volumes -a -f ; 
 docker system df ; 
+
 docker-compose run --build app ; 
 
 uv python install 3.11 ; 
