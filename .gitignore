@@ -30,9 +30,13 @@ wheels/
 .dmypy.json
 dmypy.json
 
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
 # Log files
-pip-log.txt
-pip-delete-this-directory.txt
 *.log
 
 # Unit test / coverage reports
