@@ -33,24 +33,18 @@ def create_moc(dir_path: str, file_name: str, extension: UiExtensions) -> None:
     except OSError:
         pass
 
-
     if extension == UiExtensions.UI:
         command = ["pyside6-uic", "--from-imports", input_file, "-o", output_file]
     elif extension == UiExtensions.QRC:
         command = ["pyside6-rcc", input_file, "-o", output_file]
 
     logger.info("Mocking file %s...", input_file)
-    process = subprocess.run( # noqa: S603
-        command,
-        capture_output=True,
-        timeout=10,
-        text=True
-    ) 
+    process = subprocess.run(  # noqa: S603
+        command, capture_output=True, timeout=10, text=True
+    )
 
     if process.returncode != 0:
-        raise Exception(
-            f"Mocking UI file failed! ({file_name}). stdout: {process.stdout}, stderr: {process.stderr}"
-        )
+        raise Exception(f"Mocking UI file failed! ({file_name}). stdout: {process.stdout}, stderr: {process.stderr}")
 
 
 def create_mocs() -> None:
