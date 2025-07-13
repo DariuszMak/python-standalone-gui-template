@@ -44,10 +44,10 @@ class WarningDialog(QDialog):
 
         self.ui.label_warning.setPixmap(pixmap.scaled(40, 40, QtGui.Qt.AspectRatioMode.KeepAspectRatio))
 
-    def mousePressEvent(self, event: QEvent) -> None: # noqa: N802
+    def mousePressEvent(self, event: QEvent) -> None:  # noqa: N802
         self.dragPos = event.globalPosition().toPoint()
 
-    def changeEvent(self, event: QEvent) -> None: # noqa: N802
+    def changeEvent(self, event: QEvent) -> None:  # noqa: N802
         if event.type() == QEvent.LanguageChange:
             self.ui.retranslateUi(self)
         super().changeEvent(event)
