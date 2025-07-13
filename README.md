@@ -156,12 +156,11 @@ $env:PYTHONPATH="." ;
 
 clear ; 
 
+uv run pip-audit ;  
 uv run ruff check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-
+uv run ruff format --check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
 uv run mypy --explicit-package-bases test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
 # uv run mypy --explicit-package-bases --check-untyped-defs . ; 
-
-uv run pip-audit ;  
 ```
 
 
