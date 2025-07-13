@@ -8,5 +8,5 @@ def test_get_qss_from_file() -> None:
 
 
 def test_get_qss_from_file_with_incorrect_path() -> None:
-    with pytest.raises(Exception):
+    with pytest.raises(PermissionError):
         StyleLoader.get_qss_from_file("")
