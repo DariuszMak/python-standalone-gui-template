@@ -1,0 +1,11 @@
+﻿,Dariusz Makarewicz,Gigaclear,
+<Nothing>
+
+(,+(,))
+$2
+
+,\d*(\.)*\d+,$
+<Nothing>
+
+(,(.*)(,))
+$3
