@@ -40,6 +40,9 @@ Start-Process ".\dist\GUI_client.exe" ;
 Start-Sleep -Seconds 8 ; 
 
 newman run collections\Python_GUI.postman_collection.json ; 
+
+Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
+Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
 ```
 
 Go to `http://127.0.0.1:8000/schema/swagger` or `http://127.0.0.1:8000/schema/redoc` to see API schema.
