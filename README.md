@@ -45,8 +45,6 @@ Start-Process "http://127.0.0.1:8000/schema/redoc" ;
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
 ```
 
-Go to `http://127.0.0.1:8000/schema/swagger` or `http://127.0.0.1:8000/schema/redoc` to see API schema.
-
 
 ## Setup entire project from scratch (Windows PowerShell)
 
