@@ -16,33 +16,32 @@ def create_moc(dir_path: str, file_name: str, extension: UiExtensions) -> None:
     output_file = None
 
     if extension == UiExtensions.UI:
-        output_file = os.path.join(dir_path, f"""moc_{(os.path.splitext(file_name)[0])}.py""")
+        output_file = os.path.join(dir_path, f"moc_{os.path.splitext(file_name)[0]}.py")
     elif extension == UiExtensions.QRC:
-        output_file = os.path.join(dir_path, f"""{(os.path.splitext(file_name)[0])}_rc.py""")
+        output_file = os.path.join(dir_path, f"{os.path.splitext(file_name)[0]}_rc.py")
 
     if os.path.isfile(output_file):
         ui_file_modification_time = os.path.getmtime(input_file)
         moc_file_modification_time = os.path.getmtime(output_file)
         if moc_file_modification_time > ui_file_modification_time:
-            logger.info(f"Skipping mocking of file {input_file}, older than moc file")
+            logger.info("Skipping mocking of file %s, older than moc file", input_file)
             return
 
     try:
-        logger.info(f"Remove old moc file: {output_file}")
+        logger.info("Remove old moc file: %s", output_file)
         os.remove(output_file)
     except OSError:
         pass
 
-    command = None
 
     if extension == UiExtensions.UI:
-        command = f'pyside6-uic --from-imports "{input_file}"  -o  "{output_file}"'
+        command = ["pyside6-uic", "--from-imports", input_file, "-o", output_file]
     elif extension == UiExtensions.QRC:
-        command = f'pyside6-rcc "{input_file}"  -o  "{output_file}"'
+        command = ["pyside6-rcc", input_file, "-o", output_file]
 
-    logger.info(f"Mocking file {input_file}...")
+    logger.info("Mocking file %s...", input_file)
 
-    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     (output_bin, err_bin) = process.communicate(timeout=10)
     return_code = process.returncode
     if return_code != 0:
@@ -52,7 +51,7 @@ def create_moc(dir_path: str, file_name: str, extension: UiExtensions) -> None:
 
 
 def create_mocs() -> None:
-    for root, dirs, files in os.walk(os.path.dirname(os.path.abspath(__file__))):
+    for root, _dirs, files in os.walk(os.path.dirname(os.path.abspath(__file__))):
         for file in files:
             for extension in UiExtensions:
                 if file.endswith(extension):
