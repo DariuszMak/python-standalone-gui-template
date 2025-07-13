@@ -129,6 +129,16 @@ Run tests with coverage report:
 pytest test/ --cov=. ; 
 ```
 
+Run tests in Docker:
+```commandline
+docker-compose run app sh -c "uv sync --dev && uv run pytest test/ --cov=." ; 
+```
+
+Run Newman tests from saved collection (run application before execution):
+```commandline
+newman run collections\Python_GUI.postman_collection.json ; 
+```
+
 
 ## Edit `ui` forms with QT Designer:
 
@@ -172,30 +182,9 @@ uv run ruff check --fix --select I test\ src\ --exclude "moc_*.py,files_rc.py" ;
 
 ## Running Docker container service
 
-##### Build project
-```commandline
-docker-compose build ; 
-```
-
-##### Run app
-```commandline
-docker-compose run app ; 
-```
-
-##### Build before running
+##### Build and run
 ```commandline
 docker-compose run --build app ; 
-```
-
-##### Run tests in Docker
-```commandline
-
-docker-compose run app sh -c "uv sync --dev && uv run pytest test/ --cov=." ; 
-```
-
-##### Run Newman tests from saved collection (run application before execution)
-```commandline
-newman run collections\Python_GUI.postman_collection.json ; 
 ```
 
 ## GUI files specification
