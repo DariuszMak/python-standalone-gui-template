@@ -136,6 +136,8 @@ uv run pyqt6-tools designer src\ui\forms\warning_dialog.ui ;
 $env:PYTHONPATH="." ; 
 .venv\Scripts\Activate.ps1 ; 
 
+clear ; 
+
 uv run ruff check test\ src\ --exclude "moc_*.py,files_rc.py" ; 
 
 uv run ruff format test\ src\ --exclude "moc_*.py,files_rc.py" ; 
