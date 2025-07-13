@@ -89,7 +89,7 @@ def test_create_moc_error_when_create_qrc_contnent_for_ui(temp_dir: str, example
     with open(input_file, "w") as f:
         f.write(example_moc_content_qrc)
 
-    with pytest.raises(Exception):
+    with pytest.raises(Exception, match=r"Mocking UI file failed!.*example\.ui"):
         create_moc(temp_dir, "example.ui", UiExtensions.UI)
 
 
@@ -98,5 +98,5 @@ def test_create_moc_error_when_create_ui_content_for_qrc(temp_dir: str, example_
     with open(input_file, "w") as f:
         f.write(example_moc_content_ui)
 
-    with pytest.raises(Exception):
+    with pytest.raises(Exception, match=r"Mocking UI file failed!.*example\.ui"):
         create_moc(temp_dir, "example.ui", UiExtensions.QRC)
