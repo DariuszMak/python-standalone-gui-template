@@ -136,16 +136,16 @@ uv run pyqt6-tools designer src\ui\forms\warning_dialog.ui ;
 $env:PYTHONPATH="." ; 
 .venv\Scripts\Activate.ps1 ; 
 
-uv run ruff check ; 
+uv run ruff check test\ src\ --exclude "moc_*.py,files_rc.py" ; 
 
-uv run ruff format ; 
+uv run ruff format test\ src\ --exclude "moc_*.py,files_rc.py" ; 
 
-uv run ruff check --fix ; 
-uv run ruff check --fix --unsafe-fixes ; 
-uv run ruff check --fix --select I ; 
+uv run ruff check --fix test\ src\ --exclude "moc_*.py,files_rc.py" ; 
+uv run ruff check --fix --unsafe-fixes test\ src\ --exclude "moc_*.py,files_rc.py" ; 
+uv run ruff check --fix --select I test\ src\ --exclude "moc_*.py,files_rc.py" ; 
 
-uv run mypy --explicit-package-bases . ; 
-uv run mypy --explicit-package-bases --check-untyped-defs . ; 
+uv run mypy --explicit-package-bases test\ src\ --exclude "moc_*.py,files_rc.py" ; 
+# uv run mypy --explicit-package-bases --check-untyped-defs . ; 
 
 uv run pip-audit ; 
 ```
@@ -166,9 +166,9 @@ docker-compose run app ;
 ```commandline
 docker-compose run --build app ; 
 ```
-
 ##### Run tests in Docker
 ```commandline
+
 docker-compose run app sh -c "uv sync --dev && uv run pytest . --cov=." ; 
 ```
 
