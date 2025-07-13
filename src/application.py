@@ -12,8 +12,7 @@ def run() -> None:
     app = QApplication(sys.argv)
 
     pixmap = QPixmap(":/logos/icons/images/program_icon.ico").scaled(
-        64, 64,  Qt.AspectRatioMode.KeepAspectRatio,
-    Qt.TransformationMode.SmoothTransformation
+        64, 64, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation
     )
 
     splash = QSplashScreen(pixmap)
