@@ -40,13 +40,16 @@ def create_moc(dir_path: str, file_name: str, extension: UiExtensions) -> None:
         command = ["pyside6-rcc", input_file, "-o", output_file]
 
     logger.info("Mocking file %s...", input_file)
+    process = subprocess.run( # noqa: S603
+        command,
+        capture_output=True,
+        timeout=10,
+        text=True
+    ) 
 
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    (output_bin, err_bin) = process.communicate(timeout=10)
-    return_code = process.returncode
-    if return_code != 0:
+    if process.returncode != 0:
         raise Exception(
-            "Mocing ui file failed! (" + file_name + "). cout: " + str(output_bin) + ". cerr: " + str(err_bin)
+            f"Mocking UI file failed! ({file_name}). stdout: {process.stdout}, stderr: {process.stderr}"
         )
 
 
