@@ -32,8 +32,8 @@ uv sync --dev ;
 $env:PYTHONPATH="." ; 
 .venv\Scripts\Activate.ps1 ; 
 
-uv run ruff check test\ src\ --exclude "moc_*.py,files_rc.py" ; 
-uv run mypy --explicit-package-bases test\ src\ --exclude "moc_*.py,files_rc.py" ; 
+uv run ruff check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
+uv run mypy --explicit-package-bases test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
 
 uv run pip-audit ; 
 
@@ -156,9 +156,9 @@ $env:PYTHONPATH="." ;
 
 clear ; 
 
-uv run ruff check test\ src\ --exclude "moc_*.py,files_rc.py" ; 
+uv run ruff check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
 
-uv run mypy --explicit-package-bases test\ src\ --exclude "moc_*.py,files_rc.py" ; 
+uv run mypy --explicit-package-bases test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
 # uv run mypy --explicit-package-bases --check-untyped-defs . ; 
 
 uv run pip-audit ;  
@@ -173,11 +173,11 @@ $env:PYTHONPATH="." ;
 
 clear ; 
 
-uv run ruff format test\ src\ --exclude "moc_*.py,files_rc.py" ; 
+uv run ruff format test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
 
-uv run ruff check --fix test\ src\ --exclude "moc_*.py,files_rc.py" ; 
-uv run ruff check --fix --unsafe-fixes test\ src\ --exclude "moc_*.py,files_rc.py" ; 
-uv run ruff check --fix --select I test\ src\ --exclude "moc_*.py,files_rc.py" ; 
+uv run ruff check --fix test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
+uv run ruff check --fix --unsafe-fixes test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
+uv run ruff check --fix --select I test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
 ```
 
 ## Running Docker container service
