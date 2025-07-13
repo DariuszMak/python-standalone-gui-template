@@ -37,7 +37,7 @@ uv run mypy --explicit-package-bases test\ src\ --exclude "moc_*.py,files_rc.py"
 
 uv run pip-audit ; 
 
-pytest . --cov=. ; 
+pytest test/ --cov=. ; 
 
 uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
 
@@ -119,13 +119,13 @@ uv run pyinstaller --clean .\standalone_build\standalone_build.spec ;
 ## Run tests:
 
 ```commandline
-uv run pytest -vv ; 
+uv run pytest -vv test/ ; 
 ```
 
 Run tests with coverage report:
 
 ```commandline
-pytest . --cov=. ; 
+pytest test/ --cov=. ; 
 ```
 
 
@@ -185,10 +185,11 @@ docker-compose run app ;
 ```commandline
 docker-compose run --build app ; 
 ```
+
 ##### Run tests in Docker
 ```commandline
 
-docker-compose run app sh -c "uv sync --dev && uv run pytest . --cov=." ; 
+docker-compose run app sh -c "uv sync --dev && uv run pytest test/ --cov=." ; 
 ```
 
 ##### Run Newman tests from saved collection (run application before execution)
