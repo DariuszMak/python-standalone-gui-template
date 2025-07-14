@@ -1,5 +1,7 @@
 from litestar.testing import TestClient
+
 from src.api.app import app
+
 
 def test_ping_route():
     with TestClient(app) as client:
