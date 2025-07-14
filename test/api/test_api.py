@@ -10,6 +10,13 @@ def test_ping_route():
         assert response.json() == {"message": "pong"}
 
 
+def test_redoc_available():
+    with TestClient(app) as client:
+        resp = client.get("/schema/redoc")
+        assert resp.status_code == 200
+        assert "html" in resp.headers["content-type"]
+
+
 def test_swagger_ui_available():
     with TestClient(app) as client:
         resp = client.get("/schema/swagger")
