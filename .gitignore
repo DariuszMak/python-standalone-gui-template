@@ -19,6 +19,7 @@ parts/
 sdist/
 var/
 wheels/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -41,6 +42,7 @@ dmypy.json
 
 # Unit test / coverage reports
 htmlcov/
+.nox/
 .tox/
 .coverage
 .coverage.*
@@ -49,13 +51,29 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *.cover
+*,cover
+*.py,cover
 .hypothesis/
 
 # Translations
 *.mo
 *.pot
 
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
 # PyBuilder
+.pybuilder/
 target/
 
 # Jupyter Notebook
@@ -72,8 +90,8 @@ ipython_config.py
 __pypackages__/
 
 # Environment
-.env
-.venv
+.env/
+.venv/
 env/
 venv/
 ENV/
@@ -81,6 +99,12 @@ Pipfile
 
 # UV
 uv.lock
+
+# SSL Certs
+.ca
+
+# Task
+.task
 
 # If you are using PyCharm #
 .idea/
