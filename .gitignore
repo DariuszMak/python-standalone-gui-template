@@ -79,6 +79,9 @@ venv/
 ENV/
 Pipfile
 
+# UV
+uv.lock
+
 # If you are using PyCharm #
 .idea/
 .idea/**/workspace.xml
@@ -119,6 +122,3 @@ GitHub.sublime-settings
 !.vscode/launch.json
 !.vscode/extensions.json
 .history
-
-# UV
-uv.lock
