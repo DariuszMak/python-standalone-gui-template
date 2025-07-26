@@ -27,7 +27,7 @@ docker-compose run --build app ;
 
 uv python install 3.11 ; 
 uv python pin 3.11 ; 
-uv sync --dev ; 
+uv sync --dev --no-cache ; 
 
 $env:PYTHONPATH="." ; 
 .venv\Scripts\Activate.ps1 ; 
@@ -49,6 +49,8 @@ Start-Sleep -Seconds 10 ;
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
 newman run collections\Python_GUI.postman_collection.json --bail ; 
+
+uv sync --dev --locked --no-cache ; 
 ```
 
 
