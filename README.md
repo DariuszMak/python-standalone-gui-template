@@ -40,6 +40,8 @@ uv run mypy --explicit-package-bases test\ src\ --exclude 'moc_.*\.py|files_rc\.
 pytest test/ --cov=. ; 
 docker-compose run app sh -c "uv sync --dev && uv run pytest test/ --cov=." ; 
 
+uv sync --no-dev --locked --no-cache ; 
+
 uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
 
 Start-Process ".\dist\GUI_client.exe" ; 
