@@ -5,8 +5,8 @@ from pathlib import Path
 
 block_cipher = None
 
-# Base path to resolve relative paths
-base_path = Path(__file__).resolve().parent.parent
+# Workaround since __file__ is not defined in .spec context
+base_path = Path(os.path.abspath(".")).resolve()
 
 a = Analysis(
     [str(base_path / 'src' / 'main.py')],
@@ -43,7 +43,7 @@ exe = EXE(
     upx_exclude=[],
     runtime_tmpdir=None,
     console=True,
-    icon=None  # Icons are not supported on Linux; you can remove or set to None
+    icon=None  # Skip icon for Linux
 )
 
 coll = COLLECT(
