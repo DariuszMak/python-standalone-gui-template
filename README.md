@@ -45,6 +45,8 @@ uv sync --no-dev --locked --no-cache ;
 
 docker-compose run --rm app sh -c "uv sync --dev --locked --no-cache && uv run pyinstaller --clean ./standalone_build/standalone_build_linux.spec && cp -r dist/* linux_distribution/"
 
+wsl bash -c './linux_distribution/GUI_client'
+
 uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
 
 Start-Process ".\dist\GUI_client.exe" ; 
