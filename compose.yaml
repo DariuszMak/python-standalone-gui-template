@@ -1,7 +1,9 @@
+version: '3.8'
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     volumes:
       - .:/app
+      - ./linux_distribution:/app/linux_distribution
+    working_dir: /app
+    entrypoint: ""
