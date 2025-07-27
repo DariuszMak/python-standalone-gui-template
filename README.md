@@ -56,7 +56,7 @@ newman run collections\Python_GUI.postman_collection.json --bail ;
 
 uv sync --dev --locked --no-cache ; 
 
-wsl bash -c './linux_distribution/GUI_client'
+Start-Process wsl -ArgumentList 'bash', '-c', 'export DISPLAY=$(grep nameserver /etc/resolv.conf | awk "{print $2}"):0 && ./linux_distribution/GUI_client'
 ```
 
 
