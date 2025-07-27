@@ -57,7 +57,7 @@ Start-Process wsl -ArgumentList 'bash', '-c', 'export DISPLAY=$(grep nameserver 
 Start-Sleep -Seconds 10 ; 
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
-newman run collections\Python_GUI.postman_collection.json --bail ; 
+newman run collections\Python_GUI.postman_collection_linux.json --bail ; 
 
 uv sync --dev --locked --no-cache ; 
 ```
