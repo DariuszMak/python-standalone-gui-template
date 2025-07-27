@@ -27,7 +27,8 @@ RUN apt update \
 && apt install -y sudo \
 && pip install uv
 
-COPY . ./app/
+COPY pyproject.toml /app/
+COPY uv.lock /app/
 
 ARG UID=10001
 RUN adduser \
