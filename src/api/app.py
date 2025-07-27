@@ -12,9 +12,10 @@ app = Litestar(route_handlers=[ping], openapi_config=openapi_config)
 
 
 def run_api() -> None:
-    port = 8000 if os.name == "nt" else 8001
+    port = int(os.getenv("API_PORT", "8000"))  # fallback to 8000 if not set
+    host = os.getenv("API_HOST", "127.0.0.1")
 
-    config = uvicorn.Config(app, host="127.0.0.1", port=port, log_level="info")
+    config = uvicorn.Config(app, host=host, port=port, log_level="info")
     server = uvicorn.Server(config)
     server.run()
 
