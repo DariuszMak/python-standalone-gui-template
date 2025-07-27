@@ -23,8 +23,8 @@ WORKDIR /app
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
-RUN apt update \
-&& apt install -y sudo \
+RUN apt-get update \
+&& apt-get install -y sudo \
 && pip install uv
 
 COPY pyproject.toml /app/
@@ -47,13 +47,14 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
 # Leverage a bind mount to requirements.txt to avoid having to copy them into
 # into this layer.
-RUN apt update && apt install -y \
+RUN apt-get update && apt-get install -y \
 libgl1-mesa-glx \
 libxkbcommon-x11-0 \
 libgl1-mesa-dev \
 libglib2.0-0 \
 libfontconfig \
-libdbus-1-3
+libdbus-1-3 \
+binutils
 
 USER appuser
 
