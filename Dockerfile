@@ -3,21 +3,11 @@
 ARG PYTHON_VERSION=3.11.13
 FROM python:${PYTHON_VERSION}-slim
 
-ENV PYTHONPATH="${PYTHONPATH}:/app"
-# Prevents Python from writing pyc files.
-ENV PYTHONDONTWRITEBYTECODE=1
-
-# Keeps Python from buffering stdout and stderr to avoid situations where
-# the application crashes without emitting any logs due to buffering.
-ENV PYTHONUNBUFFERED=1
-
-ENV DOCKER_RUNTIME=1
-
-ENV QT_QPA_PLATFORM=minimal
-
-ENV UV_PROJECT_ENVIRONMENT="/venv"
-
-ENV UV_CACHE_DIR="/tmp/uv-cache"
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH=/app \
+    DOCKER_RUNTIME=1 \
+    QT_QPA_PLATFORM=minimal
 
 WORKDIR /app
 
