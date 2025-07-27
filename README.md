@@ -53,16 +53,16 @@ docker-compose run --rm app sh -c "uv sync --dev --locked --no-cache && uv run p
 uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
 
 Start-Process ".\dist\GUI_client.exe" ; 
-Start-Sleep -Seconds 10 ; 
+Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
-newman run Python_GUI.postman_collection.json --environment Windows.postman_environment.json --bail
+newman run collections\Python_GUI.postman_collection.json --environment collections\Windows.postman_environment.json --bail
 
 Start-Process wsl -ArgumentList 'bash', '-c', 'export DISPLAY=$(grep nameserver /etc/resolv.conf | awk "{print $2}"):0 && ./linux_distribution/GUI_client'
-Start-Sleep -Seconds 10 ; 
+Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
-newman run Python_GUI.postman_collection.json --environment Linux.postman_environment.json --bail
+newman run collections\Python_GUI.postman_collection.json --environment collections\Linux.postman_environment.json --bail
 
 uv sync --dev --locked --no-cache ; 
 ```
