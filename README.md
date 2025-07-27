@@ -45,21 +45,24 @@ uv run ruff check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ;
 uv run ruff format --check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
 uv run mypy --explicit-package-bases test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
 
+
 pytest test/ --cov=. ; 
+docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest test/ --cov=." ; 
+
 
 uv sync --no-dev --locked --no-cache ; 
+
+
+docker-compose run --rm app sh -c "uv sync --dev --locked --no-cache && uv run pyinstaller --clean ./standalone_build/standalone_build_linux.spec && cp -r dist/* linux_distribution/"
+
 uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
+
 
 Start-Process "cmd.exe" -ArgumentList '/c', 'set API_PORT=8000 && set API_HOST=127.0.0.1 && .\dist\GUI_client.exe'
 Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
 newman run collections\Python_GUI.postman_collection.json --environment collections\Windows.postman_environment.json --bail
-
-
-docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest test/ --cov=." ; 
-
-docker-compose run --rm app sh -c "uv sync --dev --locked --no-cache && uv run pyinstaller --clean ./standalone_build/standalone_build_linux.spec && cp -r dist/* linux_distribution/"
 
 Start-Process wsl -ArgumentList @(
     'bash', '-c',
@@ -72,6 +75,7 @@ Start-Sleep -Seconds 12 ;
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
 newman run collections\Python_GUI.postman_collection.json --environment collections\Linux.postman_environment.json --bail
+
 
 uv sync --dev --locked --no-cache ; 
 ```
