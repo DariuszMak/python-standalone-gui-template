@@ -52,7 +52,7 @@ docker-compose run --rm app sh -c "uv sync --dev --locked --no-cache && uv run p
 
 uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
 
-Start-Process "cmd.exe" -ArgumentList '/c', 'set API_PORT=8080 && set API_HOST=0.0.0.1 && .\dist\GUI_client.exe'
+Start-Process "cmd.exe" -ArgumentList '/c', 'set API_PORT=8080 && set API_HOST=127.0.0.1 && .\dist\GUI_client.exe'
 Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
@@ -62,7 +62,7 @@ Start-Process wsl -ArgumentList @(
     'bash', '-c',
     'export DISPLAY=$(grep nameserver /etc/resolv.conf | awk "{print \$2}"):0 && \
      export API_PORT=8001 && \
-     export API_HOST=0.0.0.1 && \
+     export API_HOST=127.0.0.1 && \
      ./linux_distribution/GUI_client'
 )
 Start-Sleep -Seconds 12 ; 
