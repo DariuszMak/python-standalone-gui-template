@@ -58,7 +58,9 @@ docker-compose run --rm app sh -c "uv sync --dev --locked --no-cache && uv run p
 uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
 
 
-Start-Process "cmd.exe" -ArgumentList '/c', 'set API_PORT=8000 && set API_HOST=127.0.0.1 && .\dist\GUI_client.exe'
+$env:API_PORT="8000"
+$env:API_HOST="127.0.0.1"
+Start-Process .\dist\GUI_client.exe
 Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
