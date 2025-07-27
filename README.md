@@ -43,6 +43,8 @@ docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest
 
 uv sync --no-dev --locked --no-cache ; 
 
+docker-compose run --rm app sh -c "uv sync --dev --locked --no-cache && uv run pyinstaller --clean ./standalone_build/standalone_build_linux.spec && cp -r dist/* linux_distribution/"
+
 uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
 
 Start-Process ".\dist\GUI_client.exe" ; 
@@ -50,8 +52,6 @@ Start-Sleep -Seconds 10 ;
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
 newman run collections\Python_GUI.postman_collection.json --bail ; 
-
-docker-compose run --rm app sh -c "uv sync --dev --locked --no-cache && uv run pyinstaller --clean ./standalone_build/standalone_build_linux.spec && cp -r dist/* linux_distribution/"
 
 uv sync --dev --locked --no-cache ; 
 ```
