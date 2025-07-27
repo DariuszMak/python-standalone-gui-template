@@ -43,7 +43,7 @@ exe = EXE(
     upx_exclude=[],
     runtime_tmpdir=None,
     console=True,
-    icon=None  # Skip icon for Linux
+    icon=str(base_path / 'src' / 'ui' / 'forms' / 'icons' / 'images' / 'program_icon.ico'),
 )
 
 coll = COLLECT(
@@ -51,6 +51,7 @@ coll = COLLECT(
     a.binaries,
     a.zipfiles,
     a.datas,
+#    splash.binaries,
     strip=False,
     upx=True,
     upx_exclude=[],
