@@ -1,5 +1,6 @@
 moc_*.py
 files_rc.py
+linux_distribution
 
 __pycache__
 *.py[cod]
