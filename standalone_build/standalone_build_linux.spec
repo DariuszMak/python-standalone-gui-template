@@ -54,5 +54,6 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='GUI_client'
+    name='GUI_client_dist'
 )
+
