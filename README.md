@@ -20,6 +20,7 @@ git clean -x -d -f ;
 uv python install 3.11 ; 
 uv python pin 3.11 ; 
 uv sync --dev --no-cache ; 
+uv lock ; 
 
 docker system df ; 
 docker stop $(docker ps -a -q) ; 
@@ -38,7 +39,7 @@ uv run ruff format --check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ;
 uv run mypy --explicit-package-bases test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
 
 pytest test/ --cov=. ; 
-docker-compose run app sh -c "uv sync --dev && uv run pytest test/ --cov=." ; 
+docker-compose run app sh -c "uv sync --dev --locked --no-cache  && uv run pytest test/ --cov=." ; 
 
 uv sync --no-dev --locked --no-cache ; 
 
@@ -86,7 +87,8 @@ docker-compose run --build app ;
 
 ```commandline 
 uv python pin 3.11 ; 
-uv sync --dev ; 
+uv sync --dev --no-cache ; 
+uv lock ; 
 ```
 
 ##### Docker should compile ```ui``` files, but as an alternative you can do it manually
@@ -132,7 +134,7 @@ pytest test/ --cov=. ;
 
 Run tests in Docker:
 ```commandline
-docker-compose run app sh -c "uv sync --dev && uv run pytest test/ --cov=." ; 
+docker-compose run app sh -c "uv sync --dev --locked --no-cache  && uv run pytest test/ --cov=." ; 
 ```
 
 Run Newman tests from saved collection (run application before execution):
