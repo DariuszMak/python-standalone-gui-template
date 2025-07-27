@@ -7,7 +7,9 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONPATH=/app \
     DOCKER_RUNTIME=1 \
-    QT_QPA_PLATFORM=minimal
+    QT_QPA_PLATFORM=minimal \
+    UV_PROJECT_ENVIRONMENT="/venv" \
+    UV_CACHE_DIR="/tmp/uv-cache"
 
 WORKDIR /app
 
