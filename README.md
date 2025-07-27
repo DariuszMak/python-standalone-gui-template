@@ -54,9 +54,13 @@ Start-Process "http://127.0.0.1:8000/schema/redoc" ;
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
 newman run collections\Python_GUI.postman_collection.json --bail ; 
 
-uv sync --dev --locked --no-cache ; 
-
 Start-Process wsl -ArgumentList 'bash', '-c', 'export DISPLAY=$(grep nameserver /etc/resolv.conf | awk "{print $2}"):0 && ./linux_distribution/GUI_client'
+Start-Sleep -Seconds 10 ; 
+Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
+Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
+newman run collections\Python_GUI.postman_collection.json --bail ; 
+
+uv sync --dev --locked --no-cache ; 
 ```
 
 
