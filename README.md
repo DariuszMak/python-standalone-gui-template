@@ -29,7 +29,7 @@
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
 
-## Setup project from scratch (PowerShell):
+## Setup project from scratch (Windows PowerShell):
 
 ```commandline
 deactivate ; 
@@ -105,7 +105,7 @@ uv sync --dev --locked --no-cache ;
 ```
 
 
-## Setup entire project from scratch (Windows PowerShell)
+## Particular code blocks
 
 Make sure, that everything is committed or stashed and (optionally):
 
