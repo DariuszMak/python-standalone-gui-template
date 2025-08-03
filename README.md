@@ -1,6 +1,9 @@
 # Python Standalone GUI template
 
+### On Windows:
 [![Preview Image](images/Windows_runtime_screenshot.png)](https://github.com/DariuszMak/python-standalone-gui-template/releases/download/0.7.0/GUI_client.exe)
+
+### On Linux:
 [![Preview Image](images/Linux_runtime_screenshot.png)](https://github.com/DariuszMak/python-standalone-gui-template/releases/download/0.7.0/GUI_client)
 
 ## Requirements
