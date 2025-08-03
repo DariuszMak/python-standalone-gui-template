@@ -57,6 +57,7 @@ docker-compose run --rm app sh -c "uv sync --dev --locked --no-cache && uv run p
 
 uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
 
+#####
 
 $env:API_PORT="8000"
 $env:API_HOST="127.0.0.1"
@@ -73,7 +74,7 @@ Start-Process wsl -ArgumentList @(
      export API_HOST=127.0.0.1 && \
      ./linux_distribution/GUI_client'
 )
-Start-Sleep -Seconds 12 ; 
+Start-Sleep -Seconds 20 ; 
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
 newman run collections\Python_GUI.postman_collection.json --environment collections\Linux.postman_environment.json --bail
