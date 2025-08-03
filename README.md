@@ -4,9 +4,9 @@
 
 <table>
   <tr>
-    <th style="text-align: center;">Windows</th>
+    <th style="text-align: center;">Windows (click on image):</th>
     <th style="width: 100px;"></th>
-    <th style="text-align: center;">Linux</th>
+    <th style="text-align: center;">Linux (click on image):</th>
   </tr>
   <tr>
     <td align="center">
