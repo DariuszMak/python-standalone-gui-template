@@ -67,7 +67,7 @@ uv run ruff format --check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ;
 uv run mypy --explicit-package-bases test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
 
 
-pytest test/ --cov=. ; 
+pytest test/ --cov=. -vv ; 
 docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest test/ --cov=." ; 
 
 
@@ -173,18 +173,18 @@ uv run pyinstaller --clean .\standalone_build\standalone_build.spec ;
 ## Run tests:
 
 ```commandline
-uv run pytest -vv test/ ; 
+uv run pytest test/ -vv ; 
 ```
 
 Run tests with coverage report:
 
 ```commandline
-pytest test/ --cov=. ; 
+pytest test/ --cov=. -vv ; 
 ```
 
 Run tests in Docker:
 ```commandline
-docker-compose run app sh -c "uv sync --dev --locked --no-cache  && uv run pytest test/ --cov=." ; 
+docker-compose run app sh -c "uv sync --dev --locked --no-cache  && uv run pytest test/ --cov=. -vv" ; 
 ```
 
 Run Newman tests from saved collection (run application before execution):
