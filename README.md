@@ -38,6 +38,7 @@ clear ;
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
 
+
 uv python install 3.11 ; 
 uv python pin 3.11 ; 
 uv sync --dev --no-cache ; 
@@ -70,13 +71,13 @@ uv run mypy --explicit-package-bases test\ src\ --exclude 'moc_.*\.py|files_rc\.
 pytest test/ --cov=. -vv ; 
 docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest test/ --cov=." ; 
 
-
 uv sync --no-dev --locked --no-cache ; 
 
 
 docker-compose run --rm app sh -c "uv sync --dev --locked --no-cache && uv run pyinstaller --clean ./standalone_build/standalone_build_linux.spec && cp -r dist/* linux_distribution/"
 
 uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
+
 
 ##### RUN APPLICATIONS:
 
@@ -87,6 +88,7 @@ Start-Sleep -Seconds 12 ;
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
 newman run collections\Python_GUI.postman_collection.json --environment collections\Windows.postman_environment.json --bail
+
 
 Start-Process wsl -ArgumentList @(
     'bash', '-c',
