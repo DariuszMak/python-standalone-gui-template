@@ -105,7 +105,7 @@ uv sync --dev --locked --no-cache ;
 ```
 
 
-## Particular code blocks
+## Particular code snippets
 
 Make sure, that everything is committed or stashed and (optionally):
 
