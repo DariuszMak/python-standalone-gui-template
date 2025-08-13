@@ -79,7 +79,7 @@ docker-compose run --rm app sh -c "uv sync --dev --locked --no-cache && uv run p
 uv run pyinstaller --clean .\standalone_build\standalone_build.spec ; 
 
 
-##### RUN APPLICATIONS:
+##### RUN APPLICATIONS LOCALLY
 
 $env:API_PORT="8000"
 $env:API_HOST="127.0.0.1"
