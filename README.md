@@ -58,7 +58,7 @@ uv run mypy --explicit-package-bases test\ src\ --exclude 'moc_.*\.py|files_rc\.
 
 pytest test/ --cov=. -vv ; 
 
-##### RUN APPLICATIONS LOCALLY
+##### RUN APPLICATION LOCALLY
 
 $env:API_PORT="8000"
 $env:API_HOST="127.0.0.1"
