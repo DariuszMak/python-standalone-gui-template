@@ -60,8 +60,10 @@ pytest test/ --cov=. -vv ;
 
 ##### RUN APPLICATIONS LOCALLY
 
+$env:API_PORT="8000"
+$env:API_HOST="127.0.0.1"
 uv run python src\gui_setup.py ; 
-uv run python src\main.py ; 
+Start-Process src\main.py
 Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
