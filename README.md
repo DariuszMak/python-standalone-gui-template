@@ -29,6 +29,46 @@
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
 
+## Local development (Windows PowerShell):
+
+```commandline
+deactivate ; 
+clear ; 
+
+git reset --hard HEAD ; 
+git clean -x -d -f ; 
+
+uv python install 3.11 ; 
+uv python pin 3.11 ; 
+uv sync --dev --no-cache ; 
+uv lock ; 
+
+$env:PYTHONPATH="." ; 
+.venv\Scripts\Activate.ps1 ; 
+
+uv run ruff format test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
+uv run ruff check --fix test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
+uv run ruff check --fix --unsafe-fixes test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
+uv run ruff check --fix --select I test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
+
+uv run pip-audit ; 
+uv run ruff check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
+uv run ruff format --check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
+uv run mypy --explicit-package-bases test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
+
+pytest test/ --cov=. -vv ; 
+
+##### RUN APPLICATIONS LOCALLY
+
+uv run python src\gui_setup.py ; 
+uv run python src\main.py ; 
+Start-Sleep -Seconds 12 ; 
+Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
+Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
+newman run collections\Python_GUI.postman_collection.json --environment collections\Windows.postman_environment.json --bail
+```
+
+
 ## Setup project from scratch (Windows PowerShell):
 
 ```commandline
