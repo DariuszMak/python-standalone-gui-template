@@ -43,7 +43,7 @@ RUN apt-get update && apt-get install -y \
 libgl1-mesa-dev \
 libxkbcommon-x11-0 \
 libgl1-mesa-dev \
-libglib2.0-0 \
+libglib2.0-0t64 \
 libfontconfig \
 libdbus-1-3 \
 binutils \
