@@ -73,7 +73,7 @@ newman run collections\Python_GUI.postman_collection.json --environment collecti
 ```
 
 
-## Setup project from scratch (Windows PowerShell):
+## Setup project from scratch for Windows and Linux enviroment (Windows PowerShell):
 
 ```commandline
 deactivate ; 
