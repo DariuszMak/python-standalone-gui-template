@@ -43,6 +43,8 @@ uv python pin 3.11 ;
 uv sync --dev --no-cache ; 
 uv lock ; 
 
+##### STATIC ANALYSIS & TESTS
+
 $env:PYTHONPATH="." ; 
 .venv\Scripts\Activate.ps1 ; 
 
