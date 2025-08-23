@@ -52,15 +52,7 @@ uv lock ;
 $env:PYTHONPATH="." ; 
 .venv\Scripts\Activate.ps1 ; 
 
-uv run ruff format test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run ruff check --fix test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run ruff check --fix --unsafe-fixes test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run ruff check --fix --select I test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-
-uv run pip-audit ; 
-uv run ruff check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run ruff format --check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run mypy --explicit-package-bases test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
+.\scripts\format_and_lint.ps1 ; 
 
 pytest test/ --cov=. -vv ; 
 
@@ -105,16 +97,7 @@ docker-compose run --build app ;
 $env:PYTHONPATH="." ; 
 .venv\Scripts\Activate.ps1 ; 
 
-uv run ruff format test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run ruff check --fix test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run ruff check --fix --unsafe-fixes test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run ruff check --fix --select I test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-
-uv run pip-audit ; 
-uv run ruff check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run ruff format --check test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run mypy --explicit-package-bases test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ; 
-
+.\scripts\format_and_lint.ps1 ; 
 
 pytest test/ --cov=. -vv ; 
 docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest test/ --cov=." ; 
