@@ -33,7 +33,7 @@
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
 
-## Native Windows development:
+## Fast native Windows development:
 
 ```commandline
 deactivate ; 
