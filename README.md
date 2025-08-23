@@ -124,7 +124,7 @@ newman run collections\Python_GUI.postman_collection.json --environment collecti
 Start-Process wsl -ArgumentList @(
     'bash', '-c',
     'export DISPLAY=$(grep nameserver /etc/resolv.conf | awk "{print \$2}"):0 && \
-     export QT_QPA_PLATFORM=xcb && \
+     export QT_QPA_PLATFORM=wayland && \
      export API_PORT=8001 && \
      export API_HOST=127.0.0.1 && \
      ./linux_distribution/GUI_client'
