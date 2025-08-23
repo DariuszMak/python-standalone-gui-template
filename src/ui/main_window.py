@@ -18,8 +18,14 @@ class MainWindow(QMainWindow):
         StyleLoader.style_window(self)
         self.ui.pushButton.setText("Click to open dialog window")
         self.ui.pushButton.clicked.connect(self.show_warning_dialog)
+
+        self.ui.btn_minimize.clicked.connect(self.minimize_window)
+        self.ui.btn_maximize_restore.clicked.connect(self.maximize_restore_window)
+        self.ui.btn_close.clicked.connect(self.close_window)
+
         self._drag_active: bool = False
         self._drag_position: QPoint = QPoint()
+        self._is_maximized: bool = False
 
     def show_warning_dialog(self) -> None:
         dlg = WarningDialog(self)
@@ -30,6 +36,20 @@ class MainWindow(QMainWindow):
             logger.info("Accepted")
         else:
             logger.info("Cancelled")
+
+    def minimize_window(self) -> None:
+        self.showMinimized()
+
+    def maximize_restore_window(self) -> None:
+        if self._is_maximized:
+            self.showNormal()
+            self._is_maximized = False
+        else:
+            self.showMaximized()
+            self._is_maximized = True
+
+    def close_window(self) -> None:
+        self.close()
 
     def mousePressEvent(self, event) -> None:  # noqa: N802
         if event.button() == Qt.MouseButton.LeftButton:
