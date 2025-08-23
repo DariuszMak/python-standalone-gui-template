@@ -31,6 +31,10 @@
 
 ## Local development (Windows PowerShell):
 
+You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
+
+## Native Windows development:
+
 ```commandline
 deactivate ; 
 clear ; 
@@ -73,7 +77,7 @@ newman run collections\Python_GUI.postman_collection.json --environment collecti
 ```
 
 
-## Setup project from scratch for Windows and Linux enviroment (Windows PowerShell):
+## Thorough setup from scratch for Windows and Linux enviroment:
 
 ```commandline
 deactivate ; 
