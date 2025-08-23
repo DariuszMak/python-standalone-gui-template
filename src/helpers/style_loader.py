@@ -1,6 +1,6 @@
 import os
 
-from PySide6.QtCore import QSize
+from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QWidget
 
@@ -14,6 +14,7 @@ class StyleLoader:
     def style_window(window: QWidget) -> None:
         StyleLoader.setup_stylesheets(window)
         StyleLoader.set_main_program_icon(window)
+        window.setWindowFlags(Qt.WindowType.FramelessWindowHint)
 
     @staticmethod
     def set_main_program_icon(window: QWidget) -> None:
