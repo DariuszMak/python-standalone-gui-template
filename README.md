@@ -122,9 +122,9 @@ docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest
 uv sync --no-dev --locked --no-cache ; 
 
 
-docker-compose run --rm --remove-orphans app sh -c "uv sync --dev --locked --no-cache && uv run pyinstaller --clean ./standalone_build/standalone_build_linux.spec && cp -r dist/* linux_distribution/"
+docker-compose run --rm --remove-orphans app sh -c "uv sync --dev --locked --no-cache && uv run pyinstaller --clean ./scripts/standalone_build_linux.spec && cp -r dist/* linux_distribution/"
 
-uv run pyinstaller --clean .\standalone_build\standalone_build_windows.spec ; 
+uv run pyinstaller --clean .\scripts\standalone_build_windows.spec ; 
 
 
 ##### RUN APPLICATIONS LOCALLY
@@ -216,7 +216,7 @@ In order to generate executable application, run:
 $env:PYTHONPATH="." ; 
 .venv\Scripts\Activate.ps1 ; 
 
-uv run pyinstaller --clean .\standalone_build\standalone_build_windows.spec ; 
+uv run pyinstaller --clean .\scripts\standalone_build_windows.spec ; 
 ```
 
 
