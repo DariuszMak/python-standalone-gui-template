@@ -46,7 +46,10 @@ libgl1-mesa-dev \
 libglib2.0-0 \
 libfontconfig \
 libdbus-1-3 \
-binutils
+binutils \
+libgssapi-krb5-2 \
+libssl-dev \
+libqt5network5
 
 USER appuser
 
