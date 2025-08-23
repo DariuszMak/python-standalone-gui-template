@@ -51,7 +51,6 @@ class MainWindow(QMainWindow):
     def close_window(self) -> None:
         self.close()
 
-
 def mousePressEvent(self, event) -> None:  # noqa: N802
     if event.button() == Qt.MouseButton.LeftButton and not self._is_maximized:
         if self.windowHandle() is not None and self.windowHandle().startSystemMove(event):
@@ -61,14 +60,13 @@ def mousePressEvent(self, event) -> None:  # noqa: N802
         self._drag_position = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
         event.accept()
 
-
 def mouseMoveEvent(self, event) -> None:  # noqa: N802
     if self._drag_active and event.buttons() & Qt.MouseButton.LeftButton:
         self.move(event.globalPosition().toPoint() - self._drag_position)
         event.accept()
 
-
 def mouseReleaseEvent(self, event) -> None:  # noqa: N802
     if event.button() == Qt.MouseButton.LeftButton:
         self._drag_active = False
         event.accept()
+
