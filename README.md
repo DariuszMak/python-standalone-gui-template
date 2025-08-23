@@ -60,6 +60,7 @@ pytest test/ --cov=. -vv ;
 
 $env:API_PORT="8000"
 $env:API_HOST="127.0.0.1"
+$env:QT_QPA_PLATFORM="wayland"
 uv run python src\gui_setup.py ; 
 Start-Process src\main.py
 Start-Sleep -Seconds 12 ; 
@@ -114,6 +115,7 @@ uv run pyinstaller --clean .\scripts\standalone_build_windows.spec ;
 
 $env:API_PORT="8000"
 $env:API_HOST="127.0.0.1"
+$env:QT_QPA_PLATFORM="wayland"
 Start-Process .\dist\GUI_client.exe
 Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
