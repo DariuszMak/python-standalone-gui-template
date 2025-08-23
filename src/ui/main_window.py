@@ -1,5 +1,6 @@
 import logging
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMainWindow
 
 from src.helpers.style_loader import StyleLoader
@@ -27,3 +28,22 @@ class MainWindow(QMainWindow):
             logger.info("Accepted")
         else:
             logger.info("Cancelled")
+
+
+def mousePressEvent(self, event) -> None:  # noqa: N802
+    if event.button() == Qt.MouseButton.LeftButton:
+        self._drag_active = True
+        self._drag_position = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
+        event.accept()
+
+
+def mouseMoveEvent(self, event) -> None:  # noqa: N802
+    if self._drag_active and event.buttons() & Qt.MouseButton.LeftButton:
+        self.move(event.globalPosition().toPoint() - self._drag_position)
+        event.accept()
+
+
+def mouseReleaseEvent(self, event) -> None:  # noqa: N802
+    if event.button() == Qt.MouseButton.LeftButton:
+        self._drag_active = False
+        event.accept()
