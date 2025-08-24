@@ -39,7 +39,18 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 deactivate ; 
 clear ; 
 
-taskkill /PID (Get-NetTCPConnection -LocalPort 8000).OwningProcess /F
+$ports = 8000
+
+foreach ($port in $ports) {
+    $conn = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
+    if ($conn) {
+        $pid = $conn.OwningProcess
+        Write-Host "Port $port is used by PID $pid. Killing..."
+        Stop-Process -Id $pid -Force
+    } else {
+        Write-Host "No process is using port $port."
+    }
+}
 
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
@@ -77,8 +88,18 @@ newman run collections\Python_GUI.postman_collection.json --environment collecti
 deactivate ; 
 clear ; 
 
-taskkill /PID (Get-NetTCPConnection -LocalPort 8000).OwningProcess /F
-taskkill /PID (Get-NetTCPConnection -LocalPort 8001).OwningProcess /F
+$ports = 8000, 8001
+
+foreach ($port in $ports) {
+    $conn = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
+    if ($conn) {
+        $pid = $conn.OwningProcess
+        Write-Host "Port $port is used by PID $pid. Killing..."
+        Stop-Process -Id $pid -Force
+    } else {
+        Write-Host "No process is using port $port."
+    }
+}
 
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
