@@ -40,5 +40,5 @@ class WarningDialog(DraggableDialog):
         super().changeEvent(event)
 
     def closeEvent(self, event: QCloseEvent) -> None:
-        logger.info("Closing main window...")
+        logger.info("Closing dialog window...")
         super().closeEvent(event)
