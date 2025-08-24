@@ -1,6 +1,5 @@
 import logging
 
-from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import QMainWindow
 
 from src.helpers.style_loader import StyleLoader
@@ -49,4 +48,3 @@ class MainWindow(QMainWindow, DraggableMixin):
 
     def close_window(self) -> None:
         self.close()
-
