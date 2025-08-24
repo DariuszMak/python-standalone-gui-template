@@ -40,7 +40,6 @@ deactivate ;
 clear ; 
 
 taskkill /PID (Get-NetTCPConnection -LocalPort 8000).OwningProcess /F
-taskkill /PID (Get-NetTCPConnection -LocalPort 8001).OwningProcess /F
 
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
@@ -79,7 +78,7 @@ deactivate ;
 clear ; 
 
 taskkill /PID (Get-NetTCPConnection -LocalPort 8000).OwningProcess /F
-
+taskkill /PID (Get-NetTCPConnection -LocalPort 8001).OwningProcess /F
 
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
