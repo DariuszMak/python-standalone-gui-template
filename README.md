@@ -39,6 +39,9 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 deactivate ; 
 clear ; 
 
+taskkill /PID (Get-NetTCPConnection -LocalPort 8000).OwningProcess /F
+taskkill /PID (Get-NetTCPConnection -LocalPort 8001).OwningProcess /F
+
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
 
@@ -74,6 +77,9 @@ newman run collections\Python_GUI.postman_collection.json --environment collecti
 ```commandline
 deactivate ; 
 clear ; 
+
+taskkill /PID (Get-NetTCPConnection -LocalPort 8000).OwningProcess /F
+
 
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
