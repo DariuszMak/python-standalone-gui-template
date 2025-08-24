@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 class MainWindow(QMainWindow, DraggableMixin):
     def __init__(self) -> None:
         super().__init__()
+        DraggableMixin.__init__(self)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         StyleLoader.style_window(self)
