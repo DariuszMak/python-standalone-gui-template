@@ -8,25 +8,39 @@ class DraggableMixin:
         self._drag_position: QPoint = QPoint()
 
     def mousePressEvent(self, event: QMouseEvent) -> None:  # noqa: N802
-        if event.button() == Qt.MouseButton.LeftButton and not self._is_maximized:
-            if self.windowHandle() is not None:
-                self.windowHandle().startSystemMove()
-                return
+        if event.button() == Qt.MouseButton.LeftButton:
+            is_maximized = getattr(self, "_is_maximized", False)  # fallback for dialogs
+            if not is_maximized and self.windowHandle() is not None:
+                # try native drag first
+                if self.windowHandle().startSystemMove():
+                    return
 
+            # fallback manual drag
             self._drag_active = True
             self._drag_position = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
             event.accept()
-        super().mousePressEvent(event)
+
+        try:
+            super().mousePressEvent(event)
+        except AttributeError:
+            pass  # ignore if no parent implementation
 
     def mouseMoveEvent(self, event: QMouseEvent) -> None:  # noqa: N802
         if self._drag_active and event.buttons() & Qt.MouseButton.LeftButton:
             self.move(event.globalPosition().toPoint() - self._drag_position)
             event.accept()
-        super().mouseMoveEvent(event)
+
+        try:
+            super().mouseMoveEvent(event)
+        except AttributeError:
+            pass
 
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:  # noqa: N802
         if event.button() == Qt.MouseButton.LeftButton:
             self._drag_active = False
             event.accept()
-        super().mouseReleaseEvent(event)
 
+        try:
+            super().mouseReleaseEvent(event)
+        except AttributeError:
+            pass
