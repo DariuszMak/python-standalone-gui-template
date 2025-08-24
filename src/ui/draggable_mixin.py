@@ -8,7 +8,11 @@ class DraggableMixin:
         self._drag_position: QPoint = QPoint()
 
     def mousePressEvent(self, event: QMouseEvent) -> None:  # noqa: N802
-        if event.button() == Qt.MouseButton.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton and not self._is_maximized:
+            if self.windowHandle() is not None:
+                self.windowHandle().startSystemMove()
+                return
+
             self._drag_active = True
             self._drag_position = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
             event.accept()
@@ -25,3 +29,4 @@ class DraggableMixin:
             self._drag_active = False
             event.accept()
         super().mouseReleaseEvent(event)
+
