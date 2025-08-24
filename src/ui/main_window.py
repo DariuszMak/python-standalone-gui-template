@@ -1,11 +1,12 @@
+import logging
 from src.helpers.style_loader import StyleLoader
 from src.ui.draggable_main_window import DraggableMainWindow
 from src.ui.forms.moc_main_window import Ui_MainWindow
 from src.ui.warning_dialog import WarningDialog
 
-
+logger = logging.getLogger(__name__)
 class MainWindow(DraggableMainWindow):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         self.ui = Ui_MainWindow()
@@ -23,7 +24,11 @@ class MainWindow(DraggableMainWindow):
         dlg = WarningDialog(self)
         dlg.ui.label_title_bar_top.setText("Warning title")
         dlg.ui.label_info.setText("Warning message")
-        dlg.exec()
+
+        if dlg.exec_():
+            logger.info("Accepted")
+        else:
+            logger.info("Cancelled")
 
     def toggle_maximize_restore(self):
         if self._is_maximized:
@@ -31,3 +36,8 @@ class MainWindow(DraggableMainWindow):
         else:
             self.showMaximized()
         self._is_maximized = not self._is_maximized
+
+    
+    def close_window(self) -> None:
+        logger.info("Closing window...")
+        self.close()
