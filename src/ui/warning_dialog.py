@@ -1,15 +1,14 @@
 from PySide6.QtCore import QEvent, Qt
 from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import QWidget
 
 from src.helpers.style_loader import StyleLoader
 from src.ui.draggable_dialog import DraggableDialog
 from src.ui.forms.moc_warning_dialog import Ui_Dialog
-from PySide6.QtWidgets import QDialog, QWidget
 
 
 class WarningDialog(DraggableDialog):
-       
-    def __init__(self, parent: QWidget | None = None) -> None:        
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
