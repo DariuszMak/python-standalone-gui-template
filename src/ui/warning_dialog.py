@@ -4,10 +4,11 @@ from PySide6.QtGui import QMouseEvent, QPixmap
 from PySide6.QtWidgets import QDialog, QWidget
 
 from src.helpers.style_loader import StyleLoader
+from src.ui.draggable_mixin import DraggableMixin
 from src.ui.forms.moc_warning_dialog import Ui_Dialog  # type: ignore
 
 
-class WarningDialog(QDialog):
+class WarningDialog(QDialog, DraggableMixin):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__()
 
@@ -43,9 +44,6 @@ class WarningDialog(QDialog):
         pixmap = QPixmap(":/logos/icons/images/warning.png")
 
         self.ui.label_warning.setPixmap(pixmap.scaled(40, 40, QtGui.Qt.AspectRatioMode.KeepAspectRatio))
-
-    def mousePressEvent(self, event: QMouseEvent) -> None:  # noqa: N802
-        self.dragPos = event.globalPosition().toPoint()
 
     def changeEvent(self, event: QEvent) -> None:  # noqa: N802
         if event.type() == QEvent.Type.LanguageChange:

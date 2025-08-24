@@ -4,13 +4,14 @@ from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import QMainWindow
 
 from src.helpers.style_loader import StyleLoader
+from src.ui.draggable_mixin import DraggableMixin
 from src.ui.forms.moc_main_window import Ui_MainWindow
 from src.ui.warning_dialog import WarningDialog
 
 logger = logging.getLogger(__name__)
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow, DraggableMixin):
     def __init__(self) -> None:
         super().__init__()
         self.ui = Ui_MainWindow()
@@ -23,8 +24,6 @@ class MainWindow(QMainWindow):
         self.ui.btn_maximize_restore.clicked.connect(self.maximize_restore_window)
         self.ui.btn_close.clicked.connect(self.close_window)
 
-        self._drag_active: bool = False
-        self._drag_position: QPoint = QPoint()
         self._is_maximized: bool = False
 
     def show_warning_dialog(self) -> None:
@@ -51,22 +50,3 @@ class MainWindow(QMainWindow):
     def close_window(self) -> None:
         self.close()
 
-    def mousePressEvent(self, event) -> None:
-        if event.button() == Qt.MouseButton.LeftButton and not self._is_maximized:
-            if self.windowHandle() is not None:
-                self.windowHandle().startSystemMove()
-                return
-
-            self._drag_active = True
-            self._drag_position = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
-            event.accept()
-
-    def mouseMoveEvent(self, event) -> None:  # noqa: N802
-        if self._drag_active and event.buttons() & Qt.MouseButton.LeftButton:
-            self.move(event.globalPosition().toPoint() - self._drag_position)
-            event.accept()
-
-    def mouseReleaseEvent(self, event) -> None:  # noqa: N802
-        if event.button() == Qt.MouseButton.LeftButton:
-            self._drag_active = False
-            event.accept()
