@@ -6,6 +6,17 @@ from src.helpers.style_loader import StyleLoader
 from src.ui.draggable_dialog import DraggableDialog
 from src.ui.forms.moc_warning_dialog import Ui_Dialog
 
+from PySide6.QtCore import QEvent, Qt
+from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import QWidget
+from PySide6.QtCore import QEvent
+from PySide6.QtGui import QCloseEvent
+from PySide6.QtWidgets import QWidget
+import logging
+
+
+logger = logging.getLogger(__name__)
+
 
 class WarningDialog(DraggableDialog):
     def __init__(self, parent: QWidget | None = None) -> None:
@@ -27,3 +38,7 @@ class WarningDialog(DraggableDialog):
         if event.type() == QEvent.LanguageChange:
             self.ui.retranslateUi(self)
         super().changeEvent(event)
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        logger.info("Closing main window...")
+        super().closeEvent(event)
