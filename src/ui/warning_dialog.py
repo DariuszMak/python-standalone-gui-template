@@ -1,19 +1,12 @@
+import logging
+
 from PySide6.QtCore import QEvent, Qt
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QCloseEvent, QPixmap
 from PySide6.QtWidgets import QWidget
 
 from src.helpers.style_loader import StyleLoader
 from src.ui.draggable_dialog import DraggableDialog
 from src.ui.forms.moc_warning_dialog import Ui_Dialog
-
-from PySide6.QtCore import QEvent, Qt
-from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QWidget
-from PySide6.QtCore import QEvent
-from PySide6.QtGui import QCloseEvent
-from PySide6.QtWidgets import QWidget
-import logging
-
 
 logger = logging.getLogger(__name__)
 
