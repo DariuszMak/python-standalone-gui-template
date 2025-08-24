@@ -1,6 +1,6 @@
+from src.helpers.style_loader import StyleLoader
 from src.ui.draggable_main_window import DraggableMainWindow
 from src.ui.forms.moc_main_window import Ui_MainWindow
-from src.helpers.style_loader import StyleLoader
 from src.ui.warning_dialog import WarningDialog
 
 

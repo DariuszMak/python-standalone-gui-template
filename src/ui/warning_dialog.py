@@ -1,8 +1,9 @@
+from PySide6.QtCore import QEvent, Qt
+from PySide6.QtGui import QPixmap
+
+from src.helpers.style_loader import StyleLoader
 from src.ui.draggable_dialog import DraggableDialog
 from src.ui.forms.moc_warning_dialog import Ui_Dialog
-from PySide6.QtCore import Qt, QEvent
-from PySide6.QtGui import QPixmap
-from src.helpers.style_loader import StyleLoader
 
 
 class WarningDialog(DraggableDialog):
