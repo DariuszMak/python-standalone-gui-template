@@ -50,5 +50,5 @@ class MainWindow(DraggableMainWindow):
         super().changeEvent(event)
 
     def closeEvent(self, event: QCloseEvent) -> None:
-        logger.info("Closing window...")
+        logger.info("Closing main window...")
         super().closeEvent(event)
