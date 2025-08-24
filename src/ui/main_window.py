@@ -3,6 +3,12 @@ from src.helpers.style_loader import StyleLoader
 from src.ui.draggable_main_window import DraggableMainWindow
 from src.ui.forms.moc_main_window import Ui_MainWindow
 from src.ui.warning_dialog import WarningDialog
+from PySide6.QtCore import QEvent, Qt
+from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import QWidget
+from PySide6.QtCore import QEvent
+from PySide6.QtGui import QCloseEvent
+from PySide6.QtWidgets import QWidget
 
 logger = logging.getLogger(__name__)
 class MainWindow(DraggableMainWindow):
@@ -37,7 +43,12 @@ class MainWindow(DraggableMainWindow):
             self.showMaximized()
         self._is_maximized = not self._is_maximized
 
-    
-    def close_window(self) -> None:
+
+    def changeEvent(self, event: QEvent) -> None:
+        if event.type() == QEvent.LanguageChange:
+            self.ui.retranslateUi(self)
+        super().changeEvent(event)
+
+    def closeEvent(self, event: QCloseEvent) -> None:
         logger.info("Closing window...")
-        self.close()
+        super().closeEvent(event)
