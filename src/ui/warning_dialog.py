@@ -27,11 +27,11 @@ class WarningDialog(DraggableDialog):
         pixmap = QPixmap(":/logos/icons/images/warning.png")
         self.ui.label_warning.setPixmap(pixmap.scaled(40, 40, Qt.KeepAspectRatio))
 
-    def changeEvent(self, event: QEvent) -> None:
+    def changeEvent(self, event: QEvent) -> None:  # noqa: N802
         if event.type() == QEvent.LanguageChange:
             self.ui.retranslateUi(self)
         super().changeEvent(event)
 
-    def closeEvent(self, event: QCloseEvent) -> None:
+    def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802
         logger.info("Closing dialog window...")
         super().closeEvent(event)

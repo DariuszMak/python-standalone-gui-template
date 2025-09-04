@@ -43,11 +43,11 @@ class MainWindow(DraggableMainWindow):
             self.showMaximized()
         self._is_maximized = not self._is_maximized
 
-    def changeEvent(self, event: QEvent) -> None:
+    def changeEvent(self, event: QEvent) -> None:  # noqa: N802
         if event.type() == QEvent.LanguageChange:
             self.ui.retranslateUi(self)
         super().changeEvent(event)
 
-    def closeEvent(self, event: QCloseEvent) -> None:
+    def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802
         logger.info("Closing main window...")
         super().closeEvent(event)
