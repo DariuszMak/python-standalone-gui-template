@@ -10,7 +10,7 @@ class DraggableMainWindow(QMainWindow):
         self._drag_position = QPoint()
         self._is_maximized = False
 
-    def mousePressEvent(self, event: QMouseEvent) -> None:
+    def mousePressEvent(self, event: QMouseEvent) -> None:  # noqa: N802
         if event.button() == Qt.LeftButton and not self._is_maximized:
             if self.windowHandle() and self.windowHandle().startSystemMove():
                 return
@@ -19,13 +19,13 @@ class DraggableMainWindow(QMainWindow):
             event.accept()
         super().mousePressEvent(event)
 
-    def mouseMoveEvent(self, event: QMouseEvent) -> None:
+    def mouseMoveEvent(self, event: QMouseEvent) -> None:  # noqa: N802
         if self._drag_active and event.buttons() & Qt.LeftButton:
             self.move(event.globalPosition().toPoint() - self._drag_position)
             event.accept()
         super().mouseMoveEvent(event)
 
-    def mouseReleaseEvent(self, event: QMouseEvent) -> None:
+    def mouseReleaseEvent(self, event: QMouseEvent) -> None:  # noqa: N802
         if event.button() == Qt.LeftButton:
             self._drag_active = False
             event.accept()
