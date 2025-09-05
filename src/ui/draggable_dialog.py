@@ -10,7 +10,7 @@ class DraggableDialog(QDialog):
         self._drag_position = QPoint()
 
     def mousePressEvent(self, event: QMouseEvent) -> None:  # noqa: N802
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton:
             if self.windowHandle() and self.windowHandle().startSystemMove():
                 return
             self._drag_active = True
@@ -19,13 +19,13 @@ class DraggableDialog(QDialog):
         super().mousePressEvent(event)
 
     def mouseMoveEvent(self, event: QMouseEvent) -> None:  # noqa: N802
-        if self._drag_active and event.buttons() & Qt.LeftButton:
+        if self._drag_active and event.buttons() & Qt.MouseButton.LeftButton:
             self.move(event.globalPosition().toPoint() - self._drag_position)
             event.accept()
         super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:  # noqa: N802
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton:
             self._drag_active = False
             event.accept()
         super().mouseReleaseEvent(event)
