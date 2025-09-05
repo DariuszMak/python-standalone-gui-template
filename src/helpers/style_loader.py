@@ -38,9 +38,13 @@ class StyleLoader:
             current_window.move(parent_obj.geometry().center() - current_window.rect().center())
         else:
             mouse_pointer_position = current_window.cursor().pos()
-
             screen = QApplication.screenAt(mouse_pointer_position)
 
-            position = screen.geometry().center() - current_window.rect().center()
-
-            current_window.move(position.x(), position.y())
+            if screen is not None:
+                position = screen.geometry().center() - current_window.rect().center()
+                current_window.move(position.x(), position.y())
+            else:
+                primary_screen = QApplication.primaryScreen()
+                if primary_screen:
+                    position = primary_screen.geometry().center() - current_window.rect().center()
+                    current_window.move(position.x(), position.y())
