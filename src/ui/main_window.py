@@ -44,7 +44,7 @@ class MainWindow(DraggableMainWindow):
         self._is_maximized = not self._is_maximized
 
     def changeEvent(self, event: QEvent) -> None:  # noqa: N802
-        if event.type() == QEvent.LanguageChange:
+        if event.type() == QEvent.Type.LanguageChange:
             self.ui.retranslateUi(self)
         super().changeEvent(event)
 
