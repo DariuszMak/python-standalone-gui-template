@@ -18,17 +18,17 @@ class WarningDialog(DraggableDialog):
         self.ui.setupUi(self)
         StyleLoader.style_window(self)
 
-        self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
         self.ui.btn_close.clicked.connect(self.close)
         StyleLoader.center_window(self, parent)
 
         pixmap = QPixmap(":/logos/icons/images/warning.png")
-        self.ui.label_warning.setPixmap(pixmap.scaled(40, 40, Qt.KeepAspectRatio))
+        self.ui.label_warning.setPixmap(pixmap.scaled(40, 40, Qt.AspectRatioMode.KeepAspectRatio))
 
     def changeEvent(self, event: QEvent) -> None:  # noqa: N802
-        if event.type() == QEvent.LanguageChange:
+        if event.type() == QEvent.Type.LanguageChange:
             self.ui.retranslateUi(self)
         super().changeEvent(event)
 
