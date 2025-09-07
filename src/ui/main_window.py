@@ -1,6 +1,8 @@
-from PySide6.QtCore import QEvent, QPropertyAnimation, QEasingCurve
-from PySide6.QtGui import QCloseEvent
 import logging
+
+from PySide6.QtCore import QEasingCurve, QEvent, QPropertyAnimation
+from PySide6.QtGui import QCloseEvent
+
 from src.helpers.style_loader import StyleLoader
 from src.ui.draggable_main_window import DraggableMainWindow
 from src.ui.forms.moc_main_window import Ui_MainWindow
@@ -8,12 +10,13 @@ from src.ui.warning_dialog import WarningDialog
 
 logger = logging.getLogger(__name__)
 
+
 class MainWindow(DraggableMainWindow):
     def __init__(self) -> None:
         super().__init__()
 
         self.setMinimumSize(500, 400)
-        self._is_closing = False  
+        self._is_closing = False
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -44,7 +47,6 @@ class MainWindow(DraggableMainWindow):
         self.anim.setEndValue(0.0)
         self.anim.setEasingCurve(QEasingCurve.Type.InOutQuad)
 
-        
         self.anim.finished.connect(self._final_close)
         self.anim.start()
 
@@ -65,22 +67,20 @@ class MainWindow(DraggableMainWindow):
             self.showMaximized()
         self._is_maximized = not self._is_maximized
 
-    def changeEvent(self, event: QEvent) -> None:  
+    def changeEvent(self, event: QEvent) -> None:
         if event.type() == QEvent.Type.LanguageChange:
             self.ui.retranslateUi(self)
         super().changeEvent(event)
 
     def _final_close(self):
         self._is_closing = True
-        super().close()  
+        super().close()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         logger.info("Closing main window...")
 
         if self._is_closing:
-            
             super().closeEvent(event)
         else:
-            
             event.ignore()
             self.fade_out_animation()
