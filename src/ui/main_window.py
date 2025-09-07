@@ -67,16 +67,12 @@ class MainWindow(DraggableMainWindow):
             self.showMaximized()
         self._is_maximized = not self._is_maximized
 
-    def changeEvent(self, event: QEvent) -> None:
+    def changeEvent(self, event: QEvent) -> None:  # noqa: N802
         if event.type() == QEvent.Type.LanguageChange:
             self.ui.retranslateUi(self)
         super().changeEvent(event)
 
-    def _final_close(self):
-        self._is_closing = True
-        super().close()
-
-    def closeEvent(self, event: QCloseEvent) -> None:
+    def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802
         logger.info("Closing main window...")
 
         if self._is_closing:
@@ -84,3 +80,7 @@ class MainWindow(DraggableMainWindow):
         else:
             event.ignore()
             self.fade_out_animation()
+
+    def _final_close(self):
+        self._is_closing = True
+        super().close()
