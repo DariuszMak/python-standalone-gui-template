@@ -15,6 +15,8 @@ class MainWindow(DraggableMainWindow):
     def __init__(self) -> None:
         super().__init__()
 
+        self.setMinimumSize(500, 400)
+
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         StyleLoader.style_window(self)
