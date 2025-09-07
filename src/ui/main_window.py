@@ -2,7 +2,6 @@ import logging
 
 from PySide6.QtCore import QEasingCurve, QEvent, QPropertyAnimation
 from PySide6.QtGui import QCloseEvent, QGuiApplication
-from PySide6.QtWidgets import QSizePolicy
 
 from src.helpers.style_loader import StyleLoader
 from src.ui.draggable_main_window import DraggableMainWindow
@@ -81,11 +80,11 @@ class MainWindow(DraggableMainWindow):
     def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802
         logger.info("Closing main window...")
 
-        if self._is_closing:
-            super().closeEvent(event)
-        else:
+        if self._supports_opacity:
             event.ignore()
             self.fade_out_animation()
+        else:
+            super().closeEvent(event)
 
     def _final_close(self) -> None:
         self._is_closing = True
