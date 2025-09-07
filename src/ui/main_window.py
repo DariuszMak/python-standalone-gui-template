@@ -33,7 +33,7 @@ class MainWindow(DraggableMainWindow):
         if self._supports_opacity:
             self.fade_in_animation()
 
-    def fade_in_animation(self):
+    def fade_in_animation(self)-> None:
         if not self._supports_opacity:
             return
         self.setWindowOpacity(0.0)
@@ -44,7 +44,7 @@ class MainWindow(DraggableMainWindow):
         self.anim.setEasingCurve(QEasingCurve.Type.InOutQuad)
         self.anim.start()
 
-    def fade_out_animation(self):
+    def fade_out_animation(self) -> None:
         if not self._supports_opacity:
             self._final_close()
             return
@@ -57,7 +57,7 @@ class MainWindow(DraggableMainWindow):
         self.anim.finished.connect(self._final_close)
         self.anim.start()
 
-    def show_warning_dialog(self):
+    def show_warning_dialog(self)-> None:
         dlg = WarningDialog(self)
         dlg.ui.label_title_bar_top.setText("Warning title")
         dlg.ui.label_info.setText("Warning message")
@@ -67,7 +67,7 @@ class MainWindow(DraggableMainWindow):
         else:
             logger.info("Cancelled")
 
-    def toggle_maximize_restore(self):
+    def toggle_maximize_restore(self)-> None:
         if self._is_maximized:
             self.showNormal()
         else:
@@ -88,6 +88,6 @@ class MainWindow(DraggableMainWindow):
             event.ignore()
             self.fade_out_animation()
 
-    def _final_close(self):
+    def _final_close(self)-> None:
         self._is_closing = True
         super().close()
