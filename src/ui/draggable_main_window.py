@@ -1,7 +1,6 @@
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtGui import QMouseEvent
-from PySide6.QtWidgets import QMainWindow
-from PySide6.QtWidgets import QDialog, QWidget
+from PySide6.QtWidgets import QMainWindow, QWidget
 
 
 class DraggableMainWindow(QMainWindow):
