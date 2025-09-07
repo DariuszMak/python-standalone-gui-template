@@ -21,10 +21,6 @@ def run() -> None:
     app.processEvents()
 
     window = MainWindow()
-
-    window.setMinimumSize(500, 400)
-    window.resize(500, 400)
-
     window.show()
 
     splash.finish(window)
