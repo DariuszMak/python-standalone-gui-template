@@ -1,8 +1,6 @@
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtGui import QMouseEvent
-from PySide6.QtWidgets import QDialog
 from PySide6.QtWidgets import QDialog, QWidget
-
 
 
 class DraggableDialog(QDialog):
