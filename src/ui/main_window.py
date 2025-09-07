@@ -1,13 +1,12 @@
 import logging
 
 from PySide6.QtCore import QEasingCurve, QEvent, QPropertyAnimation
-from PySide6.QtGui import QCloseEvent
+from PySide6.QtGui import QCloseEvent, QGuiApplication
 
 from src.helpers.style_loader import StyleLoader
 from src.ui.draggable_main_window import DraggableMainWindow
 from src.ui.forms.moc_main_window import Ui_MainWindow
 from src.ui.warning_dialog import WarningDialog
-from PySide6.QtGui import QGuiApplication
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +31,7 @@ class MainWindow(DraggableMainWindow):
         self.ui.btn_maximize_restore.clicked.connect(self.toggle_maximize_restore)
         self.ui.btn_close.clicked.connect(self.close)
         if self._supports_opacity:
-                self.fade_in_animation()
+            self.fade_in_animation()
 
     def fade_in_animation(self):
         if not self._supports_opacity:
