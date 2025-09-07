@@ -67,7 +67,7 @@ $env:PYTHONPATH="." ;
 
 .\scripts\format_and_lint.ps1 ; 
 
-pytest test/ --cov=. -vv ; 
+pytest test/ --cov=src -vv ; 
 
 ##### RUN APPLICATION LOCALLY
 
@@ -125,8 +125,8 @@ $env:PYTHONPATH="." ;
 
 .\scripts\format_and_lint.ps1 ; 
 
-pytest test/ --cov=. -vv ; 
-docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest test/ --cov=." ; 
+pytest test/ --cov=src -vv ; 
+docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest test/ --cov=src" ; 
 
 uv sync --no-dev --locked --no-cache ; 
 
@@ -244,7 +244,7 @@ pytest test/ --cov=. -vv ;
 
 Run tests in Docker:
 ```commandline
-docker-compose run app sh -c "uv sync --dev --locked --no-cache  && uv run pytest test/ --cov=. -vv" ; 
+docker-compose run app sh -c "uv sync --dev --locked --no-cache  && uv run pytest test/ --cov=src -vv" ; 
 ```
 
 Run Newman tests from saved collection (run application before execution):
