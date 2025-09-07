@@ -6,6 +6,8 @@ from PySide6.QtWidgets import QApplication, QSplashScreen
 
 from src.helpers.style_loader import StyleLoader
 from src.ui.main_window import MainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QSizePolicy
+
 
 
 def run() -> None:
@@ -21,6 +23,7 @@ def run() -> None:
     app.processEvents()
 
     window = MainWindow()
+
     window.show()
 
     splash.finish(window)
