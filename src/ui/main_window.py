@@ -7,6 +7,7 @@ from src.helpers.style_loader import StyleLoader
 from src.ui.draggable_main_window import DraggableMainWindow
 from src.ui.forms.moc_main_window import Ui_MainWindow
 from src.ui.warning_dialog import WarningDialog
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QSizePolicy
 
 logger = logging.getLogger(__name__)
 
@@ -16,8 +17,8 @@ class MainWindow(DraggableMainWindow):
         super().__init__()
 
         self._supports_opacity = QGuiApplication.platformName().lower() not in ["wayland", "xcb"]
-
         self.setMinimumSize(500, 400)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self._is_closing = False
 
         self.ui = Ui_MainWindow()
