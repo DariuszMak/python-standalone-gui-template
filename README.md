@@ -52,6 +52,8 @@ foreach ($port in $ports) {
     }
 }
 
+uv cache clean ; 
+
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
 
@@ -100,6 +102,8 @@ foreach ($port in $ports) {
         Write-Host "No process is using port $port."
     }
 }
+
+uv cache clean ; 
 
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
