@@ -52,6 +52,7 @@ foreach ($port in $ports) {
     }
 }
 
+uv self update ; 
 uv cache clean ; 
 
 git reset --hard HEAD ; 
@@ -103,6 +104,7 @@ foreach ($port in $ports) {
     }
 }
 
+uv self update ; 
 uv cache clean ; 
 
 git reset --hard HEAD ; 
@@ -200,6 +202,8 @@ docker-compose run --build app ;
 ##### Setup local environment and install dependencies
 
 ```commandline 
+uv self update ; 
+uv cache clean ; 
 uv python pin 3.11 ; 
 uv sync --dev --no-cache ; 
 uv lock ; 
