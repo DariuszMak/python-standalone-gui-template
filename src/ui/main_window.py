@@ -4,6 +4,7 @@ from PySide6.QtCore import QEasingCurve, QEvent, QPropertyAnimation
 from PySide6.QtGui import QCloseEvent, QGuiApplication
 
 from src.helpers.style_loader import StyleLoader
+from src.ui import MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
 from src.ui.draggable_main_window import DraggableMainWindow
 from src.ui.forms.moc_main_window import Ui_MainWindow
 from src.ui.warning_dialog import WarningDialog
@@ -14,6 +15,9 @@ logger = logging.getLogger(__name__)
 class MainWindow(DraggableMainWindow):
     def __init__(self) -> None:
         super().__init__()
+
+        self.resize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT)
+        self.setMinimumSize(MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE, MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE)
 
         self._supports_opacity = QGuiApplication.platformName().lower() not in ["wayland", "xcb"]
         self._is_closing = False
@@ -73,7 +77,7 @@ class MainWindow(DraggableMainWindow):
         self._is_maximized = not self._is_maximized
 
     def resizeEvent(self, event):  # noqa: N802
-        min_width, min_height = 500, 400
+        min_width, min_height = MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE, MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE
         new_width = max(event.size().width(), min_width)
         new_height = max(event.size().height(), min_height)
 
