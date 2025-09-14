@@ -16,8 +16,6 @@ class MainWindow(DraggableMainWindow):
     def __init__(self) -> None:
         super().__init__()
 
-        self.resize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT)
-        self.setMinimumSize(MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE, MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE)
 
         self._supports_opacity = QGuiApplication.platformName().lower() not in ["wayland", "xcb"]
         self._is_closing = False
@@ -26,6 +24,9 @@ class MainWindow(DraggableMainWindow):
         self.ui.setupUi(self)
         StyleLoader.style_window(self)
 
+        self.setMinimumSize(MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE, MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE)
+        self.resize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT)
+        
         self.ui.pushButton.setText("Click to open dialog window")
         self.ui.pushButton.clicked.connect(self.show_warning_dialog)
 
