@@ -124,8 +124,8 @@ def main_window(app):
 
 
 def test_startup_size(main_window):
-    assert main_window.width() == 724
-    assert main_window.height() == 480
+    assert main_window.width() == MAINWINDOW_WIDTH
+    assert main_window.height() == MAINWINDOW_HEIGHT
 
 
 def test_resize_event_enforces_minimum(main_window):
