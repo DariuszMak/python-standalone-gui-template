@@ -17,7 +17,7 @@ def test_get_real_path_from_relative_path() -> None:
 
     # Test with an absolute path, it should return the same path
     absolute_path = os.path.normpath("/absolute/path/to/some/file.txt")
-    drive, path = os.path.splitdrive(your_instance.get_real_path_from_relative_path(absolute_path))
+    _drive, path = os.path.splitdrive(your_instance.get_real_path_from_relative_path(absolute_path))
     assert path == absolute_path
 
     # Test with a different relative path, adjust the expected result accordingly
