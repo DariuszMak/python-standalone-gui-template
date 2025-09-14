@@ -72,6 +72,16 @@ class MainWindow(DraggableMainWindow):
             self.showMaximized()
         self._is_maximized = not self._is_maximized
 
+    def resizeEvent(self, event): # noqa: N802
+        min_width, min_height = 500, 400
+        new_width = max(event.size().width(), min_width)
+        new_height = max(event.size().height(), min_height)
+
+        if new_width != event.size().width() or new_height != event.size().height():
+            self.resize(new_width, new_height)
+
+        super().resizeEvent(event)
+
     def changeEvent(self, event: QEvent) -> None:  # noqa: N802
         if event.type() == QEvent.Type.LanguageChange:
             self.ui.retranslateUi(self)
