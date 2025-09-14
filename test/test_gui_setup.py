@@ -2,8 +2,12 @@ import os
 from unittest.mock import patch
 
 import pytest
+from PySide6.QtCore import QSize
+from PySide6.QtWidgets import QApplication
 
 from src.gui_setup import UiExtensions, create_moc
+from src.ui import MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
+from src.ui.main_window import MainWindow
 
 
 # Define a fixture to create a temporary directory for testing
@@ -100,3 +104,43 @@ def test_create_moc_error_when_create_ui_content_for_qrc(temp_dir: str, example_
 
     with pytest.raises(Exception, match=r"Mocking UI file failed!.*example\.ui"):
         create_moc(temp_dir, "example.ui", UiExtensions.QRC)
+
+
+@pytest.fixture(scope="session")
+def app():
+    app = QApplication.instance()
+    if app is None:
+        app = QApplication([])
+    return app
+
+
+@pytest.fixture
+def main_window(app):
+    _ = app
+    window = MainWindow()
+    window.show()
+    yield window
+    window.close()
+
+
+def test_startup_size(main_window):
+    assert main_window.width() == 724
+    assert main_window.height() == 480
+
+
+def test_resize_event_enforces_minimum(main_window):
+    min_width = MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE
+    min_height = MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE
+
+    main_window.resize(100, 100)
+    QApplication.processEvents()
+
+    assert main_window.width() >= min_width
+    assert main_window.height() >= min_height
+
+    larger_size = QSize(MAINWINDOW_WIDTH + 200, MAINWINDOW_HEIGHT + 200)
+    main_window.resize(larger_size)
+    QApplication.processEvents()
+
+    assert main_window.width() == larger_size.width()
+    assert main_window.height() == larger_size.height()
