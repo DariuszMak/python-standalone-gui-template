@@ -72,7 +72,7 @@ class MainWindow(DraggableMainWindow):
             self.showMaximized()
         self._is_maximized = not self._is_maximized
 
-    def resizeEvent(self, event): # noqa: N802
+    def resizeEvent(self, event):  # noqa: N802
         min_width, min_height = 500, 400
         new_width = max(event.size().width(), min_width)
         new_height = max(event.size().height(), min_height)
