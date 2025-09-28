@@ -4,7 +4,7 @@ from PySide6.QtCore import QEasingCurve, QEvent, QPropertyAnimation
 from PySide6.QtGui import QCloseEvent, QGuiApplication
 
 from src.helpers.style_loader import StyleLoader
-from src.ui import MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
+from src.ui import ANIMATION_DURATION, MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
 from src.ui.draggable_main_window import DraggableMainWindow
 from src.ui.forms.moc_main_window import Ui_MainWindow
 from src.ui.warning_dialog import WarningDialog
@@ -51,7 +51,7 @@ class MainWindow(DraggableMainWindow):
             self._final_close()
             return
         self.anim = QPropertyAnimation(self, b"windowOpacity")
-        self.anim.setDuration(600)
+        self.anim.setDuration(ANIMATION_DURATION)
         self.anim.setStartValue(1.0)
         self.anim.setEndValue(0.0)
         self.anim.setEasingCurve(QEasingCurve.Type.InOutQuad)
