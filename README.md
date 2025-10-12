@@ -1,3 +1,27 @@
+## Table of Contents
+
+- [Python Standalone GUI template](#python-standalone-gui-template)
+  - [Executable files do download for Windows and Linux](#executable-files-do-download-for-windows-and-linux)
+  - [Requirements](#requirements)
+  - [Local development (Windows PowerShell)](#local-development-windows-powershell)
+  - [Fast native Windows development](#fast-native-windows-development)
+  - [Thorough setup from scratch for Windows and Linux enviroment](#thorough-setup-from-scratch-for-windows-and-linux-enviroment)
+  - [Particular code snippets](#particular-code-snippets)
+    - [Install Python 3.11](#install-python-311)
+    - [Run the application (compile mocks) from Docker](#run-the-application-compile-mocks-from-docker)
+    - [Setup local environment and install dependencies](#setup-local-environment-and-install-dependencies)
+    - [Docker should compile ui files manually](#docker-should-compile-ui-files-manually)
+    - [Running application natively](#running-application-natively)
+    - [Running executable application via PyInstaller](#running-executable-application-via-pyinstaller)
+  - [Run tests](#run-tests)
+  - [Edit ui forms with QT Designer](#edit-ui-forms-with-qt-designer)
+  - [Code linting](#code-linting)
+  - [Code autoformat](#code-autoformat)
+  - [Running Docker container service](#running-docker-container-service)
+  - [GUI files specification](#gui-files-specification)
+
+---
+
 # Python Standalone GUI template
 
 ### Executable files do download for Windows and Linux:
