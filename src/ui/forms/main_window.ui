@@ -808,7 +808,6 @@
  </widget>
  <resources>
   <include location="files.qrc"/>
-  <include location="../../../../IPA-software2/ui/forms/files.qrc"/>
  </resources>
  <connections/>
 </ui>
