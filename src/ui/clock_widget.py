@@ -44,7 +44,7 @@ def calculate_clock_angles(start_dt: datetime, duration: timedelta) -> HandAngle
     The returned values are *not* radians — they are counts (seconds, minutes, hours) and later converted to radians.
     """
     # determine midnight local for the start_dt
-    midnight = datetime.combine(start_dt.date(), time(0, 0, 0))
+    midnight = datetime.combine(start_dt.date(), time(0, 0, 0), tzinfo=start_dt.tzinfo)
     start_ms = int((start_dt - midnight).total_seconds() * 1000)
     elapsed_ms = int(duration.total_seconds() * 1000)
 
