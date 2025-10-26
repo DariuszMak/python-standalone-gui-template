@@ -8,6 +8,7 @@ from src.ui import ANIMATION_DURATION, MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANG
 from src.ui.draggable_main_window import DraggableMainWindow
 from src.ui.forms.moc_main_window import Ui_MainWindow
 from src.ui.warning_dialog import WarningDialog
+from src.ui.clock_widget import ClockWidget
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +33,8 @@ class MainWindow(DraggableMainWindow):
         self.ui.btn_minimize.clicked.connect(self.showMinimized)
         self.ui.btn_maximize_restore.clicked.connect(self.toggle_maximize_restore)
         self.ui.btn_close.clicked.connect(self.close)
+
+        self.setCentralWidget(ClockWidget())
         if self._supports_opacity:
             self.fade_in_animation()
 
