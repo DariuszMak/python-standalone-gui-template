@@ -8,15 +8,15 @@ Provides:
 Usage: instantiate `ClockWidget()` and add it to any layout or set as central widget.
 
 """
+
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import datetime, timedelta, time
 import math
-from typing import Tuple
+from dataclasses import dataclass
+from datetime import datetime, time, timedelta
 
-from PySide6.QtCore import QTimer, Qt, QPointF
-from PySide6.QtGui import QPainter, QPen, QColor, QFont
+from PySide6.QtCore import QPointF, Qt, QTimer
+from PySide6.QtGui import QColor, QFont, QPainter, QPen
 from PySide6.QtWidgets import QWidget
 
 
@@ -83,7 +83,7 @@ class ClockPID:
         self.pid_minute = float(pid_minute)
         self.pid_hour = float(pid_hour)
 
-    def angles_in_radians(self) -> Tuple[float, float, float]:
+    def angles_in_radians(self) -> tuple[float, float, float]:
         second_angle = (self.pid_second / 60.0) * 2.0 * math.pi
         minute_angle = (self.pid_minute / 60.0) * 2.0 * math.pi
         hour_angle = (self.pid_hour / 12.0) * 2.0 * math.pi
@@ -207,10 +207,9 @@ class ClockWidget(QWidget):
 
         # digital time
         dt = self.current_time
-        formatted = f"{dt.hour:02}:{dt.minute:02}:{dt.second:02}.{int(dt.microsecond/1000):03}"
+        formatted = f"{dt.hour:02}:{dt.minute:02}:{dt.second:02}.{int(dt.microsecond / 1000):03}"
         painter.setPen(QPen(self.palette().text().color()))
         painter.setFont(QFont("Monospace", 12))
         fm = painter.fontMetrics()
         w = fm.horizontalAdvance(formatted)
         painter.drawText(center.x() - w / 2, center.y() + radius + 20, formatted)
-

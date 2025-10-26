@@ -2,15 +2,13 @@ import logging
 
 from PySide6.QtCore import QEasingCurve, QEvent, QPropertyAnimation
 from PySide6.QtGui import QCloseEvent, QGuiApplication
-from PySide6.QtWidgets import QVBoxLayout
-
 
 from src.helpers.style_loader import StyleLoader
 from src.ui import ANIMATION_DURATION, MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
+from src.ui.clock_widget import ClockWidget
 from src.ui.draggable_main_window import DraggableMainWindow
 from src.ui.forms.moc_main_window import Ui_MainWindow
 from src.ui.warning_dialog import WarningDialog
-from src.ui.clock_widget import ClockWidget
 
 logger = logging.getLogger(__name__)
 

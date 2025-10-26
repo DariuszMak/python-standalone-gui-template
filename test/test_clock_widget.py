@@ -3,19 +3,19 @@
 These tests validate the pure functions (calculate_clock_angles, PID, ClockPID, polar_to_cartesian) 1:1.
 The widget GUI drawing cannot be tested visually here; we test behavior and calculations.
 """
-from datetime import datetime, timedelta
+
 import math
+from datetime import datetime, timedelta
 
 import pytest
+from PySide6.QtCore import QPointF
 
 from src.ui.clock_widget import (
-    calculate_clock_angles,
-    polar_to_cartesian,
     PID,
     ClockPID,
-    HandAngles,
+    calculate_clock_angles,
+    polar_to_cartesian,
 )
-from PySide6.QtCore import QPointF
 
 
 def approx_eq(a: float, b: float, epsilon: float = 1e-6) -> bool:
