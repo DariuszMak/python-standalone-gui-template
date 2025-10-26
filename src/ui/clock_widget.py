@@ -43,7 +43,6 @@ def calculate_clock_angles(start_dt: datetime, duration: timedelta) -> HandAngle
     Implementation mirrors Rust's approach: compute ms since midnight for start, add elapsed ms from duration.
     The returned values are *not* radians — they are counts (seconds, minutes, hours) and later converted to radians.
     """
-    # determine midnight local for the start_dt
     midnight = datetime.combine(start_dt.date(), time(0, 0, 0), tzinfo=start_dt.tzinfo)
     start_ms = int((start_dt - midnight).total_seconds() * 1000)
     elapsed_ms = int(duration.total_seconds() * 1000)
@@ -110,7 +109,6 @@ class ClockWidget(QWidget):
 
         self.setMinimumSize(300, 300)
 
-        # update timer (request repaint)
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._on_tick)
         self._timer.start(33)  # ~30 FPS
@@ -185,7 +183,7 @@ class ClockWidget(QWidget):
             fm = painter.fontMetrics()
             w = fm.horizontalAdvance(str(number))
             h = fm.height()
-            painter.drawText(text_pos.x() - w / 2, text_pos.y() + h / 4, str(number))
+            painter.drawText(QPointF(text_pos.x() - w / 2, text_pos.y() + h / 4), str(number))
 
         # hands
         clock = ClockPID(self.pid_second, self.pid_minute, self.pid_hour)
@@ -211,4 +209,4 @@ class ClockWidget(QWidget):
         painter.setFont(QFont("Monospace", 12))
         fm = painter.fontMetrics()
         w = fm.horizontalAdvance(formatted)
-        painter.drawText(center.x() - w / 2, center.y() + radius + 20, formatted)
+        painter.drawText(QPointF(center.x() - w / 2, center.y() + radius + 20), formatted)
