@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from datetime import datetime, time, timedelta
+from datetime import UTC, datetime, time, timedelta
 
 from PySide6.QtCore import QPointF, Qt, QTimer
 from PySide6.QtGui import QColor, QFont, QPainter, QPen
@@ -98,7 +98,7 @@ class ClockWidget(QWidget):
 
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
-        self.start_time = datetime.now()
+        self.start_time = datetime.now(UTC).astimezone()
         self.current_time = self.start_time
         self.pid_second = 0.0
         self.pid_minute = 0.0
@@ -113,16 +113,15 @@ class ClockWidget(QWidget):
         # update timer (request repaint)
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._on_tick)
-        # 25-60 FPS — choose 30 FPS (33 ms)
-        self._timer.start(33)
+        self._timer.start(33)  # ~30 FPS
 
     def _on_tick(self) -> None:
-        self.current_time = datetime.now()
+        self.current_time = datetime.now(UTC).astimezone()
         self.update_pid()
         self.update()  # schedule repaint
 
     def reset(self) -> None:
-        self.start_time = datetime.now()
+        self.start_time = datetime.now(UTC).astimezone()
         self.current_time = self.start_time
         self.pid_second = 0.0
         self.pid_minute = 0.0
@@ -131,7 +130,7 @@ class ClockWidget(QWidget):
         self.minute_pid.reset()
         self.hour_pid.reset()
 
-    def keyPressEvent(self, event) -> None:  # type: ignore[override]
+    def keyPressEvent(self, event) -> None:  # noqa: N802
         if event.key() == Qt.Key.Key_R:
             self.reset()
         super().keyPressEvent(event)
@@ -148,7 +147,7 @@ class ClockWidget(QWidget):
         self.pid_minute += self.minute_pid.update(pid_minute_error)
         self.pid_hour += self.hour_pid.update(pid_hour_error)
 
-    def paintEvent(self, event) -> None:  # type: ignore[override]
+    def paintEvent(self, event) -> None:  # noqa: N802, ARG002
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
