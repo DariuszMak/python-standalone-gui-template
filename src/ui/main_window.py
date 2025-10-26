@@ -2,6 +2,8 @@ import logging
 
 from PySide6.QtCore import QEasingCurve, QEvent, QPropertyAnimation
 from PySide6.QtGui import QCloseEvent, QGuiApplication
+from PySide6.QtWidgets import QVBoxLayout
+
 
 from src.helpers.style_loader import StyleLoader
 from src.ui import ANIMATION_DURATION, MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
@@ -34,7 +36,9 @@ class MainWindow(DraggableMainWindow):
         self.ui.btn_maximize_restore.clicked.connect(self.toggle_maximize_restore)
         self.ui.btn_close.clicked.connect(self.close)
 
-        self.setCentralWidget(ClockWidget())
+        layout = self.ui.frame_content.layout()
+        layout.addWidget(ClockWidget())
+
         if self._supports_opacity:
             self.fade_in_animation()
 
