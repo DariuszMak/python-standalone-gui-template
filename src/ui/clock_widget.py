@@ -1,0 +1,216 @@
+"""Analog clock widget (PySide6) ported from the Rust `rust_clock_gui` implementation.
+
+Provides:
+- ClockWidget: a QWidget drawing an analog clock and a small digital display
+- HandAngles dataclass and calculation functions (calculate_clock_angles, polar_to_cartesian)
+- PID implementation used by the widget to animate hands smoothly
+
+Usage: instantiate `ClockWidget()` and add it to any layout or set as central widget.
+
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass
+from datetime import datetime, timedelta, time
+import math
+from typing import Tuple
+
+from PySide6.QtCore import QTimer, Qt, QPointF
+from PySide6.QtGui import QPainter, QPen, QColor, QFont
+from PySide6.QtWidgets import QWidget
+
+
+@dataclass
+class HandAngles:
+    seconds: float
+    minutes: float
+    hours: float
+
+
+def polar_to_cartesian(center: QPointF, length: float, angle_radians: float) -> QPointF:
+    """Return QPointF for a polar coordinate (angle measured from 0 pointing up, clockwise positive).
+
+    Matches the Rust implementation where angle=0 => up (0,-length).
+    """
+    x = center.x() + math.sin(angle_radians) * length
+    y = center.y() - math.cos(angle_radians) * length
+    return QPointF(x, y)
+
+
+def calculate_clock_angles(start_dt: datetime, duration: timedelta) -> HandAngles:
+    """Calculate raw hand "angles" in units used by the Rust code (seconds, minutes, hours float values).
+
+    Implementation mirrors Rust's approach: compute ms since midnight for start, add elapsed ms from duration.
+    The returned values are *not* radians — they are counts (seconds, minutes, hours) and later converted to radians.
+    """
+    # determine midnight local for the start_dt
+    midnight = datetime.combine(start_dt.date(), time(0, 0, 0))
+    start_ms = int((start_dt - midnight).total_seconds() * 1000)
+    elapsed_ms = int(duration.total_seconds() * 1000)
+
+    start_s = start_ms / 1000.0
+    elapsed_s = elapsed_ms / 1000.0
+
+    seconds_angle = start_s % 60.0 + elapsed_s
+    minutes_angle = (start_s / 60.0) % 60.0 + elapsed_s / 60.0
+    hours_angle = (start_s / 3600.0) % 12.0 + elapsed_s / 3600.0
+
+    return HandAngles(seconds=float(seconds_angle), minutes=float(minutes_angle), hours=float(hours_angle))
+
+
+class PID:
+    def __init__(self, kp: float = 0.0, ki: float = 0.0, kd: float = 0.0) -> None:
+        self.kp = float(kp)
+        self.ki = float(ki)
+        self.kd = float(kd)
+        self.prev_error = 0.0
+        self.integral = 0.0
+
+    def update(self, error: float) -> float:
+        self.integral += error
+        derivative = error - self.prev_error
+        self.prev_error = error
+        return self.kp * error + self.ki * self.integral + self.kd * derivative
+
+    def reset(self) -> None:
+        self.prev_error = 0.0
+        self.integral = 0.0
+
+
+class ClockPID:
+    def __init__(self, pid_second: float, pid_minute: float, pid_hour: float) -> None:
+        self.pid_second = float(pid_second)
+        self.pid_minute = float(pid_minute)
+        self.pid_hour = float(pid_hour)
+
+    def angles_in_radians(self) -> Tuple[float, float, float]:
+        second_angle = (self.pid_second / 60.0) * 2.0 * math.pi
+        minute_angle = (self.pid_minute / 60.0) * 2.0 * math.pi
+        hour_angle = (self.pid_hour / 12.0) * 2.0 * math.pi
+        return second_angle, minute_angle, hour_angle
+
+
+class ClockWidget(QWidget):
+    """A PySide6 widget that draws an analog clock and a simple digital readout.
+
+    Pressing the "R" key resets the clock's start time (mirrors the Rust app behavior).
+    """
+
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)
+        self.start_time = datetime.now()
+        self.current_time = self.start_time
+        self.pid_second = 0.0
+        self.pid_minute = 0.0
+        self.pid_hour = 0.0
+
+        self.second_pid = PID(kp=0.15, ki=0.005, kd=0.005)
+        self.minute_pid = PID(kp=0.08, ki=0.004, kd=0.004)
+        self.hour_pid = PID(kp=0.08, ki=0.002, kd=0.002)
+
+        self.setMinimumSize(300, 300)
+
+        # update timer (request repaint)
+        self._timer = QTimer(self)
+        self._timer.timeout.connect(self._on_tick)
+        # 25-60 FPS — choose 30 FPS (33 ms)
+        self._timer.start(33)
+
+    def _on_tick(self) -> None:
+        self.current_time = datetime.now()
+        self.update_pid()
+        self.update()  # schedule repaint
+
+    def reset(self) -> None:
+        self.start_time = datetime.now()
+        self.current_time = self.start_time
+        self.pid_second = 0.0
+        self.pid_minute = 0.0
+        self.pid_hour = 0.0
+        self.second_pid.reset()
+        self.minute_pid.reset()
+        self.hour_pid.reset()
+
+    def keyPressEvent(self, event) -> None:  # type: ignore[override]
+        if event.key() == Qt.Key.Key_R:
+            self.reset()
+        super().keyPressEvent(event)
+
+    def update_pid(self) -> None:
+        duration = self.current_time - self.start_time
+        calculated = calculate_clock_angles(self.start_time, duration)
+
+        pid_second_error = calculated.seconds - self.pid_second
+        pid_minute_error = calculated.minutes - self.pid_minute
+        pid_hour_error = calculated.hours - self.pid_hour
+
+        self.pid_second += self.second_pid.update(pid_second_error)
+        self.pid_minute += self.minute_pid.update(pid_minute_error)
+        self.pid_hour += self.hour_pid.update(pid_hour_error)
+
+    def paintEvent(self, event) -> None:  # type: ignore[override]
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+
+        rect = self.rect()
+        size = min(rect.width(), rect.height())
+        center = QPointF(rect.center())
+        radius = size * 0.4
+
+        # background
+        painter.fillRect(rect, self.palette().window())
+
+        # draw face
+        pen = QPen(self.palette().text().color())
+        pen.setWidthF(2.0)
+        painter.setPen(pen)
+        painter.drawEllipse(center, radius, radius)
+
+        # ticks
+        for i in range(60):
+            angle = (i / 60.0) * 2.0 * math.pi
+            outer = polar_to_cartesian(center, radius, angle)
+            inner = polar_to_cartesian(center, radius - (10.0 if i % 5 == 0 else 5.0), angle)
+            pen = QPen(QColor(200, 200, 200))
+            pen.setWidthF(3.0 if i % 5 == 0 else 1.5)
+            painter.setPen(pen)
+            painter.drawLine(inner, outer)
+
+        # hour numbers
+        painter.setFont(QFont("Arial", max(8, int(radius * 0.09))))
+        for i in range(12):
+            angle = (i / 12.0) * 2.0 * math.pi
+            text_pos = polar_to_cartesian(center, radius - 25.0, angle)
+            painter.setPen(QPen(QColor(255, 255, 255)))
+            number = ((i + 11) % 12) + 1
+            fm = painter.fontMetrics()
+            w = fm.horizontalAdvance(str(number))
+            h = fm.height()
+            painter.drawText(text_pos.x() - w / 2, text_pos.y() + h / 4, str(number))
+
+        # hands
+        clock = ClockPID(self.pid_second, self.pid_minute, self.pid_hour)
+        s_ang, m_ang, h_ang = clock.angles_in_radians()
+
+        second_hand = polar_to_cartesian(center, radius * 0.9, s_ang)
+        minute_hand = polar_to_cartesian(center, radius * 0.7, m_ang)
+        hour_hand = polar_to_cartesian(center, radius * 0.5, h_ang)
+
+        painter.setPen(QPen(QColor(255, 255, 255), 8.0))
+        painter.drawLine(center, hour_hand)
+
+        painter.setPen(QPen(QColor(200, 200, 200), 6.0))
+        painter.drawLine(center, minute_hand)
+
+        painter.setPen(QPen(QColor(255, 0, 0), 2.0))
+        painter.drawLine(center, second_hand)
+
+        # digital time
+        dt = self.current_time
+        formatted = f"{dt.hour:02}:{dt.minute:02}:{dt.second:02}.{int(dt.microsecond/1000):03}"
+        painter.setPen(QPen(self.palette().text().color()))
+        painter.setFont(QFont("Monospace", 12))
+        fm = painter.fontMetrics()
+        w = fm.horizontalAdvance(formatted)
+        painter.drawText(center.x() - w / 2, center.y() + radius + 20, formatted)
+
