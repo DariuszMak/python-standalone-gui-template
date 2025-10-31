@@ -89,8 +89,7 @@ uv lock ;
 
 ##### STATIC ANALYSIS & TESTS
 
-$env:PYTHONPATH="." ; 
-.venv\Scripts\Activate.ps1 ; 
+.venv\Scripts\Activate.ps1 ; $env:PYTHONPATH="." ; 
 
 .\scripts\format_and_lint.ps1 ; 
 
