@@ -149,8 +149,7 @@ docker system df ;
 docker-compose run --build app ; 
 
 
-$env:PYTHONPATH="." ; 
-.venv\Scripts\Activate.ps1 ; 
+.venv\Scripts\Activate.ps1 ; $env:PYTHONPATH="." ; 
 
 .\scripts\format_and_lint.ps1 ; 
 
@@ -235,8 +234,7 @@ uv lock ;
 ##### Docker should compile ```ui``` files, but as an alternative you can do it manually
 
 ```commandline
-$env:PYTHONPATH="." ; 
-.venv\Scripts\Activate.ps1 ; 
+.venv\Scripts\Activate.ps1 ; $env:PYTHONPATH="." ; 
 
 uv run python src\gui_setup.py ; 
 ```
@@ -244,8 +242,7 @@ uv run python src\gui_setup.py ;
 ### Running application natively
 
 ```commandline
-$env:PYTHONPATH="." ; 
-.venv\Scripts\Activate.ps1 ; 
+.venv\Scripts\Activate.ps1 ; $env:PYTHONPATH="." ; 
 
 uv run python src\main.py ; 
 ```
@@ -254,8 +251,7 @@ uv run python src\main.py ;
 
 In order to generate executable application, run:
 ```commandline
-$env:PYTHONPATH="." ; 
-.venv\Scripts\Activate.ps1 ; 
+.venv\Scripts\Activate.ps1 ; $env:PYTHONPATH="." ; 
 
 uv run pyinstaller --clean .\scripts\standalone_build_windows.spec ; 
 ```
@@ -295,8 +291,7 @@ uv run pyqt6-tools designer src\ui\forms\warning_dialog.ui ;
 ## Code linting
 
 ```commandline
-$env:PYTHONPATH="." ; 
-.venv\Scripts\Activate.ps1 ; 
+.venv\Scripts\Activate.ps1 ; $env:PYTHONPATH="." ; 
 
 clear ; 
 
@@ -313,8 +308,7 @@ uv run mypy test\ src\ --exclude 'moc_.*\.py|files_rc\.py' ;
 ## Code autoformat
 
 ```commandline
-$env:PYTHONPATH="." ; 
-.venv\Scripts\Activate.ps1 ; 
+.venv\Scripts\Activate.ps1 ; $env:PYTHONPATH="." ; 
 
 clear ; 
 
