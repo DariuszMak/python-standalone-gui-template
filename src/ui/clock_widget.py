@@ -4,7 +4,7 @@ import math
 from dataclasses import dataclass
 from datetime import UTC, datetime, time, timedelta
 
-from PySide6.QtCore import QPointF, Qt, QTimer
+from PySide6.QtCore import QPointF, QTimer
 from PySide6.QtGui import QColor, QFont, QPainter, QPen
 from PySide6.QtWidgets import QWidget
 
@@ -70,7 +70,6 @@ class ClockPID:
 
 
 class ClockWidget(QWidget):
-
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self.start_time = datetime.now(UTC).astimezone()
@@ -103,7 +102,6 @@ class ClockWidget(QWidget):
         self.second_pid.reset()
         self.minute_pid.reset()
         self.hour_pid.reset()
-
 
     def update_pid(self) -> None:
         duration = self.current_time - self.start_time

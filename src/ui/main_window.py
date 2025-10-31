@@ -1,6 +1,6 @@
 import logging
 
-from PySide6.QtCore import QEasingCurve, QEvent, QPropertyAnimation
+from PySide6.QtCore import QEasingCurve, QEvent, QPropertyAnimation, Qt
 from PySide6.QtGui import QCloseEvent, QGuiApplication
 
 from src.helpers.style_loader import StyleLoader
@@ -9,7 +9,6 @@ from src.ui.clock_widget import ClockWidget
 from src.ui.draggable_main_window import DraggableMainWindow
 from src.ui.forms.moc_main_window import Ui_MainWindow
 from src.ui.warning_dialog import WarningDialog
-from PySide6.QtCore import Qt
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +44,6 @@ class MainWindow(DraggableMainWindow):
             self.fade_in_animation()
 
         self.installEventFilter(self)
-
 
     def fade_in_animation(self) -> None:
         if not self._supports_opacity:
