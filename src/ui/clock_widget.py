@@ -1,14 +1,3 @@
-"""Analog clock widget (PySide6) ported from the Rust `rust_clock_gui` implementation.
-
-Provides:
-- ClockWidget: a QWidget drawing an analog clock and a small digital display
-- HandAngles dataclass and calculation functions (calculate_clock_angles, polar_to_cartesian)
-- PID implementation used by the widget to animate hands smoothly
-
-Usage: instantiate `ClockWidget()` and add it to any layout or set as central widget.
-
-"""
-
 from __future__ import annotations
 
 import math
@@ -28,21 +17,12 @@ class HandAngles:
 
 
 def polar_to_cartesian(center: QPointF, length: float, angle_radians: float) -> QPointF:
-    """Return QPointF for a polar coordinate (angle measured from 0 pointing up, clockwise positive).
-
-    Matches the Rust implementation where angle=0 => up (0,-length).
-    """
     x = center.x() + math.sin(angle_radians) * length
     y = center.y() - math.cos(angle_radians) * length
     return QPointF(x, y)
 
 
 def calculate_clock_angles(start_dt: datetime, duration: timedelta) -> HandAngles:
-    """Calculate raw hand "angles" in units used by the Rust code (seconds, minutes, hours float values).
-
-    Implementation mirrors Rust's approach: compute ms since midnight for start, add elapsed ms from duration.
-    The returned values are *not* radians — they are counts (seconds, minutes, hours) and later converted to radians.
-    """
     midnight = datetime.combine(start_dt.date(), time(0, 0, 0), tzinfo=start_dt.tzinfo)
     start_ms = int((start_dt - midnight).total_seconds() * 1000)
     elapsed_ms = int(duration.total_seconds() * 1000)
@@ -90,10 +70,6 @@ class ClockPID:
 
 
 class ClockWidget(QWidget):
-    """A PySide6 widget that draws an analog clock and a simple digital readout.
-
-    Pressing the "R" key resets the clock's start time (mirrors the Rust app behavior).
-    """
 
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
@@ -128,10 +104,6 @@ class ClockWidget(QWidget):
         self.minute_pid.reset()
         self.hour_pid.reset()
 
-    def keyPressEvent(self, event) -> None:  # noqa: N802
-        if event.key() == Qt.Key.Key_R:
-            self.reset()
-        super().keyPressEvent(event)
 
     def update_pid(self) -> None:
         duration = self.current_time - self.start_time

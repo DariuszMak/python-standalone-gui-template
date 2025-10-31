@@ -9,6 +9,7 @@ from src.ui.clock_widget import ClockWidget
 from src.ui.draggable_main_window import DraggableMainWindow
 from src.ui.forms.moc_main_window import Ui_MainWindow
 from src.ui.warning_dialog import WarningDialog
+from PySide6.QtCore import Qt
 
 logger = logging.getLogger(__name__)
 
@@ -19,10 +20,13 @@ class MainWindow(DraggableMainWindow):
 
         self._supports_opacity = QGuiApplication.platformName().lower() not in ["wayland", "xcb"]
         self._is_closing = False
+        self._clock_widget: ClockWidget | None = ClockWidget()
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         StyleLoader.style_window(self)
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.setFocus()
 
         self.setMinimumSize(MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE, MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE)
         self.resize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT)
@@ -35,10 +39,13 @@ class MainWindow(DraggableMainWindow):
         self.ui.btn_close.clicked.connect(self.close)
 
         layout = self.ui.frame_content.layout()
-        layout.addWidget(ClockWidget())
+        layout.addWidget(self._clock_widget)
 
         if self._supports_opacity:
             self.fade_in_animation()
+
+        self.installEventFilter(self)
+
 
     def fade_in_animation(self) -> None:
         if not self._supports_opacity:
@@ -104,6 +111,12 @@ class MainWindow(DraggableMainWindow):
             self.fade_out_animation()
         else:
             super().closeEvent(event)
+
+    def eventFilter(self, obj, event):  # noqa: N802
+        if event.type() == QEvent.Type.KeyPress and event.key() == Qt.Key.Key_R:
+            self._clock_widget.reset()
+            return True
+        return super().eventFilter(obj, event)
 
     def _final_close(self) -> None:
         self._is_closing = True
