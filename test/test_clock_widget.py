@@ -11,7 +11,7 @@ def approx_eq(a: float, b: float, epsilon: float = 1e-10) -> bool:
     return abs(a - b) < epsilon
 
 
-# ---------------- Clock angle tests ----------------
+
 
 
 def test_midnight_clock_angles():
@@ -95,7 +95,7 @@ def test_circled_clock_angles_after_month():
     assert angles.hours == pytest.approx(889.1003, rel=1e-5)
 
 
-# ---------------- PID tests ----------------
+
 
 
 def test_pid_update():
@@ -120,7 +120,7 @@ def test_pid_reset():
     assert pid.prev_error == 0.0
 
 
-# ---------------- ClockPID tests ----------------
+
 
 
 def test_clock_pid_angles_in_radians():
@@ -163,7 +163,7 @@ def test_quarter_angles():
     assert approx_eq(h, 0.25 * 2.0 * math.pi)
 
 
-# ---------------- polar_to_cartesian tests ----------------
+
 
 
 def test_polar_to_cartesian_zero_angle():
