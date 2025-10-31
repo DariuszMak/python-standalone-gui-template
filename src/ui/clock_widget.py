@@ -91,7 +91,7 @@ class ClockWidget(QWidget):
     def _on_tick(self) -> None:
         self.current_time = datetime.now(UTC).astimezone()
         self.update_pid()
-        self.update()  
+        self.update()
 
     def reset(self) -> None:
         self.start_time = datetime.now(UTC).astimezone()
@@ -124,16 +124,13 @@ class ClockWidget(QWidget):
         center = QPointF(rect.center())
         radius = size * 0.4
 
-        
         painter.fillRect(rect, self.palette().window())
 
-        
         pen = QPen(self.palette().text().color())
         pen.setWidthF(2.0)
         painter.setPen(pen)
         painter.drawEllipse(center, radius, radius)
 
-        
         for i in range(60):
             angle = (i / 60.0) * 2.0 * math.pi
             outer = polar_to_cartesian(center, radius, angle)
@@ -143,7 +140,6 @@ class ClockWidget(QWidget):
             painter.setPen(pen)
             painter.drawLine(inner, outer)
 
-        
         painter.setFont(QFont("Arial", max(8, int(radius * 0.09))))
         for i in range(12):
             angle = (i / 12.0) * 2.0 * math.pi
@@ -155,7 +151,6 @@ class ClockWidget(QWidget):
             h = fm.height()
             painter.drawText(QPointF(text_pos.x() - w / 2, text_pos.y() + h / 4), str(number))
 
-        
         clock = ClockPID(self.pid_second, self.pid_minute, self.pid_hour)
         s_ang, m_ang, h_ang = clock.angles_in_radians()
 
@@ -172,7 +167,6 @@ class ClockWidget(QWidget):
         painter.setPen(QPen(QColor(255, 0, 0), 2.0))
         painter.drawLine(center, second_hand)
 
-        
         dt = self.current_time
         formatted = f"{dt.hour:02}:{dt.minute:02}:{dt.second:02}.{int(dt.microsecond / 1000):03}"
         painter.setPen(QPen(self.palette().text().color()))
