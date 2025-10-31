@@ -86,7 +86,7 @@ class ClockWidget(QWidget):
 
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._on_tick)
-        self._timer.start(33)  # ~30 FPS
+        self._timer.start(15)
 
     def _on_tick(self) -> None:
         self.current_time = datetime.now(UTC).astimezone()
