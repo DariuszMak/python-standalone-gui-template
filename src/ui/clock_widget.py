@@ -140,10 +140,12 @@ class ClockWidget(QWidget):
             painter.setPen(pen)
             painter.drawLine(inner, outer)
 
-        painter.setFont(QFont("Arial", max(8, int(radius * 0.09))))
+        font_size = max(8, int(radius * 0.09))
+
+        painter.setFont(QFont("Arial", font_size))
         for i in range(12):
             angle = (i / 12.0) * 2.0 * math.pi
-            text_pos = polar_to_cartesian(center, radius - 25.0, angle)
+            text_pos = polar_to_cartesian(center, radius - 36.0, angle)
             painter.setPen(QPen(QColor(255, 255, 255)))
             number = ((i + 11) % 12) + 1
             fm = painter.fontMetrics()
@@ -170,7 +172,7 @@ class ClockWidget(QWidget):
         dt = self.current_time
         formatted = f"{dt.hour:02}:{dt.minute:02}:{dt.second:02}.{int(dt.microsecond / 1000):03}"
         painter.setPen(QPen(self.palette().text().color()))
-        painter.setFont(QFont("Monospace", 20))
+        painter.setFont(QFont("Monospace", font_size))
         fm = painter.fontMetrics()
         w = fm.horizontalAdvance(formatted)
         painter.drawText(QPointF(center.x() - w / 2, center.y() + radius / 2), formatted)
