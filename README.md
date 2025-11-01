@@ -92,6 +92,8 @@ uv lock ;
 .venv\Scripts\Activate.ps1 ; 
 $env:PYTHONPATH="." ; 
 
+uv run python src\gui_setup.py ; 
+
 .\scripts\format_and_lint.ps1 ; 
 
 pytest test/ --cov=src -vv ; 
@@ -100,7 +102,6 @@ pytest test/ --cov=src -vv ;
 
 $env:API_PORT="8000" ; 
 $env:API_HOST="127.0.0.1" ; 
-uv run python src\gui_setup.py ; 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
