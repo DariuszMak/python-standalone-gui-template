@@ -10,6 +10,10 @@ from src.gui_setup import UiExtensions, create_moc
 from src.ui import MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
 from src.ui.main_window import MainWindow
 
+import pytest
+from typing import Generator
+
+
 
 # Define a fixture to create a temporary directory for testing
 @pytest.fixture
@@ -116,20 +120,19 @@ def app() -> QCoreApplication:
 
 
 @pytest.fixture
-def main_window(app) -> Generator[MainWindow, None, None]:
-    _ = app
+def main_window(app: QApplication) -> Generator[MainWindow, None, None]:
     window = MainWindow()
     window.show()
     yield window
     window.close()
 
 
-def test_startup_size(main_window) -> None:
+def test_startup_size(main_window: MainWindow) -> None:
     assert main_window.width() == MAINWINDOW_WIDTH
     assert main_window.height() == MAINWINDOW_HEIGHT
 
 
-def test_resize_event_enforces_minimum(main_window) -> None:
+def test_resize_event_enforces_minimum(main_window: MainWindow) -> None:
     min_width = MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE
     min_height = MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE
 

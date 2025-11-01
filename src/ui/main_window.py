@@ -1,4 +1,9 @@
+from PySide6.QtCore import QObject, QEvent, Qt
+from PySide6.QtGui import QKeyEvent
 import logging
+from PySide6.QtGui import QResizeEvent
+
+from PySide6.QtCore import QObject, QEvent
 
 from PySide6.QtCore import QEasingCurve, QEvent, QPropertyAnimation, Qt
 from PySide6.QtGui import QCloseEvent, QGuiApplication
@@ -22,7 +27,7 @@ class MainWindow(DraggableMainWindow):
         self._clock_widget: ClockWidget = ClockWidget()
 
         self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
+        self.ui.setupUi(self) # type: ignore[no-untyped-call]
         StyleLoader.style_window(self)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setFocus()
@@ -38,7 +43,10 @@ class MainWindow(DraggableMainWindow):
         self.ui.btn_close.clicked.connect(self.close)
 
         layout = self.ui.frame_clock_widget.layout()
-        layout.addWidget(self._clock_widget)
+        if layout is not None:
+            layout.addWidget(self._clock_widget)
+        else:
+            logger.warning("frame_clock_widget has no layout set.")
 
         if self._supports_opacity:
             self.fade_in_animation()
@@ -86,7 +94,7 @@ class MainWindow(DraggableMainWindow):
             self.showMaximized()
         self._is_maximized = not self._is_maximized
 
-    def resizeEvent(self, event):  # noqa: N802
+    def resizeEvent(self, event: QResizeEvent) -> None:  # noqa: N802
         min_width, min_height = MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE, MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE
         new_width = max(event.size().width(), min_width)
         new_height = max(event.size().height(), min_height)
@@ -98,7 +106,7 @@ class MainWindow(DraggableMainWindow):
 
     def changeEvent(self, event: QEvent) -> None:  # noqa: N802
         if event.type() == QEvent.Type.LanguageChange:
-            self.ui.retranslateUi(self)
+            self.ui.retranslateUi(self) # type: ignore[no-untyped-call]
         super().changeEvent(event)
 
     def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802
@@ -110,10 +118,11 @@ class MainWindow(DraggableMainWindow):
         else:
             super().closeEvent(event)
 
-    def eventFilter(self, obj, event):  # noqa: N802
-        if event.type() == QEvent.Type.KeyPress and event.key() == Qt.Key.Key_R:
-            self._clock_widget.reset()
-            return True
+    def eventFilter(self, obj: QObject, event: QEvent) -> bool:  # noqa: N802
+        if event.type() == QEvent.Type.KeyPress:
+            if isinstance(event, QKeyEvent) and event.key() == Qt.Key.Key_R:
+                self._clock_widget.reset()
+                return True
         return super().eventFilter(obj, event)
 
     def _final_close(self) -> None:
