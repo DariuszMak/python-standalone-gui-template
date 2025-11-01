@@ -635,6 +635,12 @@
           </item>
           <item>
            <widget class="QFrame" name="frame_main_content">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true"/>
             </property>
@@ -652,6 +658,12 @@
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>400</width>
+                 <height>400</height>
+                </size>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_9"/>
               </widget>
