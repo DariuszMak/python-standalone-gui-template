@@ -1,5 +1,6 @@
 moc_*.py
 files_rc.py
+linux_distribution
 
 __pycache__
 *.py[cod]
@@ -9,8 +10,7 @@ __pycache__
 .Python build/
 develop-eggs/
 build/
-windows_distribution/
-linux_distribution
+dist/
 downloads/
 eggs/
 .eggs/
