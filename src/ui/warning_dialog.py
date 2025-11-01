@@ -15,7 +15,7 @@ class WarningDialog(DraggableDialog):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__()
         self.ui = Ui_Dialog()
-        self.ui.setupUi(self) # type: ignore[no-untyped-call]
+        self.ui.setupUi(self)  # type: ignore[no-untyped-call]
         StyleLoader.style_window(self)
 
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
@@ -29,7 +29,7 @@ class WarningDialog(DraggableDialog):
 
     def changeEvent(self, event: QEvent) -> None:  # noqa: N802
         if event.type() == QEvent.Type.LanguageChange:
-            self.ui.retranslateUi(self) # type: ignore[no-untyped-call]
+            self.ui.retranslateUi(self)  # type: ignore[no-untyped-call]
         super().changeEvent(event)
 
     def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802

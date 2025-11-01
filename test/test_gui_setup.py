@@ -10,10 +10,6 @@ from src.gui_setup import UiExtensions, create_moc
 from src.ui import MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
 from src.ui.main_window import MainWindow
 
-import pytest
-from typing import Generator
-
-
 
 # Define a fixture to create a temporary directory for testing
 @pytest.fixture

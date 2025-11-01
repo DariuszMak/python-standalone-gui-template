@@ -1,12 +1,7 @@
-from PySide6.QtCore import QObject, QEvent, Qt
-from PySide6.QtGui import QKeyEvent
 import logging
-from PySide6.QtGui import QResizeEvent
 
-from PySide6.QtCore import QObject, QEvent
-
-from PySide6.QtCore import QEasingCurve, QEvent, QPropertyAnimation, Qt
-from PySide6.QtGui import QCloseEvent, QGuiApplication
+from PySide6.QtCore import QEasingCurve, QEvent, QObject, QPropertyAnimation, Qt
+from PySide6.QtGui import QCloseEvent, QGuiApplication, QKeyEvent, QResizeEvent
 
 from src.helpers.style_loader import StyleLoader
 from src.ui import ANIMATION_DURATION, MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
@@ -27,7 +22,7 @@ class MainWindow(DraggableMainWindow):
         self._clock_widget: ClockWidget = ClockWidget()
 
         self.ui = Ui_MainWindow()
-        self.ui.setupUi(self) # type: ignore[no-untyped-call]
+        self.ui.setupUi(self)  # type: ignore[no-untyped-call]
         StyleLoader.style_window(self)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setFocus()
@@ -106,7 +101,7 @@ class MainWindow(DraggableMainWindow):
 
     def changeEvent(self, event: QEvent) -> None:  # noqa: N802
         if event.type() == QEvent.Type.LanguageChange:
-            self.ui.retranslateUi(self) # type: ignore[no-untyped-call]
+            self.ui.retranslateUi(self)  # type: ignore[no-untyped-call]
         super().changeEvent(event)
 
     def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802
