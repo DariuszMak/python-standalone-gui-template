@@ -171,8 +171,8 @@ class ClockWidget(QWidget):
 
         dt = self.current_time
         formatted = f"{dt.hour:02}:{dt.minute:02}:{dt.second:02}.{int(dt.microsecond / 1000):03}"
-        painter.setPen(QPen(self.palette().text().color()))
-        painter.setFont(QFont("Monospace", font_size))
+        painter.setPen(QPen(QColor(150, 255, 190)))
+        painter.setFont(QFont("Consolas", font_size))
         fm = painter.fontMetrics()
         w = fm.horizontalAdvance(formatted)
         painter.drawText(QPointF(center.x() - w / 2, center.y() + radius / 2), formatted)
