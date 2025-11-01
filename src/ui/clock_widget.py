@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, time, timedelta
 
 from PySide6.QtCore import QPointF, QTimer
-from PySide6.QtGui import QColor, QFont, QPainter, QPen
+from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent, QPen
 from PySide6.QtWidgets import QWidget
 
 
@@ -70,7 +70,7 @@ class ClockPID:
 
 
 class ClockWidget(QWidget):
-    def __init__(self, parent=None) -> None:
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.start_time = datetime.now(UTC).astimezone()
         self.current_time = self.start_time
@@ -115,7 +115,7 @@ class ClockWidget(QWidget):
         self.pid_minute += self.minute_pid.update(pid_minute_error)
         self.pid_hour += self.hour_pid.update(pid_hour_error)
 
-    def paintEvent(self, event) -> None:  # noqa: N802, ARG002
+    def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
@@ -145,7 +145,7 @@ class ClockWidget(QWidget):
         painter.setFont(QFont("Arial", font_size))
         for i in range(12):
             angle = (i / 12.0) * 2.0 * math.pi
-            text_pos = polar_to_cartesian(center, radius - float(font_size)*2, angle)
+            text_pos = polar_to_cartesian(center, radius - float(font_size) * 2, angle)
             painter.setPen(QPen(QColor(255, 255, 255)))
             number = ((i + 11) % 12) + 1
             fm = painter.fontMetrics()

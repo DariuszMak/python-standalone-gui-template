@@ -1,8 +1,9 @@
 import os
+from collections.abc import Generator
 from unittest.mock import patch
 
 import pytest
-from PySide6.QtCore import QSize
+from PySide6.QtCore import QCoreApplication, QSize
 from PySide6.QtWidgets import QApplication
 
 from src.gui_setup import UiExtensions, create_moc
@@ -107,7 +108,7 @@ def test_create_moc_error_when_create_ui_content_for_qrc(temp_dir: str, example_
 
 
 @pytest.fixture(scope="session")
-def app():
+def app() -> QCoreApplication:
     app = QApplication.instance()
     if app is None:
         app = QApplication([])
@@ -115,7 +116,7 @@ def app():
 
 
 @pytest.fixture
-def main_window(app):
+def main_window(app) -> Generator[MainWindow, None, None]:
     _ = app
     window = MainWindow()
     window.show()
@@ -123,12 +124,12 @@ def main_window(app):
     window.close()
 
 
-def test_startup_size(main_window):
+def test_startup_size(main_window) -> None:
     assert main_window.width() == MAINWINDOW_WIDTH
     assert main_window.height() == MAINWINDOW_HEIGHT
 
 
-def test_resize_event_enforces_minimum(main_window):
+def test_resize_event_enforces_minimum(main_window) -> None:
     min_width = MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE
     min_height = MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE
 
