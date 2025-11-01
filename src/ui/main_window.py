@@ -19,7 +19,7 @@ class MainWindow(DraggableMainWindow):
 
         self._supports_opacity = QGuiApplication.platformName().lower() not in ["wayland", "xcb"]
         self._is_closing = False
-        self._clock_widget: ClockWidget | None = ClockWidget()
+        self._clock_widget: ClockWidget = ClockWidget()
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -37,7 +37,7 @@ class MainWindow(DraggableMainWindow):
         self.ui.btn_maximize_restore.clicked.connect(self.toggle_maximize_restore)
         self.ui.btn_close.clicked.connect(self.close)
 
-        layout = self.ui.frame_content.layout()
+        layout = self.ui.frame_main_content.layout()
         layout.addWidget(self._clock_widget)
 
         if self._supports_opacity:
