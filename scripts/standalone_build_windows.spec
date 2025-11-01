@@ -18,6 +18,7 @@ a = Analysis(
     cipher=block_cipher,
     noarchive=False,
 )
+
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
@@ -39,13 +40,14 @@ exe = EXE(
     icon='..\\src\\ui\\forms\\icons\\images\\program_icon.ico',
 )
 
-coll = COLLECT(exe,
-               a.binaries,
-               a.zipfiles,
-               a.datas,
-#               splash.binaries,
-               strip=False,
-               upx=True,
-               upx_exclude=[],
-               name='GUI_client'
+coll = COLLECT(
+    exe,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
+#    splash.binaries,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    name='GUI_client_Windows'
 )
