@@ -646,7 +646,7 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_4">
              <item>
-              <widget class="QFrame" name="horizontalFrame">
+              <widget class="QFrame" name="frame_clock_widget">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                  <horstretch>0</horstretch>

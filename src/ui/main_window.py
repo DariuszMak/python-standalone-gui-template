@@ -37,7 +37,7 @@ class MainWindow(DraggableMainWindow):
         self.ui.btn_maximize_restore.clicked.connect(self.toggle_maximize_restore)
         self.ui.btn_close.clicked.connect(self.close)
 
-        layout = self.ui.frame_main_content.layout()
+        layout = self.ui.frame_clock_widget.layout()
         layout.addWidget(self._clock_widget)
 
         if self._supports_opacity:
