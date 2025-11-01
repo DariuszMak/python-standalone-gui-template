@@ -164,14 +164,20 @@ uv sync --no-dev --locked --no-cache ;
 
 docker-compose run --rm --remove-orphans app sh -c "uv sync --dev --locked --no-cache && uv run pyinstaller --clean ./scripts/standalone_build_linux.spec && cp -r dist/* linux_distribution/" ; 
 
+rm -r -fo .\dist, .\build ; 
+
+
 uv run pyinstaller --clean .\scripts\standalone_build_windows.spec ; 
+cp -r -fo .\dist\* .\windows_distribution\ ; 
+
+rm -r -fo .\dist, .\build ; 
 
 
 ##### RUN APPLICATIONS LOCALLY
 
 $env:API_PORT="8000" ; 
 $env:API_HOST="127.0.0.1" ; 
-Start-Process .\dist\GUI_client.exe ; 
+Start-Process .\windows_distribution\GUI_client.exe ; 
 Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
