@@ -145,7 +145,7 @@ class ClockWidget(QWidget):
         painter.setFont(QFont("Arial", font_size))
         for i in range(12):
             angle = (i / 12.0) * 2.0 * math.pi
-            text_pos = polar_to_cartesian(center, radius - 36.0, angle)
+            text_pos = polar_to_cartesian(center, radius - float(font_size)*2, angle)
             painter.setPen(QPen(QColor(255, 255, 255)))
             number = ((i + 11) % 12) + 1
             fm = painter.fontMetrics()
