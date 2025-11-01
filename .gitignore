@@ -1,16 +1,19 @@
 moc_*.py
 files_rc.py
-linux_distribution
 
 __pycache__
 *.py[cod]
 *$py.class
 
+
+# PyInstaller
+build/
+dist/
+linux_distribution/
+
 # Distribution / packaging
 .Python build/
 develop-eggs/
-build/
-dist/
 downloads/
 eggs/
 .eggs/
