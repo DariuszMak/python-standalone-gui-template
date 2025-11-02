@@ -295,8 +295,8 @@ newman run collections\Python_GUI.postman_collection.json ;
 ## Edit `ui` forms with QT Designer:
 
 ```commandline
-uv run pyqt6-tools designer src\ui\forms\main_window.ui ;
-uv run pyqt6-tools designer src\ui\forms\warning_dialog.ui ;
+uv run pyqt6-tools designer src\ui\forms\main_window.ui ; 
+uv run pyqt6-tools designer src\ui\forms\warning_dialog.ui ; 
 ```
 
 
@@ -308,13 +308,15 @@ $env:PYTHONPATH="." ;
 
 clear ; 
 
-uv run pip-audit ;  
+uv run pip-audit ; 
 uv run ruff check test src --exclude 'moc_.*\.py|files_rc\.py' ; 
 uv run ruff format --check test src --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run mypy test src --exclude 'moc_.*\.py|files_rc\.py' ; 
-# uv run mypy --explicit-package-bases test src --exclude 'moc_.*\.py|files_rc\.py' ; 
+
+uv run mypy --explicit-package-bases test src --exclude 'moc_.*\.py|files_rc\.py' ; 
+
 # uv run mypy --explicit-package-bases --check-untyped-defs test src --exclude 'moc_.*\.py|files_rc\.py' ; 
 # uv run mypy --strict test src --exclude 'moc_.*\.py|files_rc\.py' ; 
+# uv run mypy --strict test src ; 
 ```
 
 
