@@ -34,13 +34,13 @@
   </tr>
   <tr>
     <td align="center">
-      <a href="https://github.com/DariuszMak/python-standalone-gui-template/releases/download/0.8.1/GUI_client.exe">
+      <a href="https://github.com/DariuszMak/python-standalone-gui-template/releases/download/0.9.0/GUI_client.exe">
         <img src="images/Windows_runtime_screenshot.png" width="200px" alt="Windows Preview">
       </a>
     </td>
     <td></td>
     <td align="center">
-      <a href="https://github.com/DariuszMak/python-standalone-gui-template/releases/download/0.8.1/GUI_client">
+      <a href="https://github.com/DariuszMak/python-standalone-gui-template/releases/download/0.9.0/GUI_client">
         <img src="images/Linux_runtime_screenshot.png" width="200px" alt="Linux Preview">
       </a>
     </td>
