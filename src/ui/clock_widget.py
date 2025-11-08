@@ -57,7 +57,6 @@ class PID:
 
 
 class ClockPID:
-
     pid_second: float
     pid_minute: float
     pid_hour: float
