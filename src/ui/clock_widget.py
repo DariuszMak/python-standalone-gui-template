@@ -173,16 +173,16 @@ class ClockWidget(QWidget):
             h = fm.height()
             painter.drawText(QPointF(text_pos.x() - w / 2, text_pos.y() + h / 4), str(number))
 
-        hands_positions = self.convert_to_cartesian(center, radius)
+        hands_position = self.convert_to_cartesian(center, radius)
 
         painter.setPen(QPen(QColor(255, 255, 255), 8.0))
-        painter.drawLine(center, hands_positions.hour)
+        painter.drawLine(center, hands_position.hour)
 
         painter.setPen(QPen(QColor(200, 200, 200), 6.0))
-        painter.drawLine(center, hands_positions.minute)
+        painter.drawLine(center, hands_position.minute)
 
         painter.setPen(QPen(QColor(255, 0, 0), 2.0))
-        painter.drawLine(center, hands_positions.second)
+        painter.drawLine(center, hands_position.second)
 
         dt = self.current_time
         formatted = f"{dt.hour:02}:{dt.minute:02}:{dt.second:02}.{int(dt.microsecond / 1000):03}"
