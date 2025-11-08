@@ -5,10 +5,7 @@ import pytest
 from PySide6.QtCore import QPointF
 
 from src.ui.clock_widget.clock_pid import ClockPID
-from src.ui.clock_widget.clock_widget import (
-    calculate_clock_hands_angles,
-    polar_to_cartesian,
-)
+from src.ui.clock_widget.helpers import calculate_clock_hands_angles, polar_to_cartesian
 from src.ui.clock_widget.pid import PID
 
 
