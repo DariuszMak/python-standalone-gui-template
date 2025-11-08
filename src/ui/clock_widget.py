@@ -66,6 +66,11 @@ class ClockPID:
         self.pid_minute = float(pid_minute)
         self.pid_hour = float(pid_hour)
 
+    def reset(self) -> None:
+        self.pid_second = 0.0
+        self.pid_minute = 0.0
+        self.pid_hour = 0.0
+
     def angles_in_radians(self) -> tuple[float, float, float]:
         second_angle = (self.pid_second / 60.0) * 2.0 * math.pi
         minute_angle = (self.pid_minute / 60.0) * 2.0 * math.pi
@@ -98,7 +103,7 @@ class ClockWidget(QWidget):
     def reset(self) -> None:
         self.start_time = datetime.now(UTC).astimezone()
         self.current_time = self.start_time
-        self.widget_pid = ClockPID(0.0, 0.0, 0.0)
+        self.widget_pid.reset()
         self.second_pid.reset()
         self.minute_pid.reset()
         self.hour_pid.reset()
