@@ -10,7 +10,7 @@ from PySide6.QtWidgets import QWidget
 
 
 @dataclass
-class HandAngles:
+class ClockHands:
     second: float
     minute: float
     hour: float
@@ -22,7 +22,7 @@ def polar_to_cartesian(center: QPointF, length: float, angle_radians: float) -> 
     return QPointF(x, y)
 
 
-def calculate_clock_angles(start_dt: datetime, duration: timedelta) -> HandAngles:
+def calculate_clock_angles(start_dt: datetime, duration: timedelta) -> ClockHands:
     midnight = datetime.combine(start_dt.date(), time(0, 0, 0), tzinfo=start_dt.tzinfo)
     start_ms = int((start_dt - midnight).total_seconds() * 1000)
     elapsed_ms = int(duration.total_seconds() * 1000)
@@ -34,7 +34,7 @@ def calculate_clock_angles(start_dt: datetime, duration: timedelta) -> HandAngle
     minutes_angle = (start_s / 60.0) % 60.0 + elapsed_s / 60.0
     hours_angle = (start_s / 3600.0) % 12.0 + elapsed_s / 3600.0
 
-    return HandAngles(second=float(seconds_angle), minute=float(minutes_angle), hour=float(hours_angle))
+    return ClockHands(second=float(seconds_angle), minute=float(minutes_angle), hour=float(hours_angle))
 
 
 class PID:
@@ -110,7 +110,7 @@ class ClockWidget(QWidget):
 
     def update_pid(self) -> None:
         duration = self.current_time - self.start_time
-        calculated: HandAngles = calculate_clock_angles(self.start_time, duration)
+        calculated: ClockHands = calculate_clock_angles(self.start_time, duration)
 
         pid_second_error = calculated.second - self.clock_pid.second
         pid_minute_error = calculated.minute - self.clock_pid.minute
