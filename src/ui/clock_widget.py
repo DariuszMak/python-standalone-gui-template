@@ -135,10 +135,7 @@ class ClockWidget(QWidget):
 
         return HandsPosition(second_hand_cartesian, minute_hand_cartesian, hour_hand_cartesian)
 
-    def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-
+    def paint_clock_face(self, painter: QPainter) -> tuple[QPointF, float, int]:
         rect = self.rect()
         size = min(rect.width(), rect.height())
         center = QPointF(rect.center())
@@ -172,9 +169,9 @@ class ClockWidget(QWidget):
             w = fm.horizontalAdvance(str(number))
             h = fm.height()
             painter.drawText(QPointF(text_pos.x() - w / 2, text_pos.y() + h / 4), str(number))
+        return center, radius, font_size
 
-        hands_position = self.convert_to_cartesian(center, radius)
-
+    def paint_hands(self, painter: QPainter, center: QPointF, hands_position: HandsPosition) -> None:
         painter.setPen(QPen(QColor(255, 255, 255), 8.0))
         painter.drawLine(center, hands_position.hour)
 
@@ -184,6 +181,7 @@ class ClockWidget(QWidget):
         painter.setPen(QPen(QColor(255, 0, 0), 2.0))
         painter.drawLine(center, hands_position.second)
 
+    def paint_current_time(self, painter: QPainter, center: QPointF, radius: float, font_size: int) -> None:
         dt = self.current_time
         formatted = f"{dt.hour:02}:{dt.minute:02}:{dt.second:02}.{int(dt.microsecond / 1000):03}"
         painter.setPen(QPen(QColor(150, 255, 190)))
@@ -191,3 +189,15 @@ class ClockWidget(QWidget):
         fm = painter.fontMetrics()
         w = fm.horizontalAdvance(formatted)
         painter.drawText(QPointF(center.x() - w / 2, center.y() + radius / 2), formatted)
+
+    def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+
+        center, radius, font_size = self.paint_clock_face(painter)
+
+        hands_position = self.convert_to_cartesian(center, radius)
+
+        self.paint_hands(painter, center, hands_position)
+
+        self.paint_current_time(painter, center, radius, font_size)
