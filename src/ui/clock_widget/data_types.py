@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass
-from datetime import UTC, datetime, time, timedelta
+from typing import TYPE_CHECKING
 
-from PySide6.QtCore import QPointF, QTimer
-from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent, QPen
-from PySide6.QtWidgets import QWidget
+if TYPE_CHECKING:
+    from PySide6.QtCore import QPointF
+
+
 @dataclass
 class ClockHands:
     second: float
