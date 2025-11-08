@@ -154,11 +154,11 @@ class ClockWidget(QWidget):
             painter.drawText(QPointF(text_pos.x() - w / 2, text_pos.y() + h / 4), str(number))
 
         clock_pid = ClockPID(self.widget_second, self.widget_minute, self.widget_hour)
-        s_ang, m_ang, h_ang = clock_pid.angles_in_radians()
+        second_polar, minute_polar, hour_polar = clock_pid.angles_in_radians()
 
-        second_hand_cartesian = polar_to_cartesian(center, radius * 0.9, s_ang)
-        minute_hand_cartesian = polar_to_cartesian(center, radius * 0.7, m_ang)
-        hour_hand_cartesian = polar_to_cartesian(center, radius * 0.5, h_ang)
+        second_hand_cartesian = polar_to_cartesian(center, radius * 0.9, second_polar)
+        minute_hand_cartesian = polar_to_cartesian(center, radius * 0.7, minute_polar)
+        hour_hand_cartesian = polar_to_cartesian(center, radius * 0.5, hour_polar)
 
         painter.setPen(QPen(QColor(255, 255, 255), 8.0))
         painter.drawLine(center, hour_hand_cartesian)
