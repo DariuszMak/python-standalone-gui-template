@@ -4,7 +4,13 @@ from datetime import UTC, datetime, timedelta
 import pytest
 from PySide6.QtCore import QPointF
 
-from src.ui.clock_widget.clock_widget import PID, ClockPID, ClockWidget, calculate_clock_hands_angles, polar_to_cartesian
+from src.ui.clock_widget.clock_widget import (
+    PID,
+    ClockPID,
+    ClockWidget,
+    calculate_clock_hands_angles,
+    polar_to_cartesian,
+)
 
 
 def approx_eq(a: float, b: float, epsilon: float = 1e-10) -> bool:
