@@ -156,18 +156,18 @@ class ClockWidget(QWidget):
         clock_pid = ClockPID(self.widget_second, self.widget_minute, self.widget_hour)
         s_ang, m_ang, h_ang = clock_pid.angles_in_radians()
 
-        second_hand = polar_to_cartesian(center, radius * 0.9, s_ang)
-        minute_hand = polar_to_cartesian(center, radius * 0.7, m_ang)
-        hour_hand = polar_to_cartesian(center, radius * 0.5, h_ang)
+        second_hand_cartesian = polar_to_cartesian(center, radius * 0.9, s_ang)
+        minute_hand_cartesian = polar_to_cartesian(center, radius * 0.7, m_ang)
+        hour_hand_cartesian = polar_to_cartesian(center, radius * 0.5, h_ang)
 
         painter.setPen(QPen(QColor(255, 255, 255), 8.0))
-        painter.drawLine(center, hour_hand)
+        painter.drawLine(center, hour_hand_cartesian)
 
         painter.setPen(QPen(QColor(200, 200, 200), 6.0))
-        painter.drawLine(center, minute_hand)
+        painter.drawLine(center, minute_hand_cartesian)
 
         painter.setPen(QPen(QColor(255, 0, 0), 2.0))
-        painter.drawLine(center, second_hand)
+        painter.drawLine(center, second_hand_cartesian)
 
         dt = self.current_time
         formatted = f"{dt.hour:02}:{dt.minute:02}:{dt.second:02}.{int(dt.microsecond / 1000):03}"
