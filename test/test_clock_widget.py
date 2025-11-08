@@ -4,89 +4,89 @@ from datetime import UTC, datetime, timedelta
 import pytest
 from PySide6.QtCore import QPointF
 
-from src.ui.clock_widget import PID, ClockPID, calculate_clock_angles, polar_to_cartesian
+from src.ui.clock_widget import PID, ClockPID, calculate_clock_hands_angles, polar_to_cartesian
 
 
 def approx_eq(a: float, b: float, epsilon: float = 1e-10) -> bool:
     return abs(a - b) < epsilon
 
 
-def test_midnight_clock_angles() -> None:
+def test_midnight_clock_hands_angles() -> None:
     dt = datetime(2025, 4, 27, 0, 0, 0, tzinfo=UTC)
     duration = timedelta(0)
-    angles = calculate_clock_angles(dt, duration)
+    angles = calculate_clock_hands_angles(dt, duration)
     assert angles.second == 0.0
     assert angles.minute == 0.0
     assert angles.hour == 0.0
 
 
-def test_noon_clock_angles() -> None:
+def test_noon_clock_hands_angles() -> None:
     dt = datetime(2025, 4, 27, 12, 0, 0, tzinfo=UTC)
     duration = timedelta(0)
-    angles = calculate_clock_angles(dt, duration)
+    angles = calculate_clock_hands_angles(dt, duration)
     assert angles.second == 0.0
     assert angles.minute == 0.0
     assert angles.hour == 0.0
 
 
-def test_noon_clock_angles_from_milliseconds() -> None:
+def test_noon_clock_hands_angles_from_milliseconds() -> None:
     dt = datetime(2025, 4, 27, 0, 0, 0, tzinfo=UTC)
     duration = timedelta(milliseconds=12 * 60 * 60 * 1000)
-    angles = calculate_clock_angles(dt, duration)
+    angles = calculate_clock_hands_angles(dt, duration)
     assert angles.second == pytest.approx(43200.0)
     assert angles.minute == pytest.approx(720.0)
     assert angles.hour == pytest.approx(12.0)
 
 
-def test_maximum_clock_angles() -> None:
+def test_maximum_clock_hands_angles() -> None:
     dt = datetime(2025, 4, 27, 23, 59, 59, tzinfo=UTC)
     duration = timedelta(0)
-    angles = calculate_clock_angles(dt, duration)
+    angles = calculate_clock_hands_angles(dt, duration)
     assert angles.second == pytest.approx(59.0)
     assert angles.minute == pytest.approx(59.983334, rel=1e-6)
     assert angles.hour == pytest.approx(11.9997225, rel=1e-6)
 
 
-def test_maximum_clock_angles_from_milliseconds() -> None:
+def test_maximum_clock_hands_angles_from_milliseconds() -> None:
     dt = datetime(2025, 4, 27, 0, 0, 0, tzinfo=UTC)
     duration = timedelta(milliseconds=(23 * 60 * 60 * 1000 + 59 * 60 * 1000 + 59 * 1000 + 999))
-    angles = calculate_clock_angles(dt, duration)
+    angles = calculate_clock_hands_angles(dt, duration)
     assert angles.second == pytest.approx(86400.0)
     assert angles.minute == pytest.approx(1440.0)
     assert angles.hour == pytest.approx(24.0)
 
 
-def test_half_past_three_clock_angles() -> None:
+def test_half_past_three_clock_hands_angles() -> None:
     dt = datetime(2025, 4, 27, 3, 30, 0, tzinfo=UTC)
     duration = timedelta(0)
-    angles = calculate_clock_angles(dt, duration)
+    angles = calculate_clock_hands_angles(dt, duration)
     assert angles.second == pytest.approx(0.0)
     assert angles.minute == pytest.approx(30.0)
     assert angles.hour == pytest.approx(3.5)
 
 
-def test_half_past_three_clock_angles_from_milliseconds() -> None:
+def test_half_past_three_clock_hands_angles_from_milliseconds() -> None:
     dt = datetime(2025, 4, 27, 0, 0, 0, tzinfo=UTC)
     duration = timedelta(milliseconds=(3 * 60 * 60 * 1000 + 30 * 60 * 1000))
-    angles = calculate_clock_angles(dt, duration)
+    angles = calculate_clock_hands_angles(dt, duration)
     assert angles.second == pytest.approx(12600.0)
     assert angles.minute == pytest.approx(210.0)
     assert angles.hour == pytest.approx(3.5)
 
 
-def test_circled_clock_angles() -> None:
+def test_circled_clock_hands_angles() -> None:
     dt = datetime(2025, 4, 27, 0, 0, 0, tzinfo=UTC)
     duration = timedelta(milliseconds=(33 * 60 * 60 * 1000 + 65 * 60 * 1000 + 61 * 1000 + 2))
-    angles = calculate_clock_angles(dt, duration)
+    angles = calculate_clock_hands_angles(dt, duration)
     assert angles.second == pytest.approx(122761.0)
     assert angles.minute == pytest.approx(2046.0167, rel=1e-5)
     assert angles.hour == pytest.approx(34.100277, rel=1e-5)
 
 
-def test_circled_clock_angles_after_month() -> None:
+def test_circled_clock_hands_angles_after_month() -> None:
     dt = datetime(2025, 4, 27, 0, 0, 0, tzinfo=UTC)
     duration = timedelta(milliseconds=(37 * 24 * 60 * 60 * 1000 + 65 * 60 * 1000 + 61 * 1000 + 2))
-    angles = calculate_clock_angles(dt, duration)
+    angles = calculate_clock_hands_angles(dt, duration)
     assert angles.second == pytest.approx(3200761.0)
     assert angles.minute == pytest.approx(53346.016, rel=1e-5)
     assert angles.hour == pytest.approx(889.1003, rel=1e-5)

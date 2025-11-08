@@ -29,7 +29,7 @@ def polar_to_cartesian(center: QPointF, length: float, angle_radians: float) -> 
     return QPointF(x, y)
 
 
-def calculate_clock_angles(start_dt: datetime, duration: timedelta) -> ClockHands:
+def calculate_clock_hands_angles(start_dt: datetime, duration: timedelta) -> ClockHands:
     midnight = datetime.combine(start_dt.date(), time(0, 0, 0), tzinfo=start_dt.tzinfo)
     start_ms = int((start_dt - midnight).total_seconds() * 1000)
     elapsed_ms = int(duration.total_seconds() * 1000)
@@ -113,7 +113,7 @@ class ClockWidget(QWidget):
 
     def update_clock_pid(self) -> None:
         duration = self.current_time - self.start_time
-        calculated: ClockHands = calculate_clock_angles(self.start_time, duration)
+        calculated: ClockHands = calculate_clock_hands_angles(self.start_time, duration)
 
         pid_second_error = calculated.second - self.clock_pid.clock_hands.second
         pid_minute_error = calculated.minute - self.clock_pid.clock_hands.minute
