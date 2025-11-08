@@ -1,15 +1,8 @@
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass
-from datetime import UTC, datetime, time, timedelta
-
-from PySide6.QtCore import QPointF, QTimer
-from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent, QPen
-from PySide6.QtWidgets import QWidget
 
 from src.ui.clock_widget.data_types import ClockHands
-
 
 
 class ClockPID:

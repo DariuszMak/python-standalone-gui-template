@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass
 from datetime import UTC, datetime, time, timedelta
 
 from PySide6.QtCore import QPointF, QTimer
@@ -11,8 +10,6 @@ from PySide6.QtWidgets import QWidget
 from src.ui.clock_widget.clock_pid import ClockPID
 from src.ui.clock_widget.data_types import ClockHands, HandsPosition
 from src.ui.clock_widget.pid import PID
-
-
 
 
 def polar_to_cartesian(center: QPointF, length: float, angle_radians: float) -> QPointF:
@@ -34,11 +31,6 @@ def calculate_clock_hands_angles(start_dt: datetime, duration: timedelta) -> Clo
     hours_angle = (start_s / 3600.0) % 12.0 + elapsed_s / 3600.0
 
     return ClockHands(second=float(seconds_angle), minute=float(minutes_angle), hour=float(hours_angle))
-
-
-
-
-
 
 
 class ClockWidget(QWidget):
