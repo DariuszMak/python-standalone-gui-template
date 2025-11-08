@@ -177,7 +177,7 @@ class ClockWidget(QWidget):
         w = fm.horizontalAdvance(formatted)
         painter.drawText(QPointF(center.x() - w / 2, center.y() + radius / 2), formatted)
 
-    def convert_to_cartesian(self, center, radius) -> tuple[QPointF, QPointF, QPointF]:
+    def convert_to_cartesian(self, center: QPointF, radius: float) -> tuple[QPointF, QPointF, QPointF]:
         clock_pid = ClockPID(self.clock_pid.second, self.clock_pid.minute, self.clock_pid.hour)
         second_polar, minute_polar, hour_polar = clock_pid.angles_in_radians()
 
