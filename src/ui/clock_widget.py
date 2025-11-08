@@ -16,6 +16,13 @@ class ClockHands:
     hour: float
 
 
+@dataclass
+class HandsPosition:
+    second: QPointF
+    minute: QPointF
+    hour: QPointF
+
+
 def polar_to_cartesian(center: QPointF, length: float, angle_radians: float) -> QPointF:
     x = center.x() + math.sin(angle_radians) * length
     y = center.y() - math.cos(angle_radians) * length
@@ -116,7 +123,7 @@ class ClockWidget(QWidget):
         self.clock_pid.clock_hands.minute += self.minute_pid.update(pid_minute_error)
         self.clock_pid.clock_hands.hour += self.hour_pid.update(pid_hour_error)
 
-    def convert_to_cartesian(self, center: QPointF, radius: float) -> tuple[QPointF, QPointF, QPointF]:
+    def convert_to_cartesian(self, center: QPointF, radius: float) -> HandsPosition:
         clock_pid = ClockPID(
             self.clock_pid.clock_hands.second, self.clock_pid.clock_hands.minute, self.clock_pid.clock_hands.hour
         )
@@ -125,7 +132,8 @@ class ClockWidget(QWidget):
         second_hand_cartesian = polar_to_cartesian(center, radius * 0.9, second_polar)
         minute_hand_cartesian = polar_to_cartesian(center, radius * 0.7, minute_polar)
         hour_hand_cartesian = polar_to_cartesian(center, radius * 0.5, hour_polar)
-        return second_hand_cartesian, minute_hand_cartesian, hour_hand_cartesian
+
+        return HandsPosition(second_hand_cartesian, minute_hand_cartesian, hour_hand_cartesian)
 
     def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
         painter = QPainter(self)
@@ -165,16 +173,16 @@ class ClockWidget(QWidget):
             h = fm.height()
             painter.drawText(QPointF(text_pos.x() - w / 2, text_pos.y() + h / 4), str(number))
 
-        second_hand_cartesian, minute_hand_cartesian, hour_hand_cartesian = self.convert_to_cartesian(center, radius)
+        hands_positions = self.convert_to_cartesian(center, radius)
 
         painter.setPen(QPen(QColor(255, 255, 255), 8.0))
-        painter.drawLine(center, hour_hand_cartesian)
+        painter.drawLine(center, hands_positions.hour)
 
         painter.setPen(QPen(QColor(200, 200, 200), 6.0))
-        painter.drawLine(center, minute_hand_cartesian)
+        painter.drawLine(center, hands_positions.minute)
 
         painter.setPen(QPen(QColor(255, 0, 0), 2.0))
-        painter.drawLine(center, second_hand_cartesian)
+        painter.drawLine(center, hands_positions.second)
 
         dt = self.current_time
         formatted = f"{dt.hour:02}:{dt.minute:02}:{dt.second:02}.{int(dt.microsecond / 1000):03}"
