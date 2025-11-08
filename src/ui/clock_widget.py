@@ -177,11 +177,11 @@ class ClockWidget(QWidget):
         w = fm.horizontalAdvance(formatted)
         painter.drawText(QPointF(center.x() - w / 2, center.y() + radius / 2), formatted)
 
-    def convert_to_cartesian(self, center, radius):
+    def convert_to_cartesian(self, center, radius) -> tuple[QPointF, QPointF, QPointF]:
         clock_pid = ClockPID(self.clock_pid.second, self.clock_pid.minute, self.clock_pid.hour)
         second_polar, minute_polar, hour_polar = clock_pid.angles_in_radians()
 
         second_hand_cartesian = polar_to_cartesian(center, radius * 0.9, second_polar)
         minute_hand_cartesian = polar_to_cartesian(center, radius * 0.7, minute_polar)
         hour_hand_cartesian = polar_to_cartesian(center, radius * 0.5, hour_polar)
-        return second_hand_cartesian,minute_hand_cartesian,hour_hand_cartesian
+        return second_hand_cartesian, minute_hand_cartesian, hour_hand_cartesian
