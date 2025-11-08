@@ -57,6 +57,11 @@ class PID:
 
 
 class ClockPID:
+
+    pid_second: float
+    pid_minute: float
+    pid_hour: float
+
     def __init__(self, pid_second: float, pid_minute: float, pid_hour: float) -> None:
         self.pid_second = float(pid_second)
         self.pid_minute = float(pid_minute)
