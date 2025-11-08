@@ -78,9 +78,8 @@ class ClockWidget(QWidget):
         super().__init__(parent)
         self.start_time = datetime.now(UTC).astimezone()
         self.current_time = self.start_time
-        self.widget_second = 0.0
-        self.widget_minute = 0.0
-        self.widget_hour = 0.0
+        self.widget_pid = ClockPID(0.0, 0.0, 0.0)
+
 
         self.second_pid = PID(kp=0.15, ki=0.005, kd=0.005)
         self.minute_pid = PID(kp=0.08, ki=0.004, kd=0.004)
@@ -100,9 +99,7 @@ class ClockWidget(QWidget):
     def reset(self) -> None:
         self.start_time = datetime.now(UTC).astimezone()
         self.current_time = self.start_time
-        self.widget_second = 0.0
-        self.widget_minute = 0.0
-        self.widget_hour = 0.0
+        self.widget_pid = ClockPID(0.0, 0.0, 0.0)
         self.second_pid.reset()
         self.minute_pid.reset()
         self.hour_pid.reset()
@@ -111,13 +108,13 @@ class ClockWidget(QWidget):
         duration = self.current_time - self.start_time
         calculated: HandAngles = calculate_clock_angles(self.start_time, duration)
 
-        pid_second_error = calculated.seconds - self.widget_second
-        pid_minute_error = calculated.minutes - self.widget_minute
-        pid_hour_error = calculated.hours - self.widget_hour
+        pid_second_error = calculated.seconds - self.widget_pid.pid_second
+        pid_minute_error = calculated.minutes - self.widget_pid.pid_minute
+        pid_hour_error = calculated.hours - self.widget_pid.pid_hour
 
-        self.widget_second += self.second_pid.update(pid_second_error)
-        self.widget_minute += self.minute_pid.update(pid_minute_error)
-        self.widget_hour += self.hour_pid.update(pid_hour_error)
+        self.widget_pid.pid_second += self.second_pid.update(pid_second_error)
+        self.widget_pid.pid_minute += self.minute_pid.update(pid_minute_error)
+        self.widget_pid.pid_hour += self.hour_pid.update(pid_hour_error)
 
     def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
         painter = QPainter(self)
@@ -157,7 +154,7 @@ class ClockWidget(QWidget):
             h = fm.height()
             painter.drawText(QPointF(text_pos.x() - w / 2, text_pos.y() + h / 4), str(number))
 
-        clock_pid = ClockPID(self.widget_second, self.widget_minute, self.widget_hour)
+        clock_pid = ClockPID(self.widget_pid.pid_second, self.widget_pid.pid_minute, self.widget_pid.pid_hour)
         second_polar, minute_polar, hour_polar = clock_pid.angles_in_radians()
 
         second_hand_cartesian = polar_to_cartesian(center, radius * 0.9, second_polar)
