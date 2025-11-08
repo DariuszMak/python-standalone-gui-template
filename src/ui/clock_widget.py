@@ -116,6 +116,17 @@ class ClockWidget(QWidget):
         self.clock_pid.clock_hands.minute += self.minute_pid.update(pid_minute_error)
         self.clock_pid.clock_hands.hour += self.hour_pid.update(pid_hour_error)
 
+    def convert_to_cartesian(self, center: QPointF, radius: float) -> tuple[QPointF, QPointF, QPointF]:
+        clock_pid = ClockPID(
+            self.clock_pid.clock_hands.second, self.clock_pid.clock_hands.minute, self.clock_pid.clock_hands.hour
+        )
+        second_polar, minute_polar, hour_polar = clock_pid.angles_in_radians()
+
+        second_hand_cartesian = polar_to_cartesian(center, radius * 0.9, second_polar)
+        minute_hand_cartesian = polar_to_cartesian(center, radius * 0.7, minute_polar)
+        hour_hand_cartesian = polar_to_cartesian(center, radius * 0.5, hour_polar)
+        return second_hand_cartesian, minute_hand_cartesian, hour_hand_cartesian
+
     def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -172,14 +183,3 @@ class ClockWidget(QWidget):
         fm = painter.fontMetrics()
         w = fm.horizontalAdvance(formatted)
         painter.drawText(QPointF(center.x() - w / 2, center.y() + radius / 2), formatted)
-
-    def convert_to_cartesian(self, center: QPointF, radius: float) -> tuple[QPointF, QPointF, QPointF]:
-        clock_pid = ClockPID(
-            self.clock_pid.clock_hands.second, self.clock_pid.clock_hands.minute, self.clock_pid.clock_hands.hour
-        )
-        second_polar, minute_polar, hour_polar = clock_pid.angles_in_radians()
-
-        second_hand_cartesian = polar_to_cartesian(center, radius * 0.9, second_polar)
-        minute_hand_cartesian = polar_to_cartesian(center, radius * 0.7, minute_polar)
-        hour_hand_cartesian = polar_to_cartesian(center, radius * 0.5, hour_polar)
-        return second_hand_cartesian, minute_hand_cartesian, hour_hand_cartesian
