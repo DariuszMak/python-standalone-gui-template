@@ -8,19 +8,11 @@ from PySide6.QtCore import QPointF, QTimer
 from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent, QPen
 from PySide6.QtWidgets import QWidget
 
-
-@dataclass
-class ClockHands:
-    second: float
-    minute: float
-    hour: float
+from src.ui.clock_widget.clock_pid import ClockPID
+from src.ui.clock_widget.data_types import ClockHands, HandsPosition
+from src.ui.clock_widget.pid import PID
 
 
-@dataclass
-class HandsPosition:
-    second: QPointF
-    minute: QPointF
-    hour: QPointF
 
 
 def polar_to_cartesian(center: QPointF, length: float, angle_radians: float) -> QPointF:
@@ -44,41 +36,9 @@ def calculate_clock_hands_angles(start_dt: datetime, duration: timedelta) -> Clo
     return ClockHands(second=float(seconds_angle), minute=float(minutes_angle), hour=float(hours_angle))
 
 
-class PID:
-    def __init__(self, kp: float = 0.0, ki: float = 0.0, kd: float = 0.0) -> None:
-        self.kp = float(kp)
-        self.ki = float(ki)
-        self.kd = float(kd)
-        self.prev_error = 0.0
-        self.integral = 0.0
-
-    def update(self, error: float) -> float:
-        self.integral += error
-        derivative = error - self.prev_error
-        self.prev_error = error
-        return self.kp * error + self.ki * self.integral + self.kd * derivative
-
-    def reset(self) -> None:
-        self.prev_error = 0.0
-        self.integral = 0.0
 
 
-class ClockPID:
-    clock_hands: ClockHands
 
-    def __init__(self, pid_second: float, pid_minute: float, pid_hour: float) -> None:
-        self.clock_hands = ClockHands(float(pid_second), float(pid_minute), float(pid_hour))
-
-    def reset(self) -> None:
-        self.clock_hands.second = 0.0
-        self.clock_hands.minute = 0.0
-        self.clock_hands.hour = 0.0
-
-    def angles_in_radians(self) -> tuple[float, float, float]:
-        second_angle = (self.clock_hands.second / 60.0) * 2.0 * math.pi
-        minute_angle = (self.clock_hands.minute / 60.0) * 2.0 * math.pi
-        hour_angle = (self.clock_hands.hour / 12.0) * 2.0 * math.pi
-        return second_angle, minute_angle, hour_angle
 
 
 class ClockWidget(QWidget):
