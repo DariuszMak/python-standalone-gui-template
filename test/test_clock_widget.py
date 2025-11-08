@@ -4,7 +4,7 @@ from datetime import UTC, datetime, timedelta
 import pytest
 from PySide6.QtCore import QPointF
 
-from src.ui.clock_widget import PID, ClockPID, calculate_clock_hands_angles, polar_to_cartesian
+from src.ui.clock_widget import PID, ClockPID, ClockWidget, calculate_clock_hands_angles, polar_to_cartesian
 
 
 def approx_eq(a: float, b: float, epsilon: float = 1e-10) -> bool:
@@ -182,3 +182,19 @@ def test_polar_to_cartesian_180_degrees() -> None:
     res = polar_to_cartesian(QPointF(0.0, 0.0), length, angle)
     assert abs(res.x() - 0.0) < 1e-5
     assert abs(res.y() - 10.0) < 1e-5
+
+
+def test_convert_clock_pid_to_cartesian() -> None:
+    widget = ClockWidget()
+    center = QPointF(0.0, 0.0)
+    radius = 100.0
+    clock_pid = ClockPID(0.0, 0.0, 0.0)
+
+    hands = widget.convert_clock_pid_to_cartesian(clock_pid, center, radius)
+
+    assert abs(hands.second.x() - 0.0) < 1e-10
+    assert abs(hands.second.y() - (-radius * 0.9)) < 1e-10
+    assert abs(hands.minute.x() - 0.0) < 1e-10
+    assert abs(hands.minute.y() - (-radius * 0.7)) < 1e-10
+    assert abs(hands.hour.x() - 0.0) < 1e-10
+    assert abs(hands.hour.y() - (-radius * 0.5)) < 1e-10
