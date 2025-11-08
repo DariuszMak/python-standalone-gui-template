@@ -105,7 +105,7 @@ class ClockWidget(QWidget):
 
     def update_pid(self) -> None:
         duration = self.current_time - self.start_time
-        calculated = calculate_clock_angles(self.start_time, duration)
+        calculated: HandAngles = calculate_clock_angles(self.start_time, duration)
 
         pid_second_error = calculated.seconds - self.widget_second
         pid_minute_error = calculated.minutes - self.widget_minute
