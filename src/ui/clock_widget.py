@@ -80,7 +80,6 @@ class ClockWidget(QWidget):
         self.current_time = self.start_time
         self.widget_pid = ClockPID(0.0, 0.0, 0.0)
 
-
         self.second_pid = PID(kp=0.15, ki=0.005, kd=0.005)
         self.minute_pid = PID(kp=0.08, ki=0.004, kd=0.004)
         self.hour_pid = PID(kp=0.08, ki=0.002, kd=0.002)
