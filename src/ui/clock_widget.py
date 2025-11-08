@@ -100,7 +100,7 @@ class ClockWidget(QWidget):
 
     def _on_tick(self) -> None:
         self.current_time = datetime.now(UTC).astimezone()
-        self.update_pid()
+        self.update_clock_pid()
         self.update()
 
     def reset(self) -> None:
@@ -111,7 +111,7 @@ class ClockWidget(QWidget):
         self.minute_pid.reset()
         self.hour_pid.reset()
 
-    def update_pid(self) -> None:
+    def update_clock_pid(self) -> None:
         duration = self.current_time - self.start_time
         calculated: ClockHands = calculate_clock_angles(self.start_time, duration)
 
@@ -123,7 +123,7 @@ class ClockWidget(QWidget):
         self.clock_pid.clock_hands.minute += self.minute_pid.update(pid_minute_error)
         self.clock_pid.clock_hands.hour += self.hour_pid.update(pid_hour_error)
 
-    def convert_to_cartesian(self, center: QPointF, radius: float) -> HandsPosition:
+    def convert_clock_pid_to_cartesian(self, center: QPointF, radius: float) -> HandsPosition:
         clock_pid = ClockPID(
             self.clock_pid.clock_hands.second, self.clock_pid.clock_hands.minute, self.clock_pid.clock_hands.hour
         )
@@ -196,7 +196,7 @@ class ClockWidget(QWidget):
 
         center, radius, font_size = self.paint_clock_face(painter)
 
-        hands_position = self.convert_to_cartesian(center, radius)
+        hands_position = self.convert_clock_pid_to_cartesian(center, radius)
 
         self.paint_hands(painter, center, hands_position)
 
