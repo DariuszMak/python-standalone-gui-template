@@ -57,24 +57,20 @@ class PID:
 
 
 class ClockPID:
-    second: float
-    minute: float
-    hour: float
+    clock_hands: ClockHands
 
     def __init__(self, pid_second: float, pid_minute: float, pid_hour: float) -> None:
-        self.second = float(pid_second)
-        self.minute = float(pid_minute)
-        self.hour = float(pid_hour)
+        self.clock_hands = ClockHands(float(pid_second), float(pid_minute), float(pid_hour))
 
     def reset(self) -> None:
-        self.second = 0.0
-        self.minute = 0.0
-        self.hour = 0.0
+        self.clock_hands.second = 0.0
+        self.clock_hands.minute = 0.0
+        self.clock_hands.hour = 0.0
 
     def angles_in_radians(self) -> tuple[float, float, float]:
-        second_angle = (self.second / 60.0) * 2.0 * math.pi
-        minute_angle = (self.minute / 60.0) * 2.0 * math.pi
-        hour_angle = (self.hour / 12.0) * 2.0 * math.pi
+        second_angle = (self.clock_hands.second / 60.0) * 2.0 * math.pi
+        minute_angle = (self.clock_hands.minute / 60.0) * 2.0 * math.pi
+        hour_angle = (self.clock_hands.hour / 12.0) * 2.0 * math.pi
         return second_angle, minute_angle, hour_angle
 
 
@@ -112,13 +108,13 @@ class ClockWidget(QWidget):
         duration = self.current_time - self.start_time
         calculated: ClockHands = calculate_clock_angles(self.start_time, duration)
 
-        pid_second_error = calculated.second - self.clock_pid.second
-        pid_minute_error = calculated.minute - self.clock_pid.minute
-        pid_hour_error = calculated.hour - self.clock_pid.hour
+        pid_second_error = calculated.second - self.clock_pid.clock_hands.second
+        pid_minute_error = calculated.minute - self.clock_pid.clock_hands.minute
+        pid_hour_error = calculated.hour - self.clock_pid.clock_hands.hour
 
-        self.clock_pid.second += self.second_pid.update(pid_second_error)
-        self.clock_pid.minute += self.minute_pid.update(pid_minute_error)
-        self.clock_pid.hour += self.hour_pid.update(pid_hour_error)
+        self.clock_pid.clock_hands.second += self.second_pid.update(pid_second_error)
+        self.clock_pid.clock_hands.minute += self.minute_pid.update(pid_minute_error)
+        self.clock_pid.clock_hands.hour += self.hour_pid.update(pid_hour_error)
 
     def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
         painter = QPainter(self)
@@ -178,7 +174,9 @@ class ClockWidget(QWidget):
         painter.drawText(QPointF(center.x() - w / 2, center.y() + radius / 2), formatted)
 
     def convert_to_cartesian(self, center: QPointF, radius: float) -> tuple[QPointF, QPointF, QPointF]:
-        clock_pid = ClockPID(self.clock_pid.second, self.clock_pid.minute, self.clock_pid.hour)
+        clock_pid = ClockPID(
+            self.clock_pid.clock_hands.second, self.clock_pid.clock_hands.minute, self.clock_pid.clock_hands.hour
+        )
         second_polar, minute_polar, hour_polar = clock_pid.angles_in_radians()
 
         second_hand_cartesian = polar_to_cartesian(center, radius * 0.9, second_polar)
