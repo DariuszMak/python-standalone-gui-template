@@ -9,5 +9,4 @@ class MovementStrategy(ABC):
         raise NotImplementedError
 
     def reset(self) -> None:
-        """Optional: reset internal state (e.g. integral/prev_error in PID)."""
         return None
