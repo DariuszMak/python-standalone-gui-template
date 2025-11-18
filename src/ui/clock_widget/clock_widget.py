@@ -40,8 +40,8 @@ class ClockWidget(QWidget):
         self.current_time = self.start_time
         self.clock_pid.reset()
 
-        for strat in (self.second_strategy, self.minute_strategy, self.hour_strategy):
-            strat.reset()
+        for strategy in (self.second_strategy, self.minute_strategy, self.hour_strategy):
+            strategy.reset()
 
     def update_clock_pid(self) -> None:
         duration = self.current_time - self.start_time
