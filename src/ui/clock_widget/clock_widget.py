@@ -45,13 +45,17 @@ class ClockWidget(QWidget):
 
     def update_clock_pid(self) -> None:
         duration = self.current_time - self.start_time
-        calculated: ClockHands = calculate_clock_hands_angles(self.start_time, duration)
+        calculated_clock_hands_angles: ClockHands = calculate_clock_hands_angles(self.start_time, duration)
 
-        ch = self.clock_pid.clock_hands
-
-        ch.second = self.second_strategy.update(ch.second, calculated.second)
-        ch.minute = self.minute_strategy.update(ch.minute, calculated.minute)
-        ch.hour = self.hour_strategy.update(ch.hour, calculated.hour)
+        self.clock_pid.clock_hands.second = self.second_strategy.update(
+            self.clock_pid.clock_hands.second, calculated_clock_hands_angles.second
+        )
+        self.clock_pid.clock_hands.minute = self.minute_strategy.update(
+            self.clock_pid.clock_hands.minute, calculated_clock_hands_angles.minute
+        )
+        self.clock_pid.clock_hands.hour = self.hour_strategy.update(
+            self.clock_pid.clock_hands.hour, calculated_clock_hands_angles.hour
+        )
 
     def convert_clock_pid_to_cartesian(self, clock_pid: ClockPID, center: QPointF, radius: float) -> HandsPosition:
         second_polar, minute_polar, hour_polar = clock_pid.angles_in_radians()
