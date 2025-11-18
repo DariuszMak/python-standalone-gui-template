@@ -14,5 +14,3 @@ class EasingMovementStrategy(MovementStrategy):
 
     def update(self, current_value: float, target_value: float) -> float:
         return current_value + (target_value - current_value) * self.factor
-
-

@@ -4,12 +4,10 @@ from abc import ABC, abstractmethod
 
 
 class MovementStrategy(ABC):
+    @abstractmethod
+    def update(self, current_value: float, target_value: float) -> float:
+        raise NotImplementedError
 
-
-     @abstractmethod
-     def update(self, current_value: float, target_value: float) -> float:
-         raise NotImplementedError
-
-     def reset(self) -> None:
-         """Optional: reset internal state (e.g. integral/prev_error in PID)."""
-         return None
+    def reset(self) -> None:
+        """Optional: reset internal state (e.g. integral/prev_error in PID)."""
+        return None
