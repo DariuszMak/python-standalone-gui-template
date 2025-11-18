@@ -118,15 +118,15 @@ def test_pid_reset() -> None:
 
 def test_clock_pid_reset() -> None:
     pid = ClockPID(10.5, 20.3, 5.7)
-    assert pid.clock_hands.second == 10.5
-    assert pid.clock_hands.minute == 20.3
-    assert pid.clock_hands.hour == 5.7
+    assert pid.clock_hands_angles.second == 10.5
+    assert pid.clock_hands_angles.minute == 20.3
+    assert pid.clock_hands_angles.hour == 5.7
 
     pid.reset()
 
-    assert pid.clock_hands.second == 0.0
-    assert pid.clock_hands.minute == 0.0
-    assert pid.clock_hands.hour == 0.0
+    assert pid.clock_hands_angles.second == 0.0
+    assert pid.clock_hands_angles.minute == 0.0
+    assert pid.clock_hands_angles.hour == 0.0
 
 
 def test_clock_pid_angles_in_radians() -> None:
