@@ -10,7 +10,6 @@ from PySide6.QtWidgets import QWidget
 from src.ui.clock_widget.clock_pid import ClockPID
 from src.ui.clock_widget.data_types import ClockHands, HandsPosition
 from src.ui.clock_widget.helpers import calculate_clock_hands_angles, polar_to_cartesian
-
 from src.ui.clock_widget.strategies.pid_strategy import PIDMovementStrategy
 
 
