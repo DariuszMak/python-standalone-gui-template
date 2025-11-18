@@ -198,7 +198,8 @@ def test_polar_to_cartesian_180_degrees() -> None:
     assert abs(res.x() - 0.0) < 1e-5
     assert abs(res.y() - 10.0) < 1e-5
 
-def test_format_datetime():
-    dt = datetime.datetime(2024, 1, 2, 3, 4, 5, 678901)
+
+def test_format_datetime() -> None:
+    dt = datetime(2024, 1, 2, 3, 4, 5, 678901, tzinfo=UTC)
     result = format_datetime(dt)
     assert result == "03:04:05.678"

@@ -114,8 +114,6 @@ class ClockWidget(QWidget):
         painter.setPen(QPen(QColor(255, 0, 0), 2.0))
         painter.drawLine(center, hands_position.second)
 
-
-
     def paint_current_time(self, painter: QPainter, center: QPointF, radius: float, font_size: int) -> None:
         formatted = format_datetime(self.current_time)
         painter.setPen(QPen(QColor(150, 255, 190)))
@@ -123,7 +121,6 @@ class ClockWidget(QWidget):
         font_metrics = painter.fontMetrics()
         width = font_metrics.horizontalAdvance(formatted)
         painter.drawText(QPointF(center.x() - width / 2, center.y() + radius / 2), formatted)
-
 
     def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
         painter = QPainter(self)
