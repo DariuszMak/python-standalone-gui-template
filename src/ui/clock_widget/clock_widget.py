@@ -11,7 +11,6 @@ from src.ui.clock_widget.clock_pid import ClockPID
 from src.ui.clock_widget.data_types import ClockHands, HandsPosition
 from src.ui.clock_widget.helpers import calculate_clock_hands_angles, polar_to_cartesian
 
-# import strategies
 from src.ui.clock_widget.strategies.pid_strategy import PIDMovementStrategy
 
 
@@ -22,14 +21,9 @@ class ClockWidget(QWidget):
         self.current_time = self.start_time
         self.clock_pid = ClockPID(0.0, 0.0, 0.0)
 
-        # Movement strategies for each hand (default: PID behaviour)
         self.second_strategy = PIDMovementStrategy(0.15, 0.005, 0.005)
         self.minute_strategy = PIDMovementStrategy(0.08, 0.004, 0.004)
         self.hour_strategy = PIDMovementStrategy(0.08, 0.002, 0.002)
-
-        # Example: you can swap in a different strategy easily:
-        # self.second_strategy = TickMovementStrategy()
-        # self.minute_strategy = EasingMovementStrategy(factor=0.08)
 
         self.setMinimumSize(300, 300)
 
@@ -47,10 +41,8 @@ class ClockWidget(QWidget):
         self.current_time = self.start_time
         self.clock_pid.reset()
 
-        # reset strategies if they maintain state
         for strat in (self.second_strategy, self.minute_strategy, self.hour_strategy):
             strat.reset()
-
 
     def update_clock_pid(self) -> None:
         duration = self.current_time - self.start_time
