@@ -8,7 +8,7 @@ from src.ui.clock_widget.strategies.tick_strategy import TickMovementStrategy
 
 def test_movement_strategy_is_abstract() -> None:
     with pytest.raises(TypeError):
-        MovementStrategy()
+        MovementStrategy()  # type: ignore[abstract]
 
 
 def test_easing_strategy_moves_fractionally() -> None:
