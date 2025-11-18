@@ -28,7 +28,8 @@ def calculate_clock_hands_angles(start_dt: datetime, duration: timedelta) -> Clo
 
     return ClockHands(second=float(seconds_angle), minute=float(minutes_angle), hour=float(hours_angle))
 
-def format_datetime( datetime: datetime) -> str:
+
+def format_datetime(datetime: datetime) -> str:
     formatted = f"{datetime.hour:02}:{datetime.minute:02}:{datetime.second:02}."
     formatted += f"{int(datetime.microsecond / 1000):03}"
     return formatted
