@@ -5,7 +5,7 @@ import pytest
 from PySide6.QtCore import QPointF
 
 from src.ui.clock_widget.clock_pid import ClockPID
-from src.ui.clock_widget.helpers import calculate_clock_hands_angles, polar_to_cartesian
+from src.ui.clock_widget.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
 from src.ui.clock_widget.pid import PID
 
 
@@ -197,3 +197,8 @@ def test_polar_to_cartesian_180_degrees() -> None:
     res = polar_to_cartesian(QPointF(0.0, 0.0), length, angle)
     assert abs(res.x() - 0.0) < 1e-5
     assert abs(res.y() - 10.0) < 1e-5
+
+def test_format_datetime():
+    dt = datetime.datetime(2024, 1, 2, 3, 4, 5, 678901)
+    result = format_datetime(dt)
+    assert result == "03:04:05.678"
