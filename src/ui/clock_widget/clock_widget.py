@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import math
 from datetime import UTC, datetime
 
@@ -52,8 +53,7 @@ class ClockWidget(QWidget):
             try:
                 strat.reset()
             except Exception:
-                # defensive: if a strategy has no reset, ignore
-                pass
+                contextlib.suppress(Exception)
 
     def update_clock_pid(self) -> None:
         duration = self.current_time - self.start_time
