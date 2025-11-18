@@ -79,27 +79,29 @@ class ClockWidget(QWidget):
         painter.setPen(pen)
         painter.drawEllipse(center, radius, radius)
 
-        for i in range(60):
-            angle = (i / 60.0) * 2.0 * math.pi
+        for hour in range(60):
+            angle = (hour / 60.0) * 2.0 * math.pi
             outer = polar_to_cartesian(center, radius, angle)
-            inner = polar_to_cartesian(center, radius - (10.0 if i % 5 == 0 else 5.0), angle)
+            inner = polar_to_cartesian(center, radius - (10.0 if hour % 5 == 0 else 5.0), angle)
             pen = QPen(QColor(200, 200, 200))
-            pen.setWidthF(3.0 if i % 5 == 0 else 1.5)
+            pen.setWidthF(3.0 if hour % 5 == 0 else 1.5)
             painter.setPen(pen)
             painter.drawLine(inner, outer)
 
         font_size = max(8, int(radius * 0.09))
 
         painter.setFont(QFont("Arial", font_size))
-        for i in range(12):
-            angle = (i / 12.0) * 2.0 * math.pi
-            text_pos = polar_to_cartesian(center, radius - float(font_size) * 2, angle)
+        for hour in range(12):
+            angle = (hour / 12.0) * 2.0 * math.pi
+            text_position = polar_to_cartesian(center, radius - float(font_size) * 2, angle)
             painter.setPen(QPen(QColor(255, 255, 255)))
-            number = ((i + 11) % 12) + 1
-            fm = painter.fontMetrics()
-            w = fm.horizontalAdvance(str(number))
-            h = fm.height()
-            painter.drawText(QPointF(text_pos.x() - w / 2, text_pos.y() + h / 4), str(number))
+            friendly_presented_hour = ((hour + 11) % 12) + 1
+            font_metrics = painter.fontMetrics()
+            width = font_metrics.horizontalAdvance(str(friendly_presented_hour))
+            height = font_metrics.height()
+            painter.drawText(
+                QPointF(text_position.x() - width / 2, text_position.y() + height / 4), str(friendly_presented_hour)
+            )
         return center, radius, font_size
 
     def paint_hands(self, painter: QPainter, center: QPointF, hands_position: HandsPosition) -> None:
@@ -113,13 +115,13 @@ class ClockWidget(QWidget):
         painter.drawLine(center, hands_position.second)
 
     def paint_current_time(self, painter: QPainter, center: QPointF, radius: float, font_size: int) -> None:
-        dt = self.current_time
-        formatted = f"{dt.hour:02}:{dt.minute:02}:{dt.second:02}.{int(dt.microsecond / 1000):03}"
+        formatted = f"{self.current_time.hour:02}:{self.current_time.minute:02}:{self.current_time.second:02}."
+        formatted += f"{int(self.current_time.microsecond / 1000):03}"
         painter.setPen(QPen(QColor(150, 255, 190)))
         painter.setFont(QFont("Consolas", font_size))
-        fm = painter.fontMetrics()
-        w = fm.horizontalAdvance(formatted)
-        painter.drawText(QPointF(center.x() - w / 2, center.y() + radius / 2), formatted)
+        font_metrics = painter.fontMetrics()
+        width = font_metrics.horizontalAdvance(formatted)
+        painter.drawText(QPointF(center.x() - width / 2, center.y() + radius / 2), formatted)
 
     def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
         painter = QPainter(self)
