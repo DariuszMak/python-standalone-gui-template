@@ -11,11 +11,20 @@ from src.ui.clock_widget.clock_pid import ClockPID
 from src.ui.clock_widget.data_types import ClockHands, HandsPosition
 from src.ui.clock_widget.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
 from src.ui.clock_widget.strategies.pid_strategy import PIDMovementStrategy
+from src.ui.clock_widget.tick_events import TickEventSubject
 
 
 class ClockWidget(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+
+        self._tick_subject = TickEventSubject()
+        self._tick_subject.subscribe(self)
+
+        self._timer: QTimer = QTimer(self)
+        self._timer.timeout.connect(self._tick_subject.notify)
+        self._timer.start(15)
+
         self.start_time = datetime.now(UTC).astimezone()
         self.current_time = self.start_time
         self.clock_pid = ClockPID(0.0, 0.0, 0.0)
@@ -24,13 +33,7 @@ class ClockWidget(QWidget):
         self.minute_strategy = PIDMovementStrategy(0.08, 0.004, 0.004)
         self.hour_strategy = PIDMovementStrategy(0.08, 0.002, 0.002)
 
-        self.setMinimumSize(300, 300)
-
-        self._timer = QTimer(self)
-        self._timer.timeout.connect(self._on_tick)
-        self._timer.start(15)
-
-    def _on_tick(self) -> None:
+    def on_tick(self) -> None:
         self.current_time = datetime.now(UTC).astimezone()
         self.update_clock_pid()
         self.update()
