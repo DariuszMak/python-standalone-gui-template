@@ -11,7 +11,6 @@ from src.ui.dialog_windows import MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MA
 from src.ui.dialog_windows.main_window import MainWindow
 
 
-# Define a fixture to create a temporary directory for testing
 @pytest.fixture
 def temp_dir(tmpdir: str) -> str:
     return str(tmpdir)
@@ -48,7 +47,6 @@ def example_moc_content_qrc() -> str:
 """
 
 
-# Define test cases for create_moc function
 def test_create_moc_ui(temp_dir: str, example_moc_content_ui: str) -> None:
     input_file = os.path.join(temp_dir, "example.ui")
     with open(input_file, "w") as f:
@@ -81,12 +79,11 @@ def test_create_moc_check_if_correctly_modified_existing_code(temp_dir: str, exa
         f.write(example_moc_content_ui)
 
     with patch("os.path.getmtime") as mock_getmtime:
-        mock_getmtime.side_effect = [1, 2]  # Set modification times for testing
+        mock_getmtime.side_effect = [1, 2]  
         create_moc(temp_dir, "example.ui", UiExtensions.UI)
 
-    # Check that the moc file was not recreated
     assert os.path.isfile(moc_file)
-    assert mock_getmtime.call_count == 2  # Called twice to check modification times
+    assert mock_getmtime.call_count == 2  
 
 
 def test_create_moc_error_when_create_qrc_contnent_for_ui(temp_dir: str, example_moc_content_qrc: str) -> None:
