@@ -19,7 +19,6 @@ class Strategies(NamedTuple):
 
 
 class ClockController:
-
     def __init__(self, start_time: datetime, strategies: Strategies) -> None:
         self.start_time = start_time
         self.strategies = strategies

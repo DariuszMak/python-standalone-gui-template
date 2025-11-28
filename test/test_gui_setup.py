@@ -79,11 +79,11 @@ def test_create_moc_check_if_correctly_modified_existing_code(temp_dir: str, exa
         f.write(example_moc_content_ui)
 
     with patch("os.path.getmtime") as mock_getmtime:
-        mock_getmtime.side_effect = [1, 2]  
+        mock_getmtime.side_effect = [1, 2]
         create_moc(temp_dir, "example.ui", UiExtensions.UI)
 
     assert os.path.isfile(moc_file)
-    assert mock_getmtime.call_count == 2  
+    assert mock_getmtime.call_count == 2
 
 
 def test_create_moc_error_when_create_qrc_contnent_for_ui(temp_dir: str, example_moc_content_qrc: str) -> None:
