@@ -5,8 +5,8 @@ import pytest
 from PySide6.QtCore import QPointF
 
 from src.ui.clock_widget.model.clock_pid import ClockPID
-from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
 from src.ui.clock_widget.model.pid import PID
+from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
 
 
 def approx_eq(a: float, b: float, epsilon: float = 1e-10) -> bool:
