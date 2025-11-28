@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import contextlib
-from typing import TYPE_CHECKING, NamedTuple
+from typing import TYPE_CHECKING, NamedTuple, Protocol
 
 from src.ui.clock_widget.model.clock_pid import ClockPID
 from src.ui.clock_widget.model.helpers import calculate_clock_hands_angles
@@ -12,10 +12,15 @@ if TYPE_CHECKING:
     from src.ui.clock_widget.model.data_types import ClockHands
 
 
+class ClockStrategy(Protocol):
+    def update(self, current: float, target: float) -> float: ...
+    def reset(self) -> None: ...
+
+
 class Strategies(NamedTuple):
-    second: object
-    minute: object
-    hour: object
+    second: ClockStrategy
+    minute: ClockStrategy
+    hour: ClockStrategy
 
 
 class ClockController:
@@ -43,6 +48,10 @@ class ClockController:
     def reset(self, new_start_time: datetime) -> None:
         self.start_time = new_start_time
         self.current_pid.reset()
-        for strategy in (self.strategies.second, self.strategies.minute, self.strategies.hour):
+        for strategy in (
+            self.strategies.second,
+            self.strategies.minute,
+            self.strategies.hour,
+        ):
             with contextlib.suppress(Exception):
                 strategy.reset()
