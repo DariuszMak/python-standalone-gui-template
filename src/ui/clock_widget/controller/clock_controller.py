@@ -1,11 +1,15 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import NamedTuple
+import contextlib
+from typing import TYPE_CHECKING, NamedTuple
 
 from src.ui.clock_widget.model.clock_pid import ClockPID
-from src.ui.clock_widget.model.data_types import ClockHands
 from src.ui.clock_widget.model.helpers import calculate_clock_hands_angles
+
+if TYPE_CHECKING:
+    from datetime import datetime
+
+    from src.ui.clock_widget.model.data_types import ClockHands
 
 
 class Strategies(NamedTuple):
@@ -48,7 +52,5 @@ class ClockController:
         self.current_pid.reset()
         # reset strategies if they implement reset()
         for s in (self.strategies.second, self.strategies.minute, self.strategies.hour):
-            try:
+            with contextlib.suppress(Exception):
                 s.reset()
-            except Exception:
-                pass
