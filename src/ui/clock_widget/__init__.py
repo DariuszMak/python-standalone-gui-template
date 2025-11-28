@@ -1,1 +1,1 @@
-__all__ = ["model", "controller", "view"]
+__all__ = ["controller", "model", "view"]
