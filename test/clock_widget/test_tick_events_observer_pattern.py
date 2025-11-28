@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from src.ui.clock_widget.tick_events import TickEventSubject, TickObserver
+from src.ui.clock_widget.view.tick_events import TickEventSubject, TickObserver
 
 
 class DummyObserver(TickObserver):

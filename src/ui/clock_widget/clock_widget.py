@@ -11,7 +11,7 @@ from src.ui.clock_widget.model.clock_pid import ClockPID
 from src.ui.clock_widget.model.data_types import ClockHands, HandsPosition
 from src.ui.clock_widget.model.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
 from src.ui.clock_widget.strategies.pid_strategy import PIDMovementStrategy
-from src.ui.clock_widget.tick_events import TickEventSubject
+from src.ui.clock_widget.view.tick_events import TickEventSubject
 
 
 class ClockWidget(QWidget):
