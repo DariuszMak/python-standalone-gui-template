@@ -23,7 +23,6 @@ class ClockController:
     def __init__(self, start_time: datetime, strategies: Strategies) -> None:
         self.start_time = start_time
         self.strategies = strategies
-        # keep model state here
         self.current_pid = ClockPID(0.0, 0.0, 0.0)
 
     def update(self, now: datetime) -> ClockPID:
@@ -45,7 +44,6 @@ class ClockController:
     def reset(self, new_start_time: datetime) -> None:
         self.start_time = new_start_time
         self.current_pid.reset()
-        # reset strategies if they implement reset()
-        for s in (self.strategies.second, self.strategies.minute, self.strategies.hour):
+        for strategy in (self.strategies.second, self.strategies.minute, self.strategies.hour):
             with contextlib.suppress(Exception):
-                s.reset()
+                strategy.reset()
