@@ -19,11 +19,6 @@ class Strategies(NamedTuple):
 
 
 class ClockController:
-    """Controller that advances the model state (ClockPID) using provided strategies.
-
-    - `start_time` is the wall clock moment from which the target positions are calculated.
-    - `strategies` is a NamedTuple with movement strategy instances for second, minute, hour.
-    """
 
     def __init__(self, start_time: datetime, strategies: Strategies) -> None:
         self.start_time = start_time
