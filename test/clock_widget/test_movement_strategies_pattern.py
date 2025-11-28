@@ -1,9 +1,9 @@
 import pytest
 
-from src.ui.clock_widget.strategies.easing_strategy import EasingMovementStrategy
-from src.ui.clock_widget.strategies.movement_strategy import MovementStrategy
-from src.ui.clock_widget.strategies.pid_strategy import PIDMovementStrategy
-from src.ui.clock_widget.strategies.tick_strategy import TickMovementStrategy
+from src.ui.clock_widget.model.strategies.easing_strategy import EasingMovementStrategy
+from src.ui.clock_widget.model.strategies.movement_strategy import MovementStrategy
+from src.ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
+from src.ui.clock_widget.model.strategies.tick_strategy import TickMovementStrategy
 
 
 def test_movement_strategy_is_abstract() -> None:
