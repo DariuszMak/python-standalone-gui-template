@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from src.ui.clock_widget.model.pid import PID
-from src.ui.clock_widget.strategies.movement_strategy import MovementStrategy
+from src.ui.clock_widget.model.strategies.movement_strategy import MovementStrategy
 
 
 class PIDMovementStrategy(MovementStrategy):
