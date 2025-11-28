@@ -4,7 +4,7 @@ import contextlib
 from typing import TYPE_CHECKING, NamedTuple, Protocol
 
 from src.ui.clock_widget.model.clock_pid import ClockPID
-from src.ui.clock_widget.model.helpers import calculate_clock_hands_angles
+from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles
 
 if TYPE_CHECKING:
     from datetime import datetime

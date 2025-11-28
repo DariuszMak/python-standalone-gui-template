@@ -1,6 +1,6 @@
 from .clock_pid import ClockPID
 from .data_types import ClockHands, HandsPosition
-from .helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
+from ..view.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
 from .pid import PID
 
 __all__ = [
