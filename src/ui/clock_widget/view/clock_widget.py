@@ -9,8 +9,8 @@ from PySide6.QtWidgets import QWidget
 
 from src.ui.clock_widget.model.clock_pid import ClockPID
 from src.ui.clock_widget.model.data_types import ClockHands, HandsPosition
-from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
 from src.ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
+from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
 from src.ui.clock_widget.view.tick_events import TickEventSubject
 
 
