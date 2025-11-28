@@ -4,7 +4,7 @@ from datetime import UTC, datetime, timedelta
 import pytest
 from PySide6.QtCore import QPointF
 
-from src.ui.clock_widget.clock_pid import ClockPID
+from src.ui.clock_widget.model.clock_pid import ClockPID
 from src.ui.clock_widget.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
 from src.ui.clock_widget.pid import PID
 

@@ -7,7 +7,7 @@ from PySide6.QtCore import QPointF, QTimer
 from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent, QPen
 from PySide6.QtWidgets import QWidget
 
-from src.ui.clock_widget.clock_pid import ClockPID
+from src.ui.clock_widget.model.clock_pid import ClockPID
 from src.ui.clock_widget.data_types import ClockHands, HandsPosition
 from src.ui.clock_widget.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
 from src.ui.clock_widget.strategies.pid_strategy import PIDMovementStrategy
