@@ -96,7 +96,7 @@ uv run python src\gui_setup.py ;
 
 .\scripts\format_and_lint.ps1 ; 
 
-pytest test/ --cov=src -vv ; 
+uv run pytest test/ --cov=src -vv ; 
 
 ##### RUN APPLICATION LOCALLY
 
@@ -153,7 +153,7 @@ $env:PYTHONPATH="." ;
 
 .\scripts\format_and_lint.ps1 ; 
 
-pytest test/ --cov=src -vv ; 
+uv run pytest test/ --cov=src -vv ; 
 docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest test/ --cov=src" ; 
 
 uv sync --no-dev --locked --no-cache ; 
@@ -271,7 +271,7 @@ uv run pytest test/ -vv ;
 Run tests with coverage report:
 
 ```commandline
-pytest test/ --cov=. -vv ; 
+uv run pytest test/ --cov=. -vv ; 
 ```
 
 Run tests in Docker:
