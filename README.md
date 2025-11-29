@@ -106,7 +106,7 @@ Start-Process uv -ArgumentList "run", "python", "src\main.py" ;
 Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
-newman run collections\Python_GUI.postman_collection.json --environment collections\Windows.postman_environment.json --bail ; 
+newman run collections\Python_GUI.postman_collection.json --environment collections\environments\Windows.postman_environment.json --bail ; 
 ```
 
 
