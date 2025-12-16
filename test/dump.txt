@@ -1,0 +1,549 @@
+./api/test_api.py
+from litestar.testing import TestClient
+
+from src.api.app import app
+
+
+def test_ping_route() -> None:
+    with TestClient(app) as client:
+        response = client.get("/ping")
+        assert response.status_code == 200
+        assert response.json() == {"message": "pong"}
+
+
+def test_redoc_available() -> None:
+    with TestClient(app) as client:
+        resp = client.get("/schema/redoc")
+        assert resp.status_code == 200
+        assert "html" in resp.headers["content-type"]
+
+
+def test_swagger_ui_available() -> None:
+    with TestClient(app) as client:
+        resp = client.get("/schema/swagger")
+        assert resp.status_code == 200
+        assert "html" in resp.headers["content-type"]
+
+./clock_widget/test_clock_widget.py
+import math
+from datetime import UTC, datetime, timedelta
+
+import pytest
+from PySide6.QtCore import QPointF
+
+from src.ui.clock_widget.model.clock_pid import ClockPID
+from src.ui.clock_widget.model.pid import PID
+from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
+
+
+def approx_eq(a: float, b: float, epsilon: float = 1e-10) -> bool:
+    return abs(a - b) < epsilon
+
+
+def test_midnight_clock_hands_angles() -> None:
+    dt = datetime(2025, 4, 27, 0, 0, 0, tzinfo=UTC)
+    duration = timedelta(0)
+    angles = calculate_clock_hands_angles(dt, duration)
+    assert angles.second == 0.0
+    assert angles.minute == 0.0
+    assert angles.hour == 0.0
+
+
+def test_noon_clock_hands_angles() -> None:
+    dt = datetime(2025, 4, 27, 12, 0, 0, tzinfo=UTC)
+    duration = timedelta(0)
+    angles = calculate_clock_hands_angles(dt, duration)
+    assert angles.second == 0.0
+    assert angles.minute == 0.0
+    assert angles.hour == 0.0
+
+
+def test_noon_clock_hands_angles_from_milliseconds() -> None:
+    dt = datetime(2025, 4, 27, 0, 0, 0, tzinfo=UTC)
+    duration = timedelta(milliseconds=12 * 60 * 60 * 1000)
+    angles = calculate_clock_hands_angles(dt, duration)
+    assert angles.second == pytest.approx(43200.0)
+    assert angles.minute == pytest.approx(720.0)
+    assert angles.hour == pytest.approx(12.0)
+
+
+def test_maximum_clock_hands_angles() -> None:
+    dt = datetime(2025, 4, 27, 23, 59, 59, tzinfo=UTC)
+    duration = timedelta(0)
+    angles = calculate_clock_hands_angles(dt, duration)
+    assert angles.second == pytest.approx(59.0)
+    assert angles.minute == pytest.approx(59.983334, rel=1e-6)
+    assert angles.hour == pytest.approx(11.9997225, rel=1e-6)
+
+
+def test_maximum_clock_hands_angles_from_milliseconds() -> None:
+    dt = datetime(2025, 4, 27, 0, 0, 0, tzinfo=UTC)
+    duration = timedelta(milliseconds=(23 * 60 * 60 * 1000 + 59 * 60 * 1000 + 59 * 1000 + 999))
+    angles = calculate_clock_hands_angles(dt, duration)
+    assert angles.second == pytest.approx(86400.0)
+    assert angles.minute == pytest.approx(1440.0)
+    assert angles.hour == pytest.approx(24.0)
+
+
+def test_half_past_three_clock_hands_angles() -> None:
+    dt = datetime(2025, 4, 27, 3, 30, 0, tzinfo=UTC)
+    duration = timedelta(0)
+    angles = calculate_clock_hands_angles(dt, duration)
+    assert angles.second == pytest.approx(0.0)
+    assert angles.minute == pytest.approx(30.0)
+    assert angles.hour == pytest.approx(3.5)
+
+
+def test_half_past_three_clock_hands_angles_from_milliseconds() -> None:
+    dt = datetime(2025, 4, 27, 0, 0, 0, tzinfo=UTC)
+    duration = timedelta(milliseconds=(3 * 60 * 60 * 1000 + 30 * 60 * 1000))
+    angles = calculate_clock_hands_angles(dt, duration)
+    assert angles.second == pytest.approx(12600.0)
+    assert angles.minute == pytest.approx(210.0)
+    assert angles.hour == pytest.approx(3.5)
+
+
+def test_circled_clock_hands_angles() -> None:
+    dt = datetime(2025, 4, 27, 0, 0, 0, tzinfo=UTC)
+    duration = timedelta(milliseconds=(33 * 60 * 60 * 1000 + 65 * 60 * 1000 + 61 * 1000 + 2))
+    angles = calculate_clock_hands_angles(dt, duration)
+    assert angles.second == pytest.approx(122761.0)
+    assert angles.minute == pytest.approx(2046.0167, rel=1e-5)
+    assert angles.hour == pytest.approx(34.100277, rel=1e-5)
+
+
+def test_circled_clock_hands_angles_after_month() -> None:
+    dt = datetime(2025, 4, 27, 0, 0, 0, tzinfo=UTC)
+    duration = timedelta(milliseconds=(37 * 24 * 60 * 60 * 1000 + 65 * 60 * 1000 + 61 * 1000 + 2))
+    angles = calculate_clock_hands_angles(dt, duration)
+    assert angles.second == pytest.approx(3200761.0)
+    assert angles.minute == pytest.approx(53346.016, rel=1e-5)
+    assert angles.hour == pytest.approx(889.1003, rel=1e-5)
+
+
+def test_pid_update() -> None:
+    pid = PID(kp=1.0, ki=0.1, kd=0.5)
+    output1 = pid.update(1.0)
+    assert output1 == pytest.approx(1.0 + 0.1 + 0.5)
+
+    output2 = pid.update(0.5)
+    expected = 0.5 * pid.kp + (1.0 + 0.5) * pid.ki + (0.5 - 1.0) * pid.kd
+    assert output2 == pytest.approx(expected)
+
+
+def test_pid_reset() -> None:
+    pid = PID(kp=1.0, ki=0.1, kd=0.5)
+    pid.update(1.0)
+    pid.update(0.5)
+    assert pid.integral != 0.0
+    assert pid.prev_error != 0.0
+
+    pid.reset()
+    assert pid.integral == 0.0
+    assert pid.prev_error == 0.0
+
+
+def test_clock_pid_reset() -> None:
+    pid = ClockPID(10.5, 20.3, 5.7)
+    assert pid.clock_hands_angles.second == 10.5
+    assert pid.clock_hands_angles.minute == 20.3
+    assert pid.clock_hands_angles.hour == 5.7
+
+    pid.reset()
+
+    assert pid.clock_hands_angles.second == 0.0
+    assert pid.clock_hands_angles.minute == 0.0
+    assert pid.clock_hands_angles.hour == 0.0
+
+
+def test_clock_pid_angles_in_radians() -> None:
+    c = ClockPID(pid_second=15.0, pid_minute=30.0, pid_hour=6.0)
+    s_rad, m_rad, h_rad = c.angles_in_radians()
+    assert approx_eq(s_rad, math.pi / 2.0)
+    assert approx_eq(m_rad, math.pi)
+    assert approx_eq(h_rad, math.pi)
+
+
+def test_angles_at_zero() -> None:
+    c = ClockPID(0.0, 0.0, 0.0)
+    s, m, h = c.angles_in_radians()
+    assert approx_eq(s, 0.0)
+    assert approx_eq(m, 0.0)
+    assert approx_eq(h, 0.0)
+
+
+def test_angles_at_halfway() -> None:
+    c = ClockPID(30.0, 30.0, 6.0)
+    s, m, h = c.angles_in_radians()
+    assert approx_eq(s, math.pi)
+    assert approx_eq(m, math.pi)
+    assert approx_eq(h, math.pi)
+
+
+def test_angles_at_full() -> None:
+    c = ClockPID(60.0, 60.0, 12.0)
+    s, m, h = c.angles_in_radians()
+    assert approx_eq(s, 2.0 * math.pi)
+    assert approx_eq(m, 2.0 * math.pi)
+    assert approx_eq(h, 2.0 * math.pi)
+
+
+def test_quarter_angles() -> None:
+    c = ClockPID(15.0, 15.0, 3.0)
+    s, m, h = c.angles_in_radians()
+    assert approx_eq(s, 0.25 * 2.0 * math.pi)
+    assert approx_eq(m, 0.25 * 2.0 * math.pi)
+    assert approx_eq(h, 0.25 * 2.0 * math.pi)
+
+
+def test_polar_to_cartesian_zero_angle() -> None:
+    center = QPointF(100.0, 100.0)
+    res = polar_to_cartesian(center, 50.0, 0.0)
+    assert abs(res.x() - center.x()) < 1e-10
+    assert abs(res.y() - (center.y() - 50.0)) < 1e-10
+
+
+def test_polar_to_cartesian_quarter_angle() -> None:
+    center = QPointF(0.0, 0.0)
+    res = polar_to_cartesian(center, 1.0, math.pi / 2.0)
+    assert abs(res.x() - 1.0) < 1e-10
+    assert abs(res.y() - 0.0) < 1e-10
+
+
+def test_polar_to_cartesian_90_degrees() -> None:
+    length = 10.0
+    angle = math.pi / 2.0
+    res = polar_to_cartesian(QPointF(0.0, 0.0), length, angle)
+    assert abs(res.x() - 10.0) < 1e-5
+    assert abs(res.y() - 0.0) < 1e-5
+
+
+def test_polar_to_cartesian_180_degrees() -> None:
+    length = 10.0
+    angle = math.pi
+    res = polar_to_cartesian(QPointF(0.0, 0.0), length, angle)
+    assert abs(res.x() - 0.0) < 1e-5
+    assert abs(res.y() - 10.0) < 1e-5
+
+
+def test_format_datetime() -> None:
+    dt = datetime(2024, 1, 2, 3, 4, 5, 678901, tzinfo=UTC)
+    result = format_datetime(dt)
+    assert result == "03:04:05.678"
+
+./clock_widget/test_movement_strategies_pattern.py
+import pytest
+
+from src.ui.clock_widget.model.strategies.easing_strategy import EasingMovementStrategy
+from src.ui.clock_widget.model.strategies.movement_strategy import MovementStrategy
+from src.ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
+from src.ui.clock_widget.model.strategies.tick_strategy import TickMovementStrategy
+
+
+def test_movement_strategy_is_abstract() -> None:
+    with pytest.raises(TypeError):
+        MovementStrategy()  # type: ignore[abstract]
+
+
+def test_easing_strategy_moves_fractionally() -> None:
+    strat = EasingMovementStrategy(factor=0.2)
+    assert strat.update(0.0, 10.0) == pytest.approx(2.0)
+    assert strat.update(5.0, 15.0) == pytest.approx(7.0)
+
+
+def test_easing_strategy_factor_1_moves_directly() -> None:
+    strat = EasingMovementStrategy(factor=1.0)
+    assert strat.update(3.0, 10.0) == pytest.approx(10.0)
+
+
+def test_easing_strategy_factor_0_stays_same() -> None:
+    strat = EasingMovementStrategy(factor=0.0)
+    assert strat.update(3.0, 10.0) == 3.0
+
+
+def test_tick_strategy_snaps_to_target() -> None:
+    strat = TickMovementStrategy()
+    assert strat.update(5.0, 20.0) == 20.0
+    assert strat.update(-10.0, -3.5) == -3.5
+
+
+def test_pid_strategy_moves_toward_target() -> None:
+    strat = PIDMovementStrategy(0.1, 0.0, 0.0)
+    v1 = strat.update(0.0, 10.0)
+    assert v1 > 0.0
+    v2 = strat.update(v1, 10.0)
+    assert v2 > v1
+
+
+def test_pid_strategy_reset() -> None:
+    strat = PIDMovementStrategy(0.1, 0.1, 0.0)
+    v1 = strat.update(0.0, 10.0)
+    strat.reset()
+    v2 = strat.update(0.0, 10.0)
+    assert v2 == pytest.approx(v1)
+
+./clock_widget/test_tick_events_observer_pattern.py
+from __future__ import annotations
+
+from src.ui.clock_widget.view.tick_events import TickEventSubject, TickObserver
+
+
+class DummyObserver(TickObserver):
+    def __init__(self) -> None:
+        self.count = 0
+
+    def on_tick(self) -> None:
+        self.count += 1
+
+
+class DummyObserverAlt(TickObserver):
+    def __init__(self) -> None:
+        self.value = 0
+
+    def on_tick(self) -> None:
+        self.value += 5
+
+
+def test_single_observer_receives_ticks() -> None:
+    subject = TickEventSubject()
+    obs = DummyObserver()
+    subject.subscribe(obs)
+
+    subject.notify()
+    subject.notify()
+
+    assert obs.count == 2
+
+
+def test_multiple_observers_receive_ticks() -> None:
+    subject = TickEventSubject()
+    obs1 = DummyObserver()
+    obs2 = DummyObserverAlt()
+
+    subject.subscribe(obs1)
+    subject.subscribe(obs2)
+
+    subject.notify()
+
+    assert obs1.count == 1
+    assert obs2.value == 5
+
+
+def test_unsubscribed_observer_no_longer_receives_ticks() -> None:
+    subject = TickEventSubject()
+    obs = DummyObserver()
+
+    subject.subscribe(obs)
+    subject.notify()
+
+    subject.unsubscribe(obs)
+    subject.notify()
+
+    assert obs.count == 1
+
+
+def test_duplicate_subscription_is_ignored() -> None:
+    subject = TickEventSubject()
+    obs = DummyObserver()
+
+    subject.subscribe(obs)
+    subject.subscribe(obs)
+
+    subject.notify()
+
+    assert obs.count == 1
+
+
+def test_unsubscribe_nonexistent_observer_does_nothing() -> None:
+    subject = TickEventSubject()
+    obs = DummyObserver()
+
+    subject.unsubscribe(obs)
+    subject.notify()
+
+    assert obs.count == 0
+
+./conftest.py
+
+./helpers/test_io_file.py
+import os
+
+from src.helpers.io_file import IOFile  # Import the class that contains the method
+
+
+def test_get_real_path_from_relative_path() -> None:
+    your_instance = IOFile()
+
+    relative_path = os.path.normpath("example_folder/example_file.txt")
+    expected_result = os.path.realpath(os.path.join(os.path.abspath("."), relative_path))
+
+    result = your_instance.get_real_path_from_relative_path(relative_path)
+    assert result == expected_result
+
+    absolute_path = os.path.normpath("/absolute/path/to/some/file.txt")
+    _drive, path = os.path.splitdrive(your_instance.get_real_path_from_relative_path(absolute_path))
+    assert path == absolute_path
+
+    different_relative_path = os.path.normpath("another_folder/another_file.txt")
+    different_expected_result = os.path.realpath(os.path.join(os.path.abspath("."), different_relative_path))
+    assert your_instance.get_real_path_from_relative_path(different_relative_path) == different_expected_result
+
+./helpers/test_style_loader.py
+import pytest
+
+from src.helpers.style_loader import StyleLoader
+
+
+def test_get_qss_from_file() -> None:
+    assert isinstance(StyleLoader.get_qss_from_file(), str)
+
+
+def test_get_qss_from_file_with_incorrect_path() -> None:
+    with pytest.raises((PermissionError, IsADirectoryError)):
+        StyleLoader.get_qss_from_file("")
+
+./test_gui_setup.py
+import os
+from collections.abc import Generator
+from unittest.mock import patch
+
+import pytest
+from PySide6.QtCore import QCoreApplication, QSize
+from PySide6.QtWidgets import QApplication
+
+from src.gui_setup import UiExtensions, create_moc
+from src.ui.dialog_windows import MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
+from src.ui.dialog_windows.main_window import MainWindow
+
+
+@pytest.fixture
+def temp_dir(tmpdir: str) -> str:
+    return str(tmpdir)
+
+
+@pytest.fixture
+def example_moc_content_ui() -> str:
+    return """<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
+"""
+
+
+@pytest.fixture
+def example_moc_content_qrc() -> str:
+    return """<RCC>
+</RCC>
+"""
+
+
+def test_create_moc_ui(temp_dir: str, example_moc_content_ui: str) -> None:
+    input_file = os.path.join(temp_dir, "example.ui")
+    with open(input_file, "w") as f:
+        f.write(example_moc_content_ui)
+
+    create_moc(temp_dir, "example.ui", UiExtensions.UI)
+
+    moc_file = os.path.join(temp_dir, "moc_example.py")
+    assert os.path.isfile(moc_file)
+
+
+def test_create_moc_qrc(temp_dir: str, example_moc_content_qrc: str) -> None:
+    input_file = os.path.join(temp_dir, "example.qrc")
+    with open(input_file, "w") as f:
+        f.write(example_moc_content_qrc)
+
+    create_moc(temp_dir, "example.qrc", UiExtensions.QRC)
+
+    moc_file = os.path.join(temp_dir, "example_rc.py")
+    assert os.path.isfile(moc_file)
+
+
+def test_create_moc_check_if_correctly_modified_existing_code(temp_dir: str, example_moc_content_ui: str) -> None:
+    input_file = os.path.join(temp_dir, "example.ui")
+    with open(input_file, "w") as f:
+        f.write("Example UI content")
+
+    moc_file = os.path.join(temp_dir, "moc_example.py")
+    with open(moc_file, "w") as f:
+        f.write(example_moc_content_ui)
+
+    with patch("os.path.getmtime") as mock_getmtime:
+        mock_getmtime.side_effect = [1, 2]
+        create_moc(temp_dir, "example.ui", UiExtensions.UI)
+
+    assert os.path.isfile(moc_file)
+    assert mock_getmtime.call_count == 2
+
+
+def test_create_moc_error_when_create_qrc_contnent_for_ui(temp_dir: str, example_moc_content_qrc: str) -> None:
+    input_file = os.path.join(temp_dir, "example.ui")
+    with open(input_file, "w") as f:
+        f.write(example_moc_content_qrc)
+
+    with pytest.raises(Exception, match=r"Mocking UI file failed!.*example\.ui"):
+        create_moc(temp_dir, "example.ui", UiExtensions.UI)
+
+
+def test_create_moc_error_when_create_ui_content_for_qrc(temp_dir: str, example_moc_content_ui: str) -> None:
+    input_file = os.path.join(temp_dir, "example.ui")
+    with open(input_file, "w") as f:
+        f.write(example_moc_content_ui)
+
+    with pytest.raises(Exception, match=r"Mocking UI file failed!.*example\.ui"):
+        create_moc(temp_dir, "example.ui", UiExtensions.QRC)
+
+
+@pytest.fixture(scope="session")
+def app() -> QCoreApplication:
+    app = QApplication.instance()
+    if app is None:
+        app = QApplication([])
+    return app
+
+
+@pytest.fixture
+def main_window(app: QApplication) -> Generator[MainWindow, None, None]:  # noqa: ARG001
+    window = MainWindow()
+    window.show()
+    yield window
+    window.close()
+
+
+def test_startup_size(main_window: MainWindow) -> None:
+    assert main_window.width() == MAINWINDOW_WIDTH
+    assert main_window.height() == MAINWINDOW_HEIGHT
+
+
+def test_resize_event_enforces_minimum(main_window: MainWindow) -> None:
+    min_width = MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE
+    min_height = MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE
+
+    main_window.resize(100, 100)
+    QApplication.processEvents()
+
+    assert main_window.width() >= min_width
+    assert main_window.height() >= min_height
+
+    larger_size = QSize(MAINWINDOW_WIDTH + 200, MAINWINDOW_HEIGHT + 200)
+    main_window.resize(larger_size)
+    QApplication.processEvents()
+
+    assert main_window.width() == larger_size.width()
+    assert main_window.height() == larger_size.height()
+

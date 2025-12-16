@@ -1,0 +1,435 @@
+./__init__.py
+__all__ = ["controller", "model", "view"]
+
+./controller/__init__.py
+from .clock_controller import ClockController
+
+__all__ = ["ClockController"]
+
+./controller/clock_controller.py
+from __future__ import annotations
+
+import contextlib
+from typing import TYPE_CHECKING, NamedTuple, Protocol
+
+from src.ui.clock_widget.model.clock_pid import ClockPID
+from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles
+
+if TYPE_CHECKING:
+    from datetime import datetime
+
+    from src.ui.clock_widget.model.data_types import ClockHands
+
+
+class ClockStrategy(Protocol):
+    def update(self, current: float, target: float) -> float: ...
+    def reset(self) -> None: ...
+
+
+class Strategies(NamedTuple):
+    second: ClockStrategy
+    minute: ClockStrategy
+    hour: ClockStrategy
+
+
+class ClockController:
+    def __init__(self, start_time: datetime, strategies: Strategies) -> None:
+        self.start_time = start_time
+        self.strategies = strategies
+        self.current_pid = ClockPID(0.0, 0.0, 0.0)
+
+    def update(self, now: datetime) -> ClockPID:
+        duration = now - self.start_time
+        calculated: ClockHands = calculate_clock_hands_angles(self.start_time, duration)
+
+        self.current_pid.clock_hands_angles.second = self.strategies.second.update(
+            self.current_pid.clock_hands_angles.second, calculated.second
+        )
+        self.current_pid.clock_hands_angles.minute = self.strategies.minute.update(
+            self.current_pid.clock_hands_angles.minute, calculated.minute
+        )
+        self.current_pid.clock_hands_angles.hour = self.strategies.hour.update(
+            self.current_pid.clock_hands_angles.hour, calculated.hour
+        )
+
+        return self.current_pid
+
+    def reset(self, new_start_time: datetime) -> None:
+        self.start_time = new_start_time
+        self.current_pid.reset()
+        for strategy in (
+            self.strategies.second,
+            self.strategies.minute,
+            self.strategies.hour,
+        ):
+            with contextlib.suppress(Exception):
+                strategy.reset()
+
+./model/__init__.py
+from ..view.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
+from .clock_pid import ClockPID
+from .data_types import ClockHands, HandsPosition
+from .pid import PID
+
+__all__ = [
+    "PID",
+    "ClockHands",
+    "ClockPID",
+    "HandsPosition",
+    "calculate_clock_hands_angles",
+    "format_datetime",
+    "polar_to_cartesian",
+]
+
+./model/clock_pid.py
+from __future__ import annotations
+
+import math
+
+from src.ui.clock_widget.model.data_types import ClockHands
+
+
+class ClockPID:
+    clock_hands_angles: ClockHands
+
+    def __init__(self, pid_second: float, pid_minute: float, pid_hour: float) -> None:
+        self.clock_hands_angles = ClockHands(float(pid_second), float(pid_minute), float(pid_hour))
+
+    def reset(self) -> None:
+        self.clock_hands_angles.second = 0.0
+        self.clock_hands_angles.minute = 0.0
+        self.clock_hands_angles.hour = 0.0
+
+    def angles_in_radians(self) -> tuple[float, float, float]:
+        second_angle = (self.clock_hands_angles.second / 60.0) * 2.0 * math.pi
+        minute_angle = (self.clock_hands_angles.minute / 60.0) * 2.0 * math.pi
+        hour_angle = (self.clock_hands_angles.hour / 12.0) * 2.0 * math.pi
+        return second_angle, minute_angle, hour_angle
+
+./model/data_types.py
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from PySide6.QtCore import QPointF
+
+
+@dataclass
+class ClockHands:
+    second: float
+    minute: float
+    hour: float
+
+
+@dataclass
+class HandsPosition:
+    second: QPointF
+    minute: QPointF
+    hour: QPointF
+
+./model/pid.py
+from __future__ import annotations
+
+
+class PID:
+    def __init__(self, kp: float = 0.0, ki: float = 0.0, kd: float = 0.0) -> None:
+        self.kp = float(kp)
+        self.ki = float(ki)
+        self.kd = float(kd)
+        self.prev_error = 0.0
+        self.integral = 0.0
+
+    def update(self, error: float) -> float:
+        self.integral += error
+        derivative = error - self.prev_error
+        self.prev_error = error
+        return self.kp * error + self.ki * self.integral + self.kd * derivative
+
+    def reset(self) -> None:
+        self.prev_error = 0.0
+        self.integral = 0.0
+
+./model/strategies/__init__.py
+from .easing_strategy import EasingMovementStrategy
+from .movement_strategy import MovementStrategy
+from .pid_strategy import PIDMovementStrategy
+from .tick_strategy import TickMovementStrategy
+
+__all__ = [
+    "EasingMovementStrategy",
+    "MovementStrategy",
+    "PIDMovementStrategy",
+    "TickMovementStrategy",
+]
+
+./model/strategies/easing_strategy.py
+from __future__ import annotations
+
+from src.ui.clock_widget.model.strategies.movement_strategy import MovementStrategy
+
+
+class EasingMovementStrategy(MovementStrategy):
+    def __init__(self, factor: float = 0.1) -> None:
+        self.factor = float(factor)
+
+    def update(self, current_value: float, target_value: float) -> float:
+        return current_value + (target_value - current_value) * self.factor
+
+./model/strategies/movement_strategy.py
+from __future__ import annotations
+
+from abc import ABC, abstractmethod
+
+
+class MovementStrategy(ABC):
+    @abstractmethod
+    def update(self, current_value: float, target_value: float) -> float:
+        raise NotImplementedError
+
+    def reset(self) -> None:
+        return None
+
+./model/strategies/pid_strategy.py
+from __future__ import annotations
+
+from src.ui.clock_widget.model.pid import PID
+from src.ui.clock_widget.model.strategies.movement_strategy import MovementStrategy
+
+
+class PIDMovementStrategy(MovementStrategy):
+    def __init__(self, kp: float, ki: float, kd: float) -> None:
+        self.pid = PID(kp=kp, ki=ki, kd=kd)
+
+    def update(self, current_value: float, target_value: float) -> float:
+        error = target_value - current_value
+        return current_value + self.pid.update(error)
+
+    def reset(self) -> None:
+        self.pid.reset()
+
+./model/strategies/tick_strategy.py
+from __future__ import annotations
+
+from src.ui.clock_widget.model.strategies.movement_strategy import MovementStrategy
+
+
+class TickMovementStrategy(MovementStrategy):
+    def update(self, _: float, target_value: float) -> float:
+        return float(target_value)
+
+./view/__init__.py
+from .clock_widget import ClockWidget
+from .tick_events import TickEventSubject, TickObserver
+
+__all__ = ["ClockWidget", "TickEventSubject", "TickObserver"]
+
+./view/clock_widget.py
+from __future__ import annotations
+
+import math
+from datetime import UTC, datetime
+
+from PySide6.QtCore import QPointF, QTimer
+from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent, QPen
+from PySide6.QtWidgets import QWidget
+
+from src.ui.clock_widget.model.clock_pid import ClockPID
+from src.ui.clock_widget.model.data_types import ClockHands, HandsPosition
+from src.ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
+from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
+from src.ui.clock_widget.view.tick_events import TickEventSubject
+
+
+class ClockWidget(QWidget):
+    def __init__(self, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+
+        self._tick_subject = TickEventSubject()
+        self._tick_subject.subscribe(self)
+
+        self._timer: QTimer = QTimer(self)
+        self._timer.timeout.connect(self._tick_subject.notify)
+        self._timer.start(15)
+
+        self.start_time = datetime.now(UTC).astimezone()
+        self.current_time = self.start_time
+        self.clock_pid = ClockPID(0.0, 0.0, 0.0)
+
+        self.second_strategy = PIDMovementStrategy(0.15, 0.005, 0.005)
+        self.minute_strategy = PIDMovementStrategy(0.08, 0.004, 0.004)
+        self.hour_strategy = PIDMovementStrategy(0.08, 0.002, 0.002)
+
+    def on_tick(self) -> None:
+        self.current_time = datetime.now(UTC).astimezone()
+        self.update_clock_pid()
+        self.update()
+
+    def reset(self) -> None:
+        self.start_time = datetime.now(UTC).astimezone()
+        self.current_time = self.start_time
+        self.clock_pid.reset()
+
+        for strategy in (self.second_strategy, self.minute_strategy, self.hour_strategy):
+            strategy.reset()
+
+    def update_clock_pid(self) -> None:
+        duration = self.current_time - self.start_time
+        calculated_clock_hands_angles: ClockHands = calculate_clock_hands_angles(self.start_time, duration)
+
+        self.clock_pid.clock_hands_angles.second = self.second_strategy.update(
+            self.clock_pid.clock_hands_angles.second, calculated_clock_hands_angles.second
+        )
+        self.clock_pid.clock_hands_angles.minute = self.minute_strategy.update(
+            self.clock_pid.clock_hands_angles.minute, calculated_clock_hands_angles.minute
+        )
+        self.clock_pid.clock_hands_angles.hour = self.hour_strategy.update(
+            self.clock_pid.clock_hands_angles.hour, calculated_clock_hands_angles.hour
+        )
+
+    def convert_clock_pid_to_cartesian(self, clock_pid: ClockPID, center: QPointF, radius: float) -> HandsPosition:
+        second_polar, minute_polar, hour_polar = clock_pid.angles_in_radians()
+
+        second_hand_cartesian = polar_to_cartesian(center, radius * 0.9, second_polar)
+        minute_hand_cartesian = polar_to_cartesian(center, radius * 0.7, minute_polar)
+        hour_hand_cartesian = polar_to_cartesian(center, radius * 0.5, hour_polar)
+
+        return HandsPosition(second_hand_cartesian, minute_hand_cartesian, hour_hand_cartesian)
+
+    def paint_clock_face(self, painter: QPainter) -> tuple[QPointF, float, int]:
+        rect = self.rect()
+        size = min(rect.width(), rect.height())
+        center = QPointF(rect.center())
+        radius = size * 0.4
+
+        painter.fillRect(rect, self.palette().window())
+
+        pen = QPen(self.palette().text().color())
+        pen.setWidthF(2.0)
+        painter.setPen(pen)
+        painter.drawEllipse(center, radius, radius)
+
+        for hour in range(60):
+            angle = (hour / 60.0) * 2.0 * math.pi
+            outer = polar_to_cartesian(center, radius, angle)
+            inner = polar_to_cartesian(center, radius - (10.0 if hour % 5 == 0 else 5.0), angle)
+            pen = QPen(QColor(200, 200, 200))
+            pen.setWidthF(3.0 if hour % 5 == 0 else 1.5)
+            painter.setPen(pen)
+            painter.drawLine(inner, outer)
+
+        font_size = max(8, int(radius * 0.09))
+
+        painter.setFont(QFont("Arial", font_size))
+        for hour in range(12):
+            angle = (hour / 12.0) * 2.0 * math.pi
+            text_position = polar_to_cartesian(center, radius - float(font_size) * 2, angle)
+            painter.setPen(QPen(QColor(255, 255, 255)))
+            friendly_presented_hour = ((hour + 11) % 12) + 1
+            font_metrics = painter.fontMetrics()
+            width = font_metrics.horizontalAdvance(str(friendly_presented_hour))
+            height = font_metrics.height()
+            painter.drawText(
+                QPointF(text_position.x() - width / 2, text_position.y() + height / 4), str(friendly_presented_hour)
+            )
+        return center, radius, font_size
+
+    def paint_hands(self, painter: QPainter, center: QPointF, hands_position: HandsPosition) -> None:
+        painter.setPen(QPen(QColor(255, 255, 255), 8.0))
+        painter.drawLine(center, hands_position.hour)
+
+        painter.setPen(QPen(QColor(200, 200, 200), 6.0))
+        painter.drawLine(center, hands_position.minute)
+
+        painter.setPen(QPen(QColor(255, 0, 0), 2.0))
+        painter.drawLine(center, hands_position.second)
+
+    def paint_current_time(self, painter: QPainter, center: QPointF, radius: float, font_size: int) -> None:
+        formatted = format_datetime(self.current_time)
+        painter.setPen(QPen(QColor(150, 255, 190)))
+        painter.setFont(QFont("Consolas", font_size))
+        font_metrics = painter.fontMetrics()
+        width = font_metrics.horizontalAdvance(formatted)
+        painter.drawText(QPointF(center.x() - width / 2, center.y() + radius / 2), formatted)
+
+    def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+
+        center, radius, font_size = self.paint_clock_face(painter)
+        self.clock_pid = ClockPID(
+            self.clock_pid.clock_hands_angles.second,
+            self.clock_pid.clock_hands_angles.minute,
+            self.clock_pid.clock_hands_angles.hour,
+        )
+
+        hands_position = self.convert_clock_pid_to_cartesian(self.clock_pid, center, radius)
+
+        self.paint_hands(painter, center, hands_position)
+
+        self.paint_current_time(painter, center, radius, font_size)
+
+./view/helpers.py
+from __future__ import annotations
+
+import math
+from datetime import datetime, time, timedelta
+
+from PySide6.QtCore import QPointF
+
+from src.ui.clock_widget.model.data_types import ClockHands
+
+
+def polar_to_cartesian(center: QPointF, length: float, angle_radians: float) -> QPointF:
+    x = center.x() + math.sin(angle_radians) * length
+    y = center.y() - math.cos(angle_radians) * length
+    return QPointF(x, y)
+
+
+def calculate_clock_hands_angles(start_dt: datetime, duration: timedelta) -> ClockHands:
+    midnight = datetime.combine(start_dt.date(), time(0, 0, 0), tzinfo=start_dt.tzinfo)
+    start_ms = int((start_dt - midnight).total_seconds() * 1000)
+    elapsed_ms = int(duration.total_seconds() * 1000)
+
+    start_s = start_ms / 1000.0
+    elapsed_s = elapsed_ms / 1000.0
+
+    seconds_angle = start_s % 60.0 + elapsed_s
+    minutes_angle = (start_s / 60.0) % 60.0 + elapsed_s / 60.0
+    hours_angle = (start_s / 3600.0) % 12.0 + elapsed_s / 3600.0
+
+    return ClockHands(second=float(seconds_angle), minute=float(minutes_angle), hour=float(hours_angle))
+
+
+def format_datetime(datetime: datetime) -> str:
+    formatted = f"{datetime.hour:02}:{datetime.minute:02}:{datetime.second:02}."
+    formatted += f"{int(datetime.microsecond / 1000):03}"
+    return formatted
+
+./view/tick_events.py
+from __future__ import annotations
+
+from typing import Protocol
+
+
+class TickObserver(Protocol):
+    def on_tick(self) -> None: ...
+
+
+class TickEventSubject:
+    def __init__(self) -> None:
+        self._observers: list[TickObserver] = []
+
+    def subscribe(self, observer: TickObserver) -> None:
+        if observer not in self._observers:
+            self._observers.append(observer)
+
+    def unsubscribe(self, observer: TickObserver) -> None:
+        if observer in self._observers:
+            self._observers.remove(observer)
+
+    def notify(self) -> None:
+        for observer in list(self._observers):
+            observer.on_tick()
+
