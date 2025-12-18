@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from src.ui.clock_widget.model.clock_pid import ClockPIDs
+from src.ui.clock_widget.model.clock_pids import ClockPIDs
 from src.ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
 from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles
 

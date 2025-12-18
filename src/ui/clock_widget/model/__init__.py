@@ -1,5 +1,5 @@
 from ..view.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
-from .clock_pid import ClockPIDs
+from .clock_pids import ClockPIDs
 from .data_types import ClockHands, HandsPosition
 from .pid import PID
 

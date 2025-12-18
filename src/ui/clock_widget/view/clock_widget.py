@@ -8,7 +8,7 @@ from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent, QPen
 from PySide6.QtWidgets import QWidget
 
 from src.ui.clock_widget.controller.clock_controller import ClockController
-from src.ui.clock_widget.model.clock_pid import ClockPIDs
+from src.ui.clock_widget.model.clock_pids import ClockPIDs
 from src.ui.clock_widget.model.data_types import HandsPosition
 from src.ui.clock_widget.view.helpers import format_datetime, polar_to_cartesian
 from src.ui.clock_widget.view.tick_events import TickEventSubject
