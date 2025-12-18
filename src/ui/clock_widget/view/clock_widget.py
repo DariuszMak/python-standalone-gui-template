@@ -9,9 +9,9 @@ from PySide6.QtWidgets import QWidget
 
 from src.ui.clock_widget.controller.clock_controller import ClockController, Strategies
 from src.ui.clock_widget.model.clock_pid import ClockPID
-from src.ui.clock_widget.model.data_types import ClockHands, HandsPosition
+from src.ui.clock_widget.model.data_types import HandsPosition
 from src.ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
-from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
+from src.ui.clock_widget.view.helpers import format_datetime, polar_to_cartesian
 from src.ui.clock_widget.view.tick_events import TickEventSubject
 
 
@@ -30,18 +30,18 @@ class ClockWidget(QWidget):
         self.minute_strategy = PIDMovementStrategy(0.08, 0.004, 0.004)
         self.hour_strategy = PIDMovementStrategy(0.08, 0.002, 0.002)
 
-        self.controller = ClockController(datetime.now(UTC), Strategies(self.second_strategy, self.minute_strategy, self.hour_strategy))
+        self.controller = ClockController(
+            datetime.now(UTC), Strategies(self.second_strategy, self.minute_strategy, self.hour_strategy)
+        )
 
     def on_tick(self) -> None:
         self.current_time = datetime.now(UTC).astimezone()
         self.controller.update(self.current_time)
         self.update()
 
-
     def reset(self) -> None:
         self.controller.clock_controller_reset(datetime.now(UTC).astimezone())
         self.update()
-
 
     def convert_clock_pid_to_cartesian(self, clock_pid: ClockPID, center: QPointF, radius: float) -> HandsPosition:
         second_polar, minute_polar, hour_polar = clock_pid.angles_in_radians()
