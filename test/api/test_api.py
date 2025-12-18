@@ -1,4 +1,4 @@
-from datetime import datetime, timezone, UTC
+from datetime import UTC, datetime
 
 from litestar.testing import TestClient
 
@@ -14,7 +14,7 @@ def test_ping_route() -> None:
 
 def test_time_route() -> None:
     with TestClient(app) as client:
-        response = client.get("/time")
+        response = client.get("/current_time")
         assert response.status_code == 200
         data = response.json()
         assert "datetime" in data
