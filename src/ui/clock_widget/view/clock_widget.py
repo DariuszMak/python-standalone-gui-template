@@ -32,7 +32,7 @@ class ClockWidget(QWidget):
         self.controller.update(self.current_time)
         self.update()
 
-    def widget_reset(self) -> None:
+    def reset(self) -> None:
         self.controller.reset(datetime.now(UTC).astimezone())
         self.update()
 
