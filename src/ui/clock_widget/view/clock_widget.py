@@ -26,12 +26,8 @@ class ClockWidget(QWidget):
         self._timer.timeout.connect(self._tick_subject.notify)
         self._timer.start(15)
 
-        self.second_strategy = PIDMovementStrategy(0.15, 0.005, 0.005)
-        self.minute_strategy = PIDMovementStrategy(0.08, 0.004, 0.004)
-        self.hour_strategy = PIDMovementStrategy(0.08, 0.002, 0.002)
-
         self.controller = ClockController(
-            datetime.now(UTC), Strategies(self.second_strategy, self.minute_strategy, self.hour_strategy)
+            datetime.now(UTC)
         )
 
     def on_tick(self) -> None:
