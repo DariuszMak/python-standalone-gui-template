@@ -48,4 +48,5 @@ class ClockWidget(QWidget):
 
         self.painter.paint_hands(center, hands_position)
         self.painter.paint_current_time(self.get_current_time(), center, radius, font_size)
+
         self.painter.end_painter()
