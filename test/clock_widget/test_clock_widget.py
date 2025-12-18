@@ -122,7 +122,7 @@ def test_clock_pid_reset() -> None:
     assert pid.clock_hands_angles.minute == 20.3
     assert pid.clock_hands_angles.hour == 5.7
 
-    pid.clock_pid_reset()
+    pid.clock_pids_reset()
 
     assert pid.clock_hands_angles.second == 0.0
     assert pid.clock_hands_angles.minute == 0.0
