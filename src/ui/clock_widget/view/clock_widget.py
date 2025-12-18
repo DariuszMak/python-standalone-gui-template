@@ -26,18 +26,18 @@ class ClockWidget(QWidget):
         self._timer.timeout.connect(self._tick_subject.notify)
         self._timer.start(15)
 
-        self.controller = ClockController(self.get_current_time())
+        self.controller = ClockController(self.get_current_datetime())
         self.painter = Painter()
 
     def on_tick(self) -> None:
-        self.controller.update(self.get_current_time())
+        self.controller.update(self.get_current_datetime())
         self.update()
 
-    def get_current_time(self) -> datetime:
+    def get_current_datetime(self) -> datetime:
         return datetime.now(UTC).astimezone()
 
     def reset(self) -> None:
-        self.controller.reset(self.get_current_time())
+        self.controller.reset(self.get_current_datetime())
         self.update()
 
     def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
@@ -47,6 +47,6 @@ class ClockWidget(QWidget):
         hands_position = convert_clock_pid_to_cartesian(self.controller.clock_angles, center, radius)
 
         self.painter.paint_hands(center, hands_position)
-        self.painter.paint_current_time(self.get_current_time(), center, radius, font_size)
+        self.painter.paint_current_time(self.get_current_datetime(), center, radius, font_size)
 
         self.painter.end_painter()
