@@ -8,5 +8,5 @@ class MovementStrategy(ABC):
     def update(self, current_value: float, target_value: float) -> float:
         raise NotImplementedError
 
-    def movement_strategy_reset(self) -> None:
+    def reset(self) -> None:
         return None

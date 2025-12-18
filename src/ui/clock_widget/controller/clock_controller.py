@@ -43,15 +43,15 @@ class ClockController:
             self.clock_angles.clock_hands_angles.hour, calculated_clock_hands_angles.hour
         )
 
-    def clock_controller_reset(self, new_start_time: datetime) -> None:
+    def reset(self, new_start_time: datetime) -> None:
         self.start_time = new_start_time
-        self.clock_angles.clock_angles_reset()
+        self.clock_angles.reset()
         for strategy in (
             self.second_strategy,
             self.minute_strategy,
             self.hour_strategy,
         ):
             try:
-                strategy.movement_strategy_reset()
+                strategy.reset()
             except Exception as e:
                 logger.warning("Strategy reset failed: %s", e)

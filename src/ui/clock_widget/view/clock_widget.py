@@ -33,7 +33,7 @@ class ClockWidget(QWidget):
         self.update()
 
     def widget_reset(self) -> None:
-        self.controller.clock_controller_reset(datetime.now(UTC).astimezone())
+        self.controller.reset(datetime.now(UTC).astimezone())
         self.update()
 
     def convert_clock_pid_to_cartesian(self, clock_pid: ClockAngles, center: QPointF, radius: float) -> HandsPosition:

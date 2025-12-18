@@ -111,7 +111,7 @@ def test_pid_reset() -> None:
     assert pid.integral != 0.0
     assert pid.prev_error != 0.0
 
-    pid.pid_reset()
+    pid.reset()
     assert pid.integral == 0.0
     assert pid.prev_error == 0.0
 
@@ -122,7 +122,7 @@ def test_clock_angles_reset() -> None:
     assert pid.clock_hands_angles.minute == 20.3
     assert pid.clock_hands_angles.hour == 5.7
 
-    pid.clock_angles_reset()
+    pid.reset()
 
     assert pid.clock_hands_angles.second == 0.0
     assert pid.clock_hands_angles.minute == 0.0
