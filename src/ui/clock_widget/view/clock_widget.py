@@ -1,15 +1,18 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
-from PySide6.QtGui import QPainter, QPaintEvent
 from PySide6.QtWidgets import QWidget
 
 from src.ui.clock_widget.controller.clock_controller import ClockController
 from src.ui.clock_widget.view.helpers import convert_clock_pid_to_cartesian
-from src.ui.clock_widget.view.painter import paint_clock_face, paint_current_time, paint_hands
+from src.ui.clock_widget.view.painter import Painter
 from src.ui.clock_widget.view.tick_events import TickEventSubject
+
+if TYPE_CHECKING:
+    from PySide6.QtGui import QPaintEvent
 
 
 class ClockWidget(QWidget):
@@ -24,6 +27,7 @@ class ClockWidget(QWidget):
         self._timer.start(15)
 
         self.controller = ClockController(self.get_current_time())
+        self.painter = Painter()
 
     def on_tick(self) -> None:
         self.controller.update(self.get_current_time())
@@ -37,11 +41,11 @@ class ClockWidget(QWidget):
         self.update()
 
     def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        self.painter.refresh_painter(self)
 
-        center, radius, font_size = paint_clock_face(painter, self.rect, self.palette)
+        center, radius, font_size = self.painter.paint_clock_face(self.rect, self.palette)
         hands_position = convert_clock_pid_to_cartesian(self.controller.clock_angles, center, radius)
 
-        paint_hands(painter, center, hands_position)
-        paint_current_time(self.get_current_time(), painter, center, radius, font_size)
+        self.painter.paint_hands(center, hands_position)
+        self.painter.paint_current_time(self.get_current_time(), center, radius, font_size)
+        self.painter.painter.end()
