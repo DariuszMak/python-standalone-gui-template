@@ -3,6 +3,18 @@ from datetime import UTC, datetime
 from litestar.testing import TestClient
 
 from src.api.app import app
+def test_redoc_available() -> None:
+    with TestClient(app) as client:
+        resp = client.get("/schema/redoc")
+        assert resp.status_code == 200
+        assert "html" in resp.headers["content-type"]
+
+
+def test_swagger_ui_available() -> None:
+    with TestClient(app) as client:
+        resp = client.get("/schema/swagger")
+        assert resp.status_code == 200
+        assert "html" in resp.headers["content-type"]
 
 
 def test_ping_route() -> None:
@@ -23,15 +35,3 @@ def test_time_route() -> None:
         assert dt.tzinfo == UTC
 
 
-def test_redoc_available() -> None:
-    with TestClient(app) as client:
-        resp = client.get("/schema/redoc")
-        assert resp.status_code == 200
-        assert "html" in resp.headers["content-type"]
-
-
-def test_swagger_ui_available() -> None:
-    with TestClient(app) as client:
-        resp = client.get("/schema/swagger")
-        assert resp.status_code == 200
-        assert "html" in resp.headers["content-type"]
