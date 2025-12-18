@@ -15,6 +15,6 @@ class PID:
         self.prev_error = error
         return self.kp * error + self.ki * self.integral + self.kd * derivative
 
-    def reset(self) -> None:
+    def pid_reset(self) -> None:
         self.prev_error = 0.0
         self.integral = 0.0

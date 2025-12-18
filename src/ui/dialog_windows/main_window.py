@@ -115,7 +115,7 @@ class MainWindow(DraggableMainWindow):
 
     def eventFilter(self, obj: QObject, event: QEvent) -> bool:  # noqa: N802
         if event.type() == QEvent.Type.KeyPress and isinstance(event, QKeyEvent) and event.key() == Qt.Key.Key_R:
-            self._clock_widget.reset()
+            self._clock_widget.clock_widget_reset()
             return True
         return super().eventFilter(obj, event)
 

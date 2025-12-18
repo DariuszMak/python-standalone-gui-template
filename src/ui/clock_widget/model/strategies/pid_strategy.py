@@ -12,5 +12,5 @@ class PIDMovementStrategy(MovementStrategy):
         error = target_value - current_value
         return current_value + self.pid.update(error)
 
-    def reset(self) -> None:
-        self.pid.reset()
+    def movement_strategy_reset(self) -> None:
+        self.pid.pid_reset()

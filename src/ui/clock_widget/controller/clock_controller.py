@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 class ClockStrategy(Protocol):
     def update(self, current: float, target: float) -> float: ...
-    def reset(self) -> None: ...
+    def strategy_reset(self) -> None: ...
 
 
 class Strategies(NamedTuple):
@@ -45,13 +45,13 @@ class ClockController:
 
         return self.current_pid
 
-    def reset(self, new_start_time: datetime) -> None:
+    def clock_controller_reset(self, new_start_time: datetime) -> None:
         self.start_time = new_start_time
-        self.current_pid.reset()
+        self.current_pid.clock_pid_reset()
         for strategy in (
             self.strategies.second,
             self.strategies.minute,
             self.strategies.hour,
         ):
             with contextlib.suppress(Exception):
-                strategy.reset()
+                strategy.strategy_reset()

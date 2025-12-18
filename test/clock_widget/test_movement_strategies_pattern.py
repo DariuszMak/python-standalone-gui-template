@@ -44,6 +44,6 @@ def test_pid_strategy_moves_toward_target() -> None:
 def test_pid_strategy_reset() -> None:
     strat = PIDMovementStrategy(0.1, 0.1, 0.0)
     v1 = strat.update(0.0, 10.0)
-    strat.reset()
+    strat.movement_strategy_reset()
     v2 = strat.update(0.0, 10.0)
     assert v2 == pytest.approx(v1)

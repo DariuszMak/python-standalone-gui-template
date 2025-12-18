@@ -38,13 +38,13 @@ class ClockWidget(QWidget):
         self.update_clock_pid()
         self.update()
 
-    def reset(self) -> None:
+    def clock_widget_reset(self) -> None:
         self.start_time = datetime.now(UTC).astimezone()
         self.current_time = self.start_time
-        self.clock_pid.reset()
+        self.clock_pid.clock_pid_reset()
 
         for strategy in (self.second_strategy, self.minute_strategy, self.hour_strategy):
-            strategy.reset()
+            strategy.movement_strategy_reset()
 
     def update_clock_pid(self) -> None:
         duration = self.current_time - self.start_time
