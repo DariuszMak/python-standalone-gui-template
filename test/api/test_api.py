@@ -28,7 +28,7 @@ def test_ping_route() -> None:
 
 def test_time_route() -> None:
     with TestClient(app) as client:
-        response = client.get("/current_time")
+        response = client.get("/time")
         assert response.status_code == 200
         data = response.json()
         assert "datetime" in data
