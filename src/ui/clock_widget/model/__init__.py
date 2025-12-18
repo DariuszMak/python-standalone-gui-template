@@ -5,8 +5,8 @@ from .pid import PID
 
 __all__ = [
     "PID",
-    "ClockHands",
     "ClockAngles",
+    "ClockHands",
     "HandsPosition",
     "calculate_clock_hands_angles",
     "format_datetime",
