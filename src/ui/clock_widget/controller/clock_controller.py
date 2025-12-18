@@ -1,4 +1,5 @@
 from __future__ import annotations
+import logging
 
 import contextlib
 from datetime import datetime
@@ -6,6 +7,8 @@ from typing import TYPE_CHECKING, NamedTuple
 
 from src.ui.clock_widget.model.clock_pid import ClockPID
 from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -48,5 +51,7 @@ class ClockController:
             self.strategies.minute,
             self.strategies.hour,
         ):
-            with contextlib.suppress(Exception):
+            try:
                 strategy.movement_strategy_reset()
+            except Exception as e:
+                logger.warning("Strategy reset failed: %s", e)
