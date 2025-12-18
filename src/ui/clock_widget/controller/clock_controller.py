@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 from typing import TYPE_CHECKING, NamedTuple
 
-from src.ui.clock_widget.model.clock_pid import ClockPID
+from src.ui.clock_widget.model.clock_pid import ClockPIDs
 from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles
 
 logger = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ class ClockController:
     def __init__(self, start_time: datetime, strategies: Strategies) -> None:
         self.start_time = start_time
         self.strategies = strategies
-        self.clock_pids = ClockPID(0.0, 0.0, 0.0)
+        self.clock_pids = ClockPIDs(0.0, 0.0, 0.0)
 
     def update(self, now: datetime) -> None:
         duration = now - self.start_time

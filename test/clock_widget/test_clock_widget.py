@@ -4,7 +4,7 @@ from datetime import UTC, datetime, timedelta
 import pytest
 from PySide6.QtCore import QPointF
 
-from src.ui.clock_widget.model.clock_pid import ClockPID
+from src.ui.clock_widget.model.clock_pid import ClockPIDs
 from src.ui.clock_widget.model.pid import PID
 from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
 
@@ -117,7 +117,7 @@ def test_pid_reset() -> None:
 
 
 def test_clock_pid_reset() -> None:
-    pid = ClockPID(10.5, 20.3, 5.7)
+    pid = ClockPIDs(10.5, 20.3, 5.7)
     assert pid.clock_hands_angles.second == 10.5
     assert pid.clock_hands_angles.minute == 20.3
     assert pid.clock_hands_angles.hour == 5.7
@@ -130,7 +130,7 @@ def test_clock_pid_reset() -> None:
 
 
 def test_clock_pid_angles_in_radians() -> None:
-    c = ClockPID(pid_second=15.0, pid_minute=30.0, pid_hour=6.0)
+    c = ClockPIDs(pid_second=15.0, pid_minute=30.0, pid_hour=6.0)
     s_rad, m_rad, h_rad = c.angles_in_radians()
     assert approx_eq(s_rad, math.pi / 2.0)
     assert approx_eq(m_rad, math.pi)
@@ -138,7 +138,7 @@ def test_clock_pid_angles_in_radians() -> None:
 
 
 def test_angles_at_zero() -> None:
-    c = ClockPID(0.0, 0.0, 0.0)
+    c = ClockPIDs(0.0, 0.0, 0.0)
     s, m, h = c.angles_in_radians()
     assert approx_eq(s, 0.0)
     assert approx_eq(m, 0.0)
@@ -146,7 +146,7 @@ def test_angles_at_zero() -> None:
 
 
 def test_angles_at_halfway() -> None:
-    c = ClockPID(30.0, 30.0, 6.0)
+    c = ClockPIDs(30.0, 30.0, 6.0)
     s, m, h = c.angles_in_radians()
     assert approx_eq(s, math.pi)
     assert approx_eq(m, math.pi)
@@ -154,7 +154,7 @@ def test_angles_at_halfway() -> None:
 
 
 def test_angles_at_full() -> None:
-    c = ClockPID(60.0, 60.0, 12.0)
+    c = ClockPIDs(60.0, 60.0, 12.0)
     s, m, h = c.angles_in_radians()
     assert approx_eq(s, 2.0 * math.pi)
     assert approx_eq(m, 2.0 * math.pi)
@@ -162,7 +162,7 @@ def test_angles_at_full() -> None:
 
 
 def test_quarter_angles() -> None:
-    c = ClockPID(15.0, 15.0, 3.0)
+    c = ClockPIDs(15.0, 15.0, 3.0)
     s, m, h = c.angles_in_radians()
     assert approx_eq(s, 0.25 * 2.0 * math.pi)
     assert approx_eq(m, 0.25 * 2.0 * math.pi)

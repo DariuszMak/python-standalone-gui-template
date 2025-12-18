@@ -5,7 +5,7 @@ import math
 from src.ui.clock_widget.model.data_types import ClockHands
 
 
-class ClockPID:
+class ClockPIDs:
     clock_hands_angles: ClockHands
 
     def __init__(self, pid_second: float, pid_minute: float, pid_hour: float) -> None:
