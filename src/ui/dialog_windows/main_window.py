@@ -110,7 +110,6 @@ class MainWindow(DraggableMainWindow):
         if self._supports_opacity and not self._is_closing:
             event.ignore()
             self._clock_widget.reset()
-            self._clock_widget._timer.stop()
             self.fade_out_animation()
         else:
             super().closeEvent(event)
