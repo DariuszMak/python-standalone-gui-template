@@ -1,5 +1,4 @@
-
-from datetime import datetime,  UTC
+from datetime import UTC, datetime
 
 from litestar import get
 
