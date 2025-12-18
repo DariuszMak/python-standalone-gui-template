@@ -1,3 +1,5 @@
+from datetime import datetime, timezone, UTC
+
 from litestar.testing import TestClient
 
 from src.api.app import app
@@ -8,6 +10,17 @@ def test_ping_route() -> None:
         response = client.get("/ping")
         assert response.status_code == 200
         assert response.json() == {"message": "pong"}
+
+
+def test_time_route() -> None:
+    with TestClient(app) as client:
+        response = client.get("/time")
+        assert response.status_code == 200
+        data = response.json()
+        assert "datetime" in data
+
+        dt = datetime.fromisoformat(data["datetime"])
+        assert dt.tzinfo == UTC
 
 
 def test_redoc_available() -> None:
