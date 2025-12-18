@@ -11,7 +11,7 @@ class ClockAngles:
     def __init__(self, pid_second: float, pid_minute: float, pid_hour: float) -> None:
         self.clock_hands_angles = ClockHands(float(pid_second), float(pid_minute), float(pid_hour))
 
-    def clock_pids_reset(self) -> None:
+    def clock_angles_reset(self) -> None:
         self.clock_hands_angles.second = 0.0
         self.clock_hands_angles.minute = 0.0
         self.clock_hands_angles.hour = 0.0

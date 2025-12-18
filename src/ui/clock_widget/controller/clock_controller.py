@@ -45,7 +45,7 @@ class ClockController:
 
     def clock_controller_reset(self, new_start_time: datetime) -> None:
         self.start_time = new_start_time
-        self.clock_pids.clock_pids_reset()
+        self.clock_pids.clock_angles_reset()
         for strategy in (
             self.second_strategy,
             self.minute_strategy,
