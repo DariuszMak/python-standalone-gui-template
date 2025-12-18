@@ -6,7 +6,12 @@ from PySide6.QtCore import QPointF
 
 from src.ui.clock_widget.model.clock_angles import ClockAngles
 from src.ui.clock_widget.model.pid import PID
-from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles, format_datetime, polar_to_cartesian
+from src.ui.clock_widget.view.helpers import (
+    calculate_clock_hands_angles,
+    convert_clock_pid_to_cartesian,
+    format_datetime,
+    polar_to_cartesian,
+)
 
 
 def approx_eq(a: float, b: float, epsilon: float = 1e-10) -> bool:
@@ -203,3 +208,20 @@ def test_format_datetime() -> None:
     dt = datetime(2024, 1, 2, 3, 4, 5, 678901, tzinfo=UTC)
     result = format_datetime(dt)
     assert result == "03:04:05.678"
+
+
+def test_convert_clock_pid_to_cartesian() -> None:
+    center = QPointF(100.0, 100.0)
+    radius = 50.0
+
+    clock_angles = ClockAngles(
+        pid_second=0.0,
+        pid_minute=15.0,
+        pid_hour=6.0,
+    )
+
+    hands = convert_clock_pid_to_cartesian(clock_angles, center, radius)
+
+    assert hands.second == QPointF(100.0, 100.0 - radius * 0.9)
+    assert hands.minute == QPointF(100.0 + radius * 0.7, 100.0)
+    assert hands.hour == QPointF(100.0, 100.0 + radius * 0.5)
