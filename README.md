@@ -284,8 +284,13 @@ Run Newman tests from saved collection (run application before execution):
 newman run collections\Python_GUI.postman_collection.json ; 
 ```
 
+## Edit `.postman_collection.json` collections with Postman:
 
-## Edit `ui` forms with QT Designer:
+```commandline
+postman collections\Python_GUI.postman_collection.json ; 
+```
+
+## Edit `.ui` forms with QT Designer:
 
 ```commandline
 uv run pyqt6-tools designer src\ui\forms\main_window.ui ; 
