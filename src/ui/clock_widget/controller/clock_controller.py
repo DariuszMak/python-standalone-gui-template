@@ -2,18 +2,16 @@ from __future__ import annotations
 
 import contextlib
 from datetime import datetime
-from typing import TYPE_CHECKING, NamedTuple, Protocol
+from typing import TYPE_CHECKING, NamedTuple
 
 from src.ui.clock_widget.model.clock_pid import ClockPID
-from src.ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
 from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles
 
 if TYPE_CHECKING:
     from datetime import datetime
 
     from src.ui.clock_widget.model.data_types import ClockHands
-
-
+    from src.ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
 
 
 class Strategies(NamedTuple):
@@ -51,4 +49,4 @@ class ClockController:
             self.strategies.hour,
         ):
             with contextlib.suppress(Exception):
-                strategy.strategy_reset()
+                strategy.movement_strategy_reset()
