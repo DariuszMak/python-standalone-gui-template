@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from src.ui.clock_widget.model.clock_pids import ClockPIDs
+from src.ui.clock_widget.model.clock_pids import ClockAngles
 from src.ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
 from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles
 
@@ -27,7 +27,7 @@ class ClockController:
         self.minute_strategy = PIDMovementStrategy(0.08, 0.004, 0.004)
         self.hour_strategy = PIDMovementStrategy(0.08, 0.002, 0.002)
 
-        self.clock_pids = ClockPIDs(0.0, 0.0, 0.0)
+        self.clock_pids = ClockAngles(0.0, 0.0, 0.0)
 
     def update(self, now: datetime) -> None:
         duration = now - self.start_time
