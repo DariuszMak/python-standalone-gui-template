@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QPointF, QTimer
 from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent, QPen
@@ -9,9 +10,11 @@ from PySide6.QtWidgets import QWidget
 
 from src.ui.clock_widget.controller.clock_controller import ClockController
 from src.ui.clock_widget.model.clock_angles import ClockAngles
-from src.ui.clock_widget.model.data_types import HandsPosition
-from src.ui.clock_widget.view.helpers import format_datetime, polar_to_cartesian, convert_clock_pid_to_cartesian
+from src.ui.clock_widget.view.helpers import convert_clock_pid_to_cartesian, format_datetime, polar_to_cartesian
 from src.ui.clock_widget.view.tick_events import TickEventSubject
+
+if TYPE_CHECKING:
+    from src.ui.clock_widget.model.data_types import HandsPosition
 
 
 class ClockWidget(QWidget):
@@ -103,7 +106,7 @@ class ClockWidget(QWidget):
             self.controller.clock_angles.clock_hands_angles.hour,
         )
 
-        hands_position = self.convert_clock_pid_to_cartesian(self.controller.clock_angles, center, radius)
+        hands_position = convert_clock_pid_to_cartesian(self.controller.clock_angles, center, radius)
 
         self.paint_hands(painter, center, hands_position)
 
