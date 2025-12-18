@@ -116,7 +116,7 @@ def test_pid_reset() -> None:
     assert pid.prev_error == 0.0
 
 
-def test_clock_pid_reset() -> None:
+def test_clock_pids_reset() -> None:
     pid = ClockPIDs(10.5, 20.3, 5.7)
     assert pid.clock_hands_angles.second == 10.5
     assert pid.clock_hands_angles.minute == 20.3
@@ -129,7 +129,7 @@ def test_clock_pid_reset() -> None:
     assert pid.clock_hands_angles.hour == 0.0
 
 
-def test_clock_pid_angles_in_radians() -> None:
+def test_clock_pids_angles_in_radians() -> None:
     c = ClockPIDs(pid_second=15.0, pid_minute=30.0, pid_hour=6.0)
     s_rad, m_rad, h_rad = c.angles_in_radians()
     assert approx_eq(s_rad, math.pi / 2.0)
@@ -137,7 +137,7 @@ def test_clock_pid_angles_in_radians() -> None:
     assert approx_eq(h_rad, math.pi)
 
 
-def test_angles_at_zero() -> None:
+def test_clock_pids_angles_at_zero() -> None:
     c = ClockPIDs(0.0, 0.0, 0.0)
     s, m, h = c.angles_in_radians()
     assert approx_eq(s, 0.0)
@@ -145,7 +145,7 @@ def test_angles_at_zero() -> None:
     assert approx_eq(h, 0.0)
 
 
-def test_angles_at_halfway() -> None:
+def test_clock_pids_angles_at_halfway() -> None:
     c = ClockPIDs(30.0, 30.0, 6.0)
     s, m, h = c.angles_in_radians()
     assert approx_eq(s, math.pi)
@@ -153,7 +153,7 @@ def test_angles_at_halfway() -> None:
     assert approx_eq(h, math.pi)
 
 
-def test_angles_at_full() -> None:
+def test_clock_pids_angles_at_full() -> None:
     c = ClockPIDs(60.0, 60.0, 12.0)
     s, m, h = c.angles_in_radians()
     assert approx_eq(s, 2.0 * math.pi)
@@ -161,7 +161,7 @@ def test_angles_at_full() -> None:
     assert approx_eq(h, 2.0 * math.pi)
 
 
-def test_quarter_angles() -> None:
+def test_clock_pids_quarter_angles() -> None:
     c = ClockPIDs(15.0, 15.0, 3.0)
     s, m, h = c.angles_in_radians()
     assert approx_eq(s, 0.25 * 2.0 * math.pi)
