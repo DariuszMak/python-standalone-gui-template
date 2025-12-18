@@ -1,6 +1,21 @@
 from __future__ import annotations
 
 import math
+from datetime import UTC, datetime
+
+from PySide6.QtCore import QPointF, QTimer
+from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent, QPen
+from PySide6.QtWidgets import QWidget
+
+from src.ui.clock_widget.controller.clock_controller import ClockController
+from src.ui.clock_widget.model.clock_angles import ClockAngles
+from src.ui.clock_widget.model.data_types import HandsPosition
+from src.ui.clock_widget.view.helpers import format_datetime, polar_to_cartesian
+from src.ui.clock_widget.view.tick_events import TickEventSubject
+
+from __future__ import annotations
+
+import math
 from datetime import datetime, time, timedelta
 
 from PySide6.QtCore import QPointF
@@ -33,3 +48,13 @@ def format_datetime(datetime: datetime) -> str:
     formatted = f"{datetime.hour:02}:{datetime.minute:02}:{datetime.second:02}."
     formatted += f"{int(datetime.microsecond / 1000):03}"
     return formatted
+
+
+def convert_clock_pid_to_cartesian(clock_pid: ClockAngles, center: QPointF, radius: float) -> HandsPosition:
+    second_polar, minute_polar, hour_polar = clock_pid.angles_in_radians()
+
+    second_hand_cartesian = polar_to_cartesian(center, radius * 0.9, second_polar)
+    minute_hand_cartesian = polar_to_cartesian(center, radius * 0.7, minute_polar)
+    hour_hand_cartesian = polar_to_cartesian(center, radius * 0.5, hour_polar)
+
+    return HandsPosition(second_hand_cartesian, minute_hand_cartesian, hour_hand_cartesian)

@@ -10,7 +10,7 @@ from PySide6.QtWidgets import QWidget
 from src.ui.clock_widget.controller.clock_controller import ClockController
 from src.ui.clock_widget.model.clock_angles import ClockAngles
 from src.ui.clock_widget.model.data_types import HandsPosition
-from src.ui.clock_widget.view.helpers import format_datetime, polar_to_cartesian
+from src.ui.clock_widget.view.helpers import format_datetime, polar_to_cartesian, convert_clock_pid_to_cartesian
 from src.ui.clock_widget.view.tick_events import TickEventSubject
 
 
@@ -35,15 +35,6 @@ class ClockWidget(QWidget):
     def reset(self) -> None:
         self.controller.reset(datetime.now(UTC).astimezone())
         self.update()
-
-    def convert_clock_pid_to_cartesian(self, clock_pid: ClockAngles, center: QPointF, radius: float) -> HandsPosition:
-        second_polar, minute_polar, hour_polar = clock_pid.angles_in_radians()
-
-        second_hand_cartesian = polar_to_cartesian(center, radius * 0.9, second_polar)
-        minute_hand_cartesian = polar_to_cartesian(center, radius * 0.7, minute_polar)
-        hour_hand_cartesian = polar_to_cartesian(center, radius * 0.5, hour_polar)
-
-        return HandsPosition(second_hand_cartesian, minute_hand_cartesian, hour_hand_cartesian)
 
     def paint_clock_face(self, painter: QPainter) -> tuple[QPointF, float, int]:
         rect = self.rect()
