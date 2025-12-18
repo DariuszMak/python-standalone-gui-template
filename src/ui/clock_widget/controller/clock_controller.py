@@ -5,9 +5,9 @@ from datetime import datetime
 from typing import TYPE_CHECKING, NamedTuple
 
 from src.ui.clock_widget.model.clock_pid import ClockPIDs
+from src.ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
 from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles
 
-from src.ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
@@ -23,13 +23,16 @@ class Strategies(NamedTuple):
 
 
 class ClockController:
-    def __init__(self, start_time: datetime,  ) -> None:
+    def __init__(
+        self,
+        start_time: datetime,
+    ) -> None:
         self.start_time = start_time
 
         self.strategies = Strategies(
-            second= PIDMovementStrategy(0.15, 0.005, 0.005),
-            minute= PIDMovementStrategy(0.08, 0.004, 0.004),
-            hour= PIDMovementStrategy(0.08, 0.002, 0.002)
+            second=PIDMovementStrategy(0.15, 0.005, 0.005),
+            minute=PIDMovementStrategy(0.08, 0.004, 0.004),
+            hour=PIDMovementStrategy(0.08, 0.002, 0.002),
         )
 
         self.clock_pids = ClockPIDs(0.0, 0.0, 0.0)

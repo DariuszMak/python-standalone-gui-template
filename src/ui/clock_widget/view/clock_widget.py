@@ -7,10 +7,9 @@ from PySide6.QtCore import QPointF, QTimer
 from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent, QPen
 from PySide6.QtWidgets import QWidget
 
-from src.ui.clock_widget.controller.clock_controller import ClockController, Strategies
+from src.ui.clock_widget.controller.clock_controller import ClockController
 from src.ui.clock_widget.model.clock_pid import ClockPIDs
 from src.ui.clock_widget.model.data_types import HandsPosition
-from src.ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
 from src.ui.clock_widget.view.helpers import format_datetime, polar_to_cartesian
 from src.ui.clock_widget.view.tick_events import TickEventSubject
 
@@ -26,9 +25,7 @@ class ClockWidget(QWidget):
         self._timer.timeout.connect(self._tick_subject.notify)
         self._timer.start(15)
 
-        self.controller = ClockController(
-            datetime.now(UTC)
-        )
+        self.controller = ClockController(datetime.now(UTC))
 
     def on_tick(self) -> None:
         self.current_time = datetime.now(UTC).astimezone()
