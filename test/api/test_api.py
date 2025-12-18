@@ -3,6 +3,8 @@ from datetime import UTC, datetime
 from litestar.testing import TestClient
 
 from src.api.app import app
+
+
 def test_redoc_available() -> None:
     with TestClient(app) as client:
         resp = client.get("/schema/redoc")
@@ -33,5 +35,3 @@ def test_time_route() -> None:
 
         dt = datetime.fromisoformat(data["datetime"])
         assert dt.tzinfo == UTC
-
-
