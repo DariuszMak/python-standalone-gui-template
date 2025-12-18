@@ -41,11 +41,11 @@ class ClockWidget(QWidget):
         self.update()
 
     def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
-        self.painter.refresh_painter(self)
+        self.painter.init_painter(self)
 
         center, radius, font_size = self.painter.paint_clock_face(self.rect, self.palette)
         hands_position = convert_clock_pid_to_cartesian(self.controller.clock_angles, center, radius)
 
         self.painter.paint_hands(center, hands_position)
         self.painter.paint_current_time(self.get_current_time(), center, radius, font_size)
-        self.painter.painter.end()
+        self.painter.end_painter()

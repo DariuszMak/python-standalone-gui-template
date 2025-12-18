@@ -16,9 +16,14 @@ if TYPE_CHECKING:
 
 
 class Painter:
-    def refresh_painter(self, obj: QPaintDevice) -> None:
+    def init_painter(self, obj: QPaintDevice) -> None:
         self.painter = QPainter(obj)
         self.painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+
+    def end_painter(
+        self,
+    ) -> None:
+        self.painter.end()
 
     def paint_clock_face(
         self,
