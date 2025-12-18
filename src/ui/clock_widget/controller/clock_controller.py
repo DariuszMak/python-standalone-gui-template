@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, NamedTuple, Protocol
 
 from src.ui.clock_widget.model.clock_pid import ClockPID
@@ -29,21 +30,19 @@ class ClockController:
         self.strategies = strategies
         self.current_pid = ClockPID(0.0, 0.0, 0.0)
 
-    def update(self, now: datetime) -> ClockPID:
+    def update(self, now: datetime) -> None:
         duration = now - self.start_time
-        calculated: ClockHands = calculate_clock_hands_angles(self.start_time, duration)
+        calculated_clock_hands_angles: ClockHands = calculate_clock_hands_angles(self.start_time, duration)
 
         self.current_pid.clock_hands_angles.second = self.strategies.second.update(
-            self.current_pid.clock_hands_angles.second, calculated.second
+            self.current_pid.clock_hands_angles.second, calculated_clock_hands_angles.second
         )
         self.current_pid.clock_hands_angles.minute = self.strategies.minute.update(
-            self.current_pid.clock_hands_angles.minute, calculated.minute
+            self.current_pid.clock_hands_angles.minute, calculated_clock_hands_angles.minute
         )
         self.current_pid.clock_hands_angles.hour = self.strategies.hour.update(
-            self.current_pid.clock_hands_angles.hour, calculated.hour
+            self.current_pid.clock_hands_angles.hour, calculated_clock_hands_angles.hour
         )
-
-        return self.current_pid
 
     def clock_controller_reset(self, new_start_time: datetime) -> None:
         self.start_time = new_start_time
