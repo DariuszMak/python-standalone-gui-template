@@ -113,13 +113,13 @@ class ClockWidget(QWidget):
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         center, radius, font_size = self.paint_clock_face(painter)
-        self.controller.current_pid = ClockPID(
-            self.controller.current_pid.clock_hands_angles.second,
-            self.controller.current_pid.clock_hands_angles.minute,
-            self.controller.current_pid.clock_hands_angles.hour,
+        self.controller.clock_pids = ClockPID(
+            self.controller.clock_pids.clock_hands_angles.second,
+            self.controller.clock_pids.clock_hands_angles.minute,
+            self.controller.clock_pids.clock_hands_angles.hour,
         )
 
-        hands_position = self.convert_clock_pid_to_cartesian(self.controller.current_pid, center, radius)
+        hands_position = self.convert_clock_pid_to_cartesian(self.controller.clock_pids, center, radius)
 
         self.paint_hands(painter, center, hands_position)
 

@@ -26,25 +26,25 @@ class ClockController:
     def __init__(self, start_time: datetime, strategies: Strategies) -> None:
         self.start_time = start_time
         self.strategies = strategies
-        self.current_pid = ClockPID(0.0, 0.0, 0.0)
+        self.clock_pids = ClockPID(0.0, 0.0, 0.0)
 
     def update(self, now: datetime) -> None:
         duration = now - self.start_time
         calculated_clock_hands_angles: ClockHands = calculate_clock_hands_angles(self.start_time, duration)
 
-        self.current_pid.clock_hands_angles.second = self.strategies.second.update(
-            self.current_pid.clock_hands_angles.second, calculated_clock_hands_angles.second
+        self.clock_pids.clock_hands_angles.second = self.strategies.second.update(
+            self.clock_pids.clock_hands_angles.second, calculated_clock_hands_angles.second
         )
-        self.current_pid.clock_hands_angles.minute = self.strategies.minute.update(
-            self.current_pid.clock_hands_angles.minute, calculated_clock_hands_angles.minute
+        self.clock_pids.clock_hands_angles.minute = self.strategies.minute.update(
+            self.clock_pids.clock_hands_angles.minute, calculated_clock_hands_angles.minute
         )
-        self.current_pid.clock_hands_angles.hour = self.strategies.hour.update(
-            self.current_pid.clock_hands_angles.hour, calculated_clock_hands_angles.hour
+        self.clock_pids.clock_hands_angles.hour = self.strategies.hour.update(
+            self.clock_pids.clock_hands_angles.hour, calculated_clock_hands_angles.hour
         )
 
     def clock_controller_reset(self, new_start_time: datetime) -> None:
         self.start_time = new_start_time
-        self.current_pid.clock_pid_reset()
+        self.clock_pids.clock_pid_reset()
         for strategy in (
             self.strategies.second,
             self.strategies.minute,
