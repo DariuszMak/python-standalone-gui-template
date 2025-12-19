@@ -56,7 +56,7 @@ class MainWindow(DraggableMainWindow):
         self.anim = QPropertyAnimation(self, b"windowOpacity")
         self.anim.setDuration(600)
         self.anim.setStartValue(0.0)
-        self.anim.setEndValue(1.0)
+        self.anim.setEndValue(0.9)
         self.anim.setEasingCurve(QEasingCurve.Type.InOutQuad)
         self.anim.start()
 
@@ -66,7 +66,7 @@ class MainWindow(DraggableMainWindow):
             return
         self.anim = QPropertyAnimation(self, b"windowOpacity")
         self.anim.setDuration(ANIMATION_DURATION)
-        self.anim.setStartValue(1.0)
+        self.anim.setStartValue(0.9)
         self.anim.setEndValue(0.0)
         self.anim.setEasingCurve(QEasingCurve.Type.InOutQuad)
 
