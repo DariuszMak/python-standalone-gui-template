@@ -19,7 +19,6 @@ class MainWindow(DraggableMainWindow):
 
         self._supports_opacity = QGuiApplication.platformName().lower() not in ["wayland", "xcb"]
         self._is_closing = False
-        self._clock_widget: ClockWidget = ClockWidget()
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)  # type: ignore[no-untyped-call]
@@ -37,9 +36,11 @@ class MainWindow(DraggableMainWindow):
         self.ui.btn_maximize_restore.clicked.connect(self.toggle_maximize_restore)
         self.ui.btn_close.clicked.connect(self.close)
 
+        self.clock_widget: ClockWidget = ClockWidget()
+
         layout = self.ui.frame_clock_widget.layout()
         if layout is not None:
-            layout.addWidget(self._clock_widget)
+            layout.addWidget(self.clock_widget)
         else:
             logger.warning("frame_clock_widget has no layout set.")
 
@@ -109,14 +110,14 @@ class MainWindow(DraggableMainWindow):
 
         if self._supports_opacity and not self._is_closing:
             event.ignore()
-            self._clock_widget.reset()
+            self.clock_widget.reset()
             self.fade_out_animation()
         else:
             super().closeEvent(event)
 
     def eventFilter(self, obj: QObject, event: QEvent) -> bool:  # noqa: N802
         if event.type() == QEvent.Type.KeyPress and isinstance(event, QKeyEvent) and event.key() == Qt.Key.Key_R:
-            self._clock_widget.reset()
+            self.clock_widget.reset()
             return True
         return super().eventFilter(obj, event)
 
