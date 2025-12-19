@@ -20,9 +20,7 @@ class Painter:
         self.painter = QPainter(obj)
         self.painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-    def end_painter(
-        self,
-    ) -> None:
+    def __del__(self) -> None:
         self.painter.end()
 
     def paint_clock_face(
