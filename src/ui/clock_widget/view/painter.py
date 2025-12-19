@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 class Painter:
-    def init_painter(self, obj: QPaintDevice) -> None:
+    def __init__(self, obj: QPaintDevice) -> None:
         self.painter = QPainter(obj)
         self.painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
