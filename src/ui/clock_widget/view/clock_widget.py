@@ -26,6 +26,7 @@ class ClockWidget(QWidget):
         self._timer.timeout.connect(self._tick_subject.notify)
         self._timer.start(15)
 
+        self.current_datetime = datetime(1970, 1, 1, tzinfo=UTC)
         self.controller = ClockController(self.get_current_datetime())
 
     def on_tick(self) -> None:
@@ -33,7 +34,11 @@ class ClockWidget(QWidget):
         self.update()
 
     def get_current_datetime(self) -> datetime:
-        return datetime.now(UTC).astimezone()
+        return self.current_datetime
+
+    def set_current_datetime(self, datetime: datetime) -> None:
+        self.current_datetime = datetime
+        self.update()
 
     def reset(self) -> None:
         self.controller.reset(self.get_current_datetime())

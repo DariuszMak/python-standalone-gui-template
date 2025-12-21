@@ -1,8 +1,11 @@
+import asyncio
 import logging
 
 from PySide6.QtCore import QEasingCurve, QEvent, QObject, QPropertyAnimation, Qt
 from PySide6.QtGui import QCloseEvent, QGuiApplication, QKeyEvent, QResizeEvent
 
+from src.api.models import ServerTimeResponse
+from src.api.time_client import TimeClient
 from src.helpers.style_loader import StyleLoader
 from src.ui.clock_widget.view.clock_widget import ClockWidget
 from src.ui.dialog_windows import ANIMATION_DURATION, MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
@@ -11,6 +14,7 @@ from src.ui.dialog_windows.warning_dialog import WarningDialog
 from src.ui.forms.moc_main_window import Ui_MainWindow
 
 logger = logging.getLogger(__name__)
+
 
 
 class MainWindow(DraggableMainWindow):
@@ -36,6 +40,10 @@ class MainWindow(DraggableMainWindow):
         self.ui.btn_maximize_restore.clicked.connect(self.toggle_maximize_restore)
         self.ui.btn_close.clicked.connect(self.close)
 
+        self._server_time_task: asyncio.Task[None] | None = None
+        self._time_client = TimeClient("http://localhost:8000")
+        self.fetch_server_time()
+
         self.clock_widget: ClockWidget = ClockWidget()
 
         layout = self.ui.frame_clock_widget.layout()
@@ -48,6 +56,23 @@ class MainWindow(DraggableMainWindow):
             self.fade_in_animation()
 
         self.installEventFilter(self)
+
+    def fetch_server_time(self) -> None:
+        if self._server_time_task and not self._server_time_task.done():
+            return
+
+        self._server_time_task = asyncio.create_task(self._fetch_server_time())
+
+    async def _fetch_server_time(self) -> None:
+        try:
+            result = await self._time_client.fetch_time()
+            self._apply_server_time(result)
+        except Exception as exc:
+            logger.exception("Failed to fetch server time", exc_info=exc)
+
+    def _apply_server_time(self, server_time: ServerTimeResponse) -> None:
+        logger.info("Server datetime received: %s", server_time.datetime.isoformat())
+        self.clock_widget.set_current_datetime(server_time.datetime)
 
     def fade_in_animation(self) -> None:
         if not self._supports_opacity:
@@ -117,6 +142,7 @@ class MainWindow(DraggableMainWindow):
 
     def eventFilter(self, obj: QObject, event: QEvent) -> bool:  # noqa: N802
         if event.type() == QEvent.Type.KeyPress and isinstance(event, QKeyEvent) and event.key() == Qt.Key.Key_R:
+            self.fetch_server_time()
             self.clock_widget.reset()
             return True
         return super().eventFilter(obj, event)

@@ -1,8 +1,10 @@
+import asyncio
 import sys
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QApplication, QSplashScreen
+from qasync import QEventLoop
 
 from src.helpers.style_loader import StyleLoader
 from src.ui.dialog_windows.main_window import MainWindow
@@ -10,6 +12,9 @@ from src.ui.dialog_windows.main_window import MainWindow
 
 def run() -> None:
     app = QApplication(sys.argv)
+
+    loop = QEventLoop(app)
+    asyncio.set_event_loop(loop)
 
     pixmap = QPixmap(":/logos/icons/images/program_icon.ico").scaled(
         64, 64, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation
@@ -25,4 +30,5 @@ def run() -> None:
 
     splash.finish(window)
 
-    sys.exit(app.exec())
+    with loop:
+        sys.exit(loop.run_forever())
