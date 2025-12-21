@@ -52,7 +52,8 @@ class MainWindow(DraggableMainWindow):
         self.installEventFilter(self)
 
         if fetch_server_time:
-            self._server_time_task = None
+            self._server_time_task: asyncio.Task[None] | None = None
+
             self._time_client = TimeClient("http://localhost:8000")
 
             loop = asyncio.get_event_loop()
