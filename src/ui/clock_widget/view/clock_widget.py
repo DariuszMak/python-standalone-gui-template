@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QTimer
@@ -19,29 +19,30 @@ class ClockWidget(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
+        self.duration = 15
+
         self._tick_subject = TickEventSubject()
         self._tick_subject.subscribe(self)
 
         self._timer: QTimer = QTimer(self)
         self._timer.timeout.connect(self._tick_subject.notify)
-        self._timer.start(15)
+        self._timer.start(self.duration)
 
         self.current_datetime = datetime(1970, 1, 1, tzinfo=UTC)
-        self.controller = ClockController(self.get_current_datetime())
+        self.controller = ClockController(self.current_datetime)
 
     def on_tick(self) -> None:
-        self.controller.update(self.get_current_datetime())
-        self.update()
+        self.current_datetime = self.current_datetime + timedelta(milliseconds=self.duration)
 
-    def get_current_datetime(self) -> datetime:
-        return self.current_datetime
+        self.controller.update(self.current_datetime)
+        self.update()
 
     def set_current_datetime(self, datetime: datetime) -> None:
         self.current_datetime = datetime
         self.update()
 
     def reset(self) -> None:
-        self.controller.reset(self.get_current_datetime())
+        self.controller.reset(self.current_datetime)
         self.update()
 
     def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
@@ -51,4 +52,4 @@ class ClockWidget(QWidget):
         hands_position = convert_clock_pid_to_cartesian(self.controller.clock_angles, center, radius)
 
         painter.paint_hands(center, hands_position)
-        painter.paint_current_time(self.get_current_datetime(), center, radius, font_size)
+        painter.paint_current_time(self.current_datetime, center, radius, font_size)
