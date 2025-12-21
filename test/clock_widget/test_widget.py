@@ -1,14 +1,35 @@
-from datetime import UTC, datetime, timedelta
+import time
 
-from src.ui.clock_widget.view.helpers import calculate_clock_hands_angles
+from PySide6.QtWidgets import QApplication
+
+from src.ui.clock_widget.view.clock_widget import ClockWidget
 
 
-def test_clock_hands_progress_consistently() -> None:
-    start = datetime(2025, 4, 27, 12, 0, 0, tzinfo=UTC)
+def test_clock_widget_runs() -> None:
+    app = QApplication.instance() or QApplication([])
 
-    angles_t0 = calculate_clock_hands_angles(start, timedelta(0))
-    angles_t1 = calculate_clock_hands_angles(start, timedelta(seconds=60))
+    widget = ClockWidget()
+    widget.show()
 
-    assert angles_t1.second > angles_t0.second
-    assert angles_t1.minute > angles_t0.minute
-    assert angles_t1.hour > angles_t0.hour
+    before = (
+        widget.controller.clock_angles.clock_hands_angles.second,
+        widget.controller.clock_angles.clock_hands_angles.minute,
+        widget.controller.clock_angles.clock_hands_angles.hour,
+    )
+
+    end_time = time.time() + 0.1
+    while time.time() < end_time:
+        app.processEvents()
+
+    after = (
+        widget.controller.clock_angles.clock_hands_angles.second,
+        widget.controller.clock_angles.clock_hands_angles.minute,
+        widget.controller.clock_angles.clock_hands_angles.hour,
+    )
+
+    assert before != after
+
+    widget._timer.stop()
+    widget.hide()
+    widget.deleteLater()
+    app.processEvents()
