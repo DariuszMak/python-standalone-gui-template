@@ -52,13 +52,11 @@ class MainWindow(DraggableMainWindow):
         self.installEventFilter(self)
 
         if fetch_server_time:
-            self._server_time_task: asyncio.Task[None] | None = None
+            self._server_time_task = None
             self._time_client = TimeClient("http://localhost:8000")
-            try:
-                asyncio.get_running_loop()
-                self.fetch_server_time()
-            except RuntimeError:
-                logger.info("No running event loop, skipping server time fetch")
+
+            loop = asyncio.get_event_loop()
+            loop.call_soon(self.fetch_server_time)
 
     def fetch_server_time(self) -> None:
         if self._server_time_task and not self._server_time_task.done():
