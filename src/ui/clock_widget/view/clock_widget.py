@@ -39,7 +39,7 @@ class ClockWidget(QWidget):
 
     def set_current_datetime(self, datetime: datetime) -> None:
         self.current_datetime = datetime
-        self.update()
+        self.reset()
 
     def reset(self) -> None:
         self.controller.reset(self.current_datetime)
