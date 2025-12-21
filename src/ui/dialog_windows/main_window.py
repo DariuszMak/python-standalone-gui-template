@@ -133,9 +133,8 @@ class MainWindow(DraggableMainWindow):
         super().changeEvent(event)
 
     def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802
-        logger.info("Closing main window...")
-
         if self._supports_opacity and not self._is_closing:
+            logger.info("Closing main window...")
             event.ignore()
             self.clock_widget.reset()
             self.fade_out_animation()
