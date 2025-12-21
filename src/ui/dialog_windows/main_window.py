@@ -16,9 +16,8 @@ from src.ui.forms.moc_main_window import Ui_MainWindow
 logger = logging.getLogger(__name__)
 
 
-
 class MainWindow(DraggableMainWindow):
-    def __init__(self) -> None:
+    def __init__(self, fetch_server_time: bool = True) -> None:
         super().__init__()
 
         self._supports_opacity = QGuiApplication.platformName().lower() not in ["wayland", "xcb"]
@@ -40,12 +39,7 @@ class MainWindow(DraggableMainWindow):
         self.ui.btn_maximize_restore.clicked.connect(self.toggle_maximize_restore)
         self.ui.btn_close.clicked.connect(self.close)
 
-        self._server_time_task: asyncio.Task[None] | None = None
-        self._time_client = TimeClient("http://localhost:8000")
-        self.fetch_server_time()
-
         self.clock_widget: ClockWidget = ClockWidget()
-
         layout = self.ui.frame_clock_widget.layout()
         if layout is not None:
             layout.addWidget(self.clock_widget)
@@ -56,6 +50,15 @@ class MainWindow(DraggableMainWindow):
             self.fade_in_animation()
 
         self.installEventFilter(self)
+
+        if fetch_server_time:
+            self._server_time_task: asyncio.Task[None] | None = None
+            self._time_client = TimeClient("http://localhost:8000")
+            try:
+                asyncio.get_running_loop()
+                self.fetch_server_time()
+            except RuntimeError:
+                logger.info("No running event loop, skipping server time fetch")
 
     def fetch_server_time(self) -> None:
         if self._server_time_task and not self._server_time_task.done():

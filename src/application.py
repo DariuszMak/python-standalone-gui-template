@@ -4,7 +4,7 @@ import sys
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QApplication, QSplashScreen
-from qasync import QEventLoop
+from qasync import QEventLoop  # type: ignore
 
 from src.helpers.style_loader import StyleLoader
 from src.ui.dialog_windows.main_window import MainWindow
