@@ -57,6 +57,12 @@
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
 
+
+## Environment Variables:
+
+* `API_PORT` = `8000` or `8001`
+* `API_HOST` = `127.0.0.1` 
+
 ## Fast native Windows development:
 
 ```commandline
