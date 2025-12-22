@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 
 from PySide6.QtCore import QEasingCurve, QEvent, QObject, QPropertyAnimation, Qt
 from PySide6.QtGui import QCloseEvent, QGuiApplication, QKeyEvent, QResizeEvent
@@ -54,7 +55,10 @@ class MainWindow(DraggableMainWindow):
         if fetch_server_time:
             self._server_time_task: asyncio.Task[None] | None = None
 
-            self._time_client = TimeClient("http://localhost:8000")
+            api_host = os.getenv("API_HOST", "127.0.0.1")
+            api_port = os.getenv("API_PORT", "8000")
+
+            self._time_client = TimeClient(f"http://{api_host}:{api_port}")
 
             loop = asyncio.get_event_loop()
             loop.call_soon(self.fetch_server_time)
