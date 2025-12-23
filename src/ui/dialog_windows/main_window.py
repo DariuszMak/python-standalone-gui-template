@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import os
 
 from PySide6.QtCore import QEasingCurve, QEvent, QObject, QPropertyAnimation, Qt
 from PySide6.QtGui import QCloseEvent, QGuiApplication, QKeyEvent, QResizeEvent
@@ -58,7 +57,6 @@ class MainWindow(DraggableMainWindow):
 
             config = Config.from_env()
             self._time_client = TimeClient(config.api_base_url)
-
 
             loop = asyncio.get_event_loop()
             loop.call_soon(self.fetch_server_time)
