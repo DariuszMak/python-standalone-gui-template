@@ -5,6 +5,7 @@ from litestar import Litestar
 from litestar.openapi.config import OpenAPIConfig
 
 from src.api.routes import current_time, ping
+from src.config.config import Config
 
 openapi_config = OpenAPIConfig(title="My API", version="0.1.0", description="API documentation for my service")
 
@@ -12,12 +13,15 @@ app = Litestar(route_handlers=[ping, current_time], openapi_config=openapi_confi
 
 
 def run_api() -> None:
-    host = os.getenv("API_HOST", "127.0.0.1")
-    port = int(os.getenv("API_PORT", "8000"))
+    config = Config.from_env()
 
-    config = uvicorn.Config(app, host=host, port=port, log_level="info")
-    server = uvicorn.Server(config)
-    server.run()
+    uvicorn_config = uvicorn.Config(
+        app,
+        host=config.api_host,
+        port=config.api_port,
+        log_level="info",
+    )
+    uvicorn.Server(uvicorn_config).run()
 
 
 if __name__ == "__main__":

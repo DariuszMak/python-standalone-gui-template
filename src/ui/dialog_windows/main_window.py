@@ -7,6 +7,7 @@ from PySide6.QtGui import QCloseEvent, QGuiApplication, QKeyEvent, QResizeEvent
 
 from src.api.models import ServerTimeResponse
 from src.api.time_client import TimeClient
+from src.config.config import Config
 from src.helpers.style_loader import StyleLoader
 from src.ui.clock_widget.view.clock_widget import ClockWidget
 from src.ui.dialog_windows import ANIMATION_DURATION, MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
@@ -55,10 +56,9 @@ class MainWindow(DraggableMainWindow):
         if fetch_server_time:
             self._server_time_task: asyncio.Task[None] | None = None
 
-            api_host = os.getenv("API_HOST", "127.0.0.1")
-            api_port = os.getenv("API_PORT", "8000")
+            config = Config.from_env()
+            self._time_client = TimeClient(config.api_base_url)
 
-            self._time_client = TimeClient(f"http://{api_host}:{api_port}")
 
             loop = asyncio.get_event_loop()
             loop.call_soon(self.fetch_server_time)
