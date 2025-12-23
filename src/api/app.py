@@ -12,8 +12,8 @@ app = Litestar(route_handlers=[ping, current_time], openapi_config=openapi_confi
 
 
 def run_api() -> None:
-    port = int(os.getenv("API_PORT", "8000"))
     host = os.getenv("API_HOST", "127.0.0.1")
+    port = int(os.getenv("API_PORT", "8000"))
 
     config = uvicorn.Config(app, host=host, port=port, log_level="info")
     server = uvicorn.Server(config)
