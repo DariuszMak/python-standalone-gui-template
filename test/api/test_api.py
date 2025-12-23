@@ -1,8 +1,12 @@
 from datetime import UTC, datetime
 
+import httpx
+import pytest
 from litestar.testing import TestClient
 
 from src.api.app import app
+from src.api.models import ServerTimeResponse
+from src.api.time_client import TimeClient
 
 
 def test_redoc_available() -> None:
@@ -35,3 +39,36 @@ def test_time_route() -> None:
 
         dt = datetime.fromisoformat(data["datetime"])
         assert dt.tzinfo == UTC
+
+
+class MockResponse:
+    def __init__(self, json_data, status_code=200):
+        self._json_data = json_data
+        self.status_code = status_code
+
+    def json(self):
+        return self._json_data
+
+    def raise_for_status(self):
+        if self.status_code >= 400:
+            raise httpx.HTTPStatusError(
+                "error",
+                request=None,
+                response=None,
+            )
+
+
+@pytest.mark.asyncio
+async def test_fetch_time(monkeypatch):
+    iso_time = "2025-01-01T10:15:30"
+
+    async def mock_get(self, url):
+        return MockResponse({"datetime": iso_time})
+
+    monkeypatch.setattr(httpx.AsyncClient, "get", mock_get)
+
+    client = TimeClient(base_url="http://testserver")
+    result = await client.fetch_time()
+
+    assert isinstance(result, ServerTimeResponse)
+    assert result.datetime == datetime.fromisoformat(iso_time)
