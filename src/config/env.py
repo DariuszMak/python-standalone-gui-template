@@ -1,10 +1,11 @@
 import os
 from dataclasses import fields
+from typing import Any
 
 
 class EnvLoaderMixin:
     @classmethod
-    def from_env(cls):
+    def from_env(cls: type) -> Any:
         kwargs = {}
 
         for field in fields(cls):
