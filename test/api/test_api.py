@@ -42,27 +42,32 @@ def test_time_route() -> None:
 
 
 class MockResponse:
-    def __init__(self, json_data, status_code=200):
+    def __init__(self, json_data: dict[str, str], status_code: int = 200) -> None:
         self._json_data = json_data
         self.status_code = status_code
 
-    def json(self):
+    def json(self) -> dict[str, str]:
         return self._json_data
 
-    def raise_for_status(self):
+    def raise_for_status(self) -> None:
         if self.status_code >= 400:
+            request = httpx.Request("GET", "http://testserver/time")
+            response = httpx.Response(
+                status_code=self.status_code,
+                request=request,
+            )
             raise httpx.HTTPStatusError(
                 "error",
-                request=None,
-                response=None,
+                request=request,
+                response=response,
             )
 
 
 @pytest.mark.asyncio
-async def test_fetch_time(monkeypatch):
+async def test_fetch_time(monkeypatch: pytest.MonkeyPatch) -> None:
     iso_time = "2025-01-01T10:15:30"
 
-    async def mock_get(self, url):
+    async def mock_get(self: httpx.AsyncClient, url: str) -> MockResponse:  # noqa: ARG001
         return MockResponse({"datetime": iso_time})
 
     monkeypatch.setattr(httpx.AsyncClient, "get", mock_get)
