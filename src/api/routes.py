@@ -1,7 +1,8 @@
+import logging
 from datetime import UTC, datetime
+
 import httpx
 from litestar import get
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -25,10 +26,7 @@ async def current_time() -> dict[str, str]:
                 resp = await client.get(url)
                 resp.raise_for_status()
                 data = resp.json()
-                datetime_str = (
-                     data.get("iso8601")    
-                    or data.get("datetime")        
-                )
+                datetime_str = data.get("iso8601") or data.get("datetime")
                 if datetime_str:
                     logger.info("Got time from Internet: %s", datetime_str)
                     return {"datetime": datetime_str}
