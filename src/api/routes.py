@@ -1,21 +1,14 @@
 from datetime import UTC, datetime
 
-from datetime import UTC, datetime
-
 import httpx
-from litestar import get
-
 from litestar import get
 
 TIME_API_URL = "https://worldtimeapi.org/api/timezone/Etc/UTC"
 
+
 @get("/ping")
 async def ping() -> dict[str, str]:
     return {"message": "pong"}
-
-
-
-
 
 
 @get("/time")

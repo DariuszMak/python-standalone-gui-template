@@ -79,7 +79,6 @@ async def test_fetch_time(monkeypatch: pytest.MonkeyPatch) -> None:
     assert result.datetime == datetime.fromisoformat(iso_time)
 
 
-
 @pytest.mark.asyncio
 async def test_time_route_remote(monkeypatch: pytest.MonkeyPatch) -> None:
     iso_time = "2025-01-01T12:00:00+00:00"
@@ -102,6 +101,7 @@ async def test_time_route_remote(monkeypatch: pytest.MonkeyPatch) -> None:
     assert response.status_code == 200
     data = response.json()
     assert data["datetime"] == iso_time
+
 
 @pytest.mark.asyncio
 async def test_time_route_fallback_to_local(monkeypatch: pytest.MonkeyPatch) -> None:
