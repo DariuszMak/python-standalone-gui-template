@@ -37,8 +37,8 @@ def test_time_route() -> None:
         data = response.json()
         assert "datetime" in data
 
-        dt = datetime.fromisoformat(data["datetime"])
-        assert dt.tzinfo == UTC
+        datetime_from_iso_format = datetime.fromisoformat(data["datetime"])
+        assert datetime_from_iso_format.tzinfo is not None
 
 
 class MockResponse:
@@ -81,11 +81,11 @@ async def test_fetch_time(monkeypatch: pytest.MonkeyPatch) -> None:
 
 @pytest.mark.asyncio
 async def test_time_route_remote(monkeypatch: pytest.MonkeyPatch) -> None:
-    iso_time = "2025-01-01T12:00:00+00:00"
+    api_utc_time = "2025-01-01T12:00:00+00:00"
 
     class MockResponse:
         def json(self) -> dict[str, str]:
-            return {"datetime": iso_time}
+            return {"datetime": api_utc_time}
 
         def raise_for_status(self) -> None:
             return None
@@ -100,7 +100,14 @@ async def test_time_route_remote(monkeypatch: pytest.MonkeyPatch) -> None:
 
     assert response.status_code == 200
     data = response.json()
-    assert data["datetime"] == iso_time
+
+    datetime_from_iso_format = datetime.fromisoformat(data["datetime"])
+    assert datetime_from_iso_format.tzinfo is not None
+
+    datetime_from_iso_format_utc = datetime_from_iso_format.astimezone(UTC)
+
+    expected_utc = datetime.fromisoformat(api_utc_time)
+    assert datetime_from_iso_format_utc == expected_utc
 
 
 @pytest.mark.asyncio
@@ -116,5 +123,5 @@ async def test_time_route_fallback_to_local(monkeypatch: pytest.MonkeyPatch) -> 
     assert response.status_code == 200
     data = response.json()
 
-    dt = datetime.fromisoformat(data["datetime"])
-    assert dt.tzinfo == UTC
+    datetime_from_iso_format = datetime.fromisoformat(data["datetime"])
+    assert datetime_from_iso_format.tzinfo is not None

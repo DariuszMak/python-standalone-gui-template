@@ -1,5 +1,5 @@
 import logging
-from datetime import UTC, datetime
+from datetime import datetime
 
 import httpx
 from litestar import get
@@ -28,8 +28,10 @@ async def current_time() -> dict[str, str]:
                 data = resp.json()
                 datetime_str = data.get("iso8601") or data.get("datetime")
                 if datetime_str:
-                    logger.info("Got time from Internet: %s", datetime_str)
-                    return {"datetime": datetime_str}
+                    dt = datetime.fromisoformat(datetime_str).astimezone()
+                    local_dt_str = dt.isoformat()
+                    logger.info("Got time from Internet (converted to local): %s", local_dt_str)
+                    return {"datetime": local_dt_str}
             except httpx.HTTPError as exc:
                 logger.warning(
                     "Failed to fetch time from Internet (%s), trying next source",
@@ -37,6 +39,6 @@ async def current_time() -> dict[str, str]:
                 )
                 continue
 
-    local_time = datetime.now(UTC).isoformat()
-    logger.warning("All remote sources failed, returning local UTC: %s", local_time)
+    local_time = datetime.now().astimezone().isoformat()
+    logger.warning("All remote sources failed, returning system local time: %s", local_time)
     return {"datetime": local_time}
