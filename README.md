@@ -60,7 +60,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 
 ## Environment Variables:
 
-* `API_PORT` = `8000` or `8001`
+* `API_PORT` = `8001` or `8002`
 * `API_HOST` = `127.0.0.1` 
 
 ## Fast native Windows development:
@@ -69,7 +69,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 deactivate ; 
 clear ; 
 
-$ports = 8000
+$ports = 8000, 8001
 
 foreach ($port in $ports) {
     $conn = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
@@ -106,12 +106,12 @@ uv run pytest test/ --cov=src -vv ;
 
 ##### RUN APPLICATION LOCALLY
 
-$env:API_PORT="8000" ; 
+$env:API_PORT="8002" ; 
 $env:API_HOST="127.0.0.1" ; 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 Start-Sleep -Seconds 12 ; 
-Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
-Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
+Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
+Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
 newman run collections\Python_GUI.postman_collection.json --environment collections\environments\Windows.postman_environment.json --bail ; 
 ```
 
@@ -122,7 +122,7 @@ newman run collections\Python_GUI.postman_collection.json --environment collecti
 deactivate ; 
 clear ; 
 
-$ports = 8000, 8001
+$ports = 8000, 8001, 8002
 
 foreach ($port in $ports) {
     $conn = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
@@ -176,25 +176,25 @@ rm -r -fo .\dist, .\build ;
 
 ##### RUN APPLICATIONS LOCALLY
 
-$env:API_PORT="8000" ; 
+$env:API_PORT="8002" ; 
 $env:API_HOST="127.0.0.1" ; 
 Start-Process .\windows_distribution\GUI_client.exe ; 
 Start-Sleep -Seconds 12 ; 
-Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
-Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
+Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
+Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
 newman run collections\Python_GUI.postman_collection.json --environment collections\environments\Windows.postman_environment.json --bail ; 
 
 Start-Process wsl -ArgumentList @(
     'bash', '-c',
     'export DISPLAY=$(grep nameserver /etc/resolv.conf | awk "{print \$2}"):0 && \
      export QT_QPA_PLATFORM=wayland && \
-     export API_PORT=8001 && \
+     export API_PORT=8002 && \
      export API_HOST=127.0.0.1 && \
      ./linux_distribution/GUI_client'
 )
 Start-Sleep -Seconds 20 ; 
-Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
-Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
+Start-Process "http://127.0.0.1:8002/schema/redoc" ; 
+Start-Process "http://127.0.0.1:8002/schema/swagger" ; 
 newman run collections\Python_GUI.postman_collection.json --environment collections\environments\Linux.postman_environment.json --bail ; 
 
 uv sync --dev --locked --no-cache ; 

@@ -6,8 +6,8 @@ from src.config.config import Config
 def test_config_defaults() -> None:
     config = Config()
     assert config.api_host == "127.0.0.1"
-    assert config.api_port == 8000
-    assert config.api_base_url == "http://127.0.0.1:8000"
+    assert config.api_port == 8001
+    assert config.api_base_url == "http://127.0.0.1:8001"
 
 
 def test_config_custom_values() -> None:
