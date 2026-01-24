@@ -180,14 +180,14 @@ rm -r -fo .\dist, .\build ;
 ##### RUN APPLICATIONS LOCALLY
 
 $env:API_HOST="127.0.0.1" ; 
-$env:API_PORT="8002" ; 
-$env:PANEL_PORT="8004" ; 
+$env:API_PORT="8001" ; 
+$env:PANEL_PORT="8003" ; 
 $env:PANEL_HOST="127.0.0.1" ; 
 Start-Process .\windows_distribution\GUI_client.exe ; 
 Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
-Start-Process "http://127.0.0.1:8000" ; 
+Start-Process "http://127.0.0.1:8003" ; 
 newman run collections\Python_GUI.postman_collection.json --environment collections\environments\Windows.postman_environment.json --bail ; 
 
 Start-Process wsl -ArgumentList @(
