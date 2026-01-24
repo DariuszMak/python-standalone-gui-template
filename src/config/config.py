@@ -7,6 +7,8 @@ from src.config.env import EnvLoaderMixin
 class Config(EnvLoaderMixin):
     api_host: str = "127.0.0.1"
     api_port: int = 8001
+    panel_host: str = "127.0.0.1"
+    panel_port: int = 8000
 
     @property
     def api_base_url(self) -> str:

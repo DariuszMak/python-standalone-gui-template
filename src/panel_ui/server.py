@@ -4,14 +4,17 @@ from panel.io.server import serve
 
 from src.panel_ui.time_panel import layout
 
+from src.config.config import Config
 
 def run_panel() -> None:
+    config = Config.from_env()
+
     serve(
         {
             "/": layout,
         },
-        address="127.0.0.1",
-        port=8000,
+        address=config.panel_host,
+        port=config.panel_port,
         show=False,
         autoreload=False,
     )

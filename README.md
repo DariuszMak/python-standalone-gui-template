@@ -108,6 +108,8 @@ uv run pytest test/ --cov=src -vv ;
 
 $env:API_PORT="8001" ; 
 $env:API_HOST="127.0.0.1" ; 
+$env:PANEL_PORT="8000" ; 
+$env:PANEL_HOST="127.0.0.1" ; 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
@@ -177,8 +179,10 @@ rm -r -fo .\dist, .\build ;
 
 ##### RUN APPLICATIONS LOCALLY
 
-$env:API_PORT="8002" ; 
 $env:API_HOST="127.0.0.1" ; 
+$env:API_PORT="8002" ; 
+$env:PANEL_PORT="8004" ; 
+$env:PANEL_HOST="127.0.0.1" ; 
 Start-Process .\windows_distribution\GUI_client.exe ; 
 Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
@@ -190,14 +194,16 @@ Start-Process wsl -ArgumentList @(
     'bash', '-c',
     'export DISPLAY=$(grep nameserver /etc/resolv.conf | awk "{print \$2}"):0 && \
      export QT_QPA_PLATFORM=wayland && \
-     export API_PORT=8002 && \
      export API_HOST=127.0.0.1 && \
+     export API_PORT=8002 && \
+     export PANEL_HOST=127.0.0.1 && \
+     export PANEL_PORT=8004 && \
      ./linux_distribution/GUI_client'
 )
 Start-Sleep -Seconds 20 ; 
 Start-Process "http://127.0.0.1:8002/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8002/schema/swagger" ; 
-Start-Process "http://127.0.0.1:8000" ; 
+Start-Process "http://127.0.0.1:8004" ; 
 newman run collections\Python_GUI.postman_collection.json --environment collections\environments\Linux.postman_environment.json --bail ; 
 
 uv sync --dev --locked --no-cache ; 
