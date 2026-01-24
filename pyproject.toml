@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "litestar[full]>=2.16.0",
+    "panel>=1.8.5",
     "pyside6>=6.9.1",
     "pytest-asyncio>=1.3.0",
     "qasync>=0.28.0",
