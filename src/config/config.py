@@ -13,6 +13,7 @@ class Config(EnvLoaderMixin):
     @property
     def api_base_url(self) -> str:
         return f"http://{self.api_host}:{self.api_port}"
+
     @property
     def panel_api_base_url(self) -> str:
         return f"http://{self.panel_host}:{self.panel_port}"

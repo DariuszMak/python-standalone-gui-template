@@ -4,9 +4,9 @@ from typing import Any
 import httpx
 import panel as pn
 
-pn.extension()
 from src.config.config import Config
 
+pn.extension()
 
 
 async def fetch_time() -> str:
