@@ -1,7 +1,6 @@
 import asyncio
-
-import httpx
 import panel as pn
+import httpx
 
 pn.extension()
 
@@ -19,7 +18,7 @@ time_display = pn.pane.Markdown("No data", sizing_mode="stretch_width")
 button = pn.widgets.Button(name="Fetch time from API", button_type="primary")
 
 
-def on_click(event):
+def on_click(_):
     async def _update():
         try:
             time_display.object = "Loading..."
@@ -28,7 +27,9 @@ def on_click(event):
         except Exception as exc:
             time_display.object = f"Error: `{exc}`"
 
-    asyncio.create_task(_update())
+    task = asyncio.create_task(_update())
+    pn.state._tasks.add(task)
+    task.add_done_callback(pn.state._tasks.discard)
 
 
 button.on_click(on_click)
