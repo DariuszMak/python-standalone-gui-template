@@ -18,8 +18,8 @@ def run_panel() -> None:
         show=False,
         autoreload=False,
         allow_websocket_origin=[
-        f"{config.panel_host}:{config.panel_port}",
-    ],
+            f"{config.panel_host}:{config.panel_port}",
+        ],
     )
 
 
