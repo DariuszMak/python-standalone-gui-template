@@ -1,6 +1,7 @@
 import os
-import panel as pn
+
 import httpx
+import panel as pn
 
 pn.extension()
 
