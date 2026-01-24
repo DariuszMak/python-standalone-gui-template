@@ -5,13 +5,15 @@ import httpx
 import panel as pn
 
 pn.extension()
+from src.config.config import Config
 
-API_BASE_URL = "http://127.0.0.1:8001"
 
 
 async def fetch_time() -> str:
+    config = Config.from_env()
+
     async with httpx.AsyncClient(timeout=2.0) as client:
-        resp = await client.get(f"{API_BASE_URL}/time")
+        resp = await client.get(f"{config.api_base_url}/time")
         resp.raise_for_status()
         data: Any = resp.json()
         return str(data["datetime"])
