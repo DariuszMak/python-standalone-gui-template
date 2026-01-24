@@ -93,7 +93,7 @@ uv python pin 3.11 ;
 uv sync --dev --no-cache ; 
 uv lock ; 
 
-##### STATIC ANALYSIS & TESTS
+########## STATIC ANALYSIS & TESTS
 
 .venv\Scripts\Activate.ps1 ; 
 $env:PYTHONPATH="." ; 
@@ -176,8 +176,7 @@ cp -r -fo .\dist\* .\windows_distribution\ ;
 
 rm -r -fo .\dist, .\build ; 
 
-
-##### RUN APPLICATIONS LOCALLY
+########## RUN APPLICATIONS LOCALLY
 
 $env:API_HOST="127.0.0.1" ; 
 $env:API_PORT="8001" ; 
@@ -189,6 +188,8 @@ Start-Process "http://127.0.0.1:8001/schema/redoc" ;
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
 Start-Process "http://127.0.0.1:8003" ; 
 newman run collections\Python_GUI.postman_collection.json --environment collections\environments\Windows.postman_environment.json --bail ; 
+
+#####
 
 Start-Process wsl -ArgumentList @(
     'bash', '-c',
