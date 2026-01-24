@@ -106,7 +106,7 @@ uv run pytest test/ --cov=src -vv ;
 
 ##### RUN APPLICATION LOCALLY
 
-$env:API_PORT="8002" ; 
+$env:API_PORT="8001" ; 
 $env:API_HOST="127.0.0.1" ; 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 Start-Sleep -Seconds 12 ; 
