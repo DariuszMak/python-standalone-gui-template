@@ -104,7 +104,7 @@ uv run python src\gui_setup.py ;
 
 uv run pytest test/ --cov=src -vv ; 
 
-##### RUN APPLICATION LOCALLY
+########## RUN APPLICATION LOCALLY
 
 $env:API_PORT="8001" ; 
 $env:API_HOST="127.0.0.1" ; 
