@@ -1,7 +1,8 @@
 import asyncio
-import panel as pn
-import httpx
 from typing import Any
+
+import httpx
+import panel as pn
 
 pn.extension()
 
@@ -41,13 +42,13 @@ def on_click(_: object) -> None:
     task.add_done_callback(pn.state._tasks.discard)
 
 
-button.on_click(on_click)  # type: ignore[no-untyped-call]
+button.on_click(on_click)
 
-layout = pn.Column(  # type: ignore[no-untyped-call]
+layout = pn.Column(
     "# Server Time",
     button,
     time_display,
     width=400,
 )
 
-layout.servable()  # type: ignore[no-untyped-call]
+layout.servable()
