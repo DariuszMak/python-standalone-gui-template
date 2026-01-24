@@ -112,6 +112,7 @@ Start-Process uv -ArgumentList "run", "python", "src\main.py" ;
 Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
+Start-Process "http://127.0.0.1:8000" ; 
 newman run collections\Python_GUI.postman_collection.json --environment collections\environments\Windows.postman_environment.json --bail ; 
 ```
 
@@ -182,6 +183,7 @@ Start-Process .\windows_distribution\GUI_client.exe ;
 Start-Sleep -Seconds 12 ; 
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
+Start-Process "http://127.0.0.1:8000" ; 
 newman run collections\Python_GUI.postman_collection.json --environment collections\environments\Windows.postman_environment.json --bail ; 
 
 Start-Process wsl -ArgumentList @(
@@ -195,6 +197,7 @@ Start-Process wsl -ArgumentList @(
 Start-Sleep -Seconds 20 ; 
 Start-Process "http://127.0.0.1:8002/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8002/schema/swagger" ; 
+Start-Process "http://127.0.0.1:8000" ; 
 newman run collections\Python_GUI.postman_collection.json --environment collections\environments\Linux.postman_environment.json --bail ; 
 
 uv sync --dev --locked --no-cache ; 

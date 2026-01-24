@@ -11,7 +11,7 @@ def run_panel() -> None:
             "/": layout,
         },
         address="127.0.0.1",
-        port=5007,
+        port=8000,
         show=False,
         autoreload=False,
     )
