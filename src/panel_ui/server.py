@@ -17,6 +17,9 @@ def run_panel() -> None:
         port=config.panel_port,
         show=False,
         autoreload=False,
+        allow_websocket_origin=[
+        f"{config.panel_host}:{config.panel_port}",
+    ],
     )
 
 
