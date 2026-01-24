@@ -2,9 +2,9 @@ import threading
 
 from panel.io.server import serve
 
+from src.config.config import Config
 from src.panel_ui.time_panel import layout
 
-from src.config.config import Config
 
 def run_panel() -> None:
     config = Config.from_env()

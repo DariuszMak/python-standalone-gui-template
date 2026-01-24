@@ -1,6 +1,7 @@
 import asyncio
 import panel as pn
 import httpx
+from typing import Any
 
 pn.extension()
 
@@ -11,15 +12,23 @@ async def fetch_time() -> str:
     async with httpx.AsyncClient(timeout=2.0) as client:
         resp = await client.get(f"{API_BASE_URL}/time")
         resp.raise_for_status()
-        return resp.json()["datetime"]
+        data: Any = resp.json()
+        return str(data["datetime"])
 
 
-time_display = pn.pane.Markdown("No data", sizing_mode="stretch_width")
-button = pn.widgets.Button(name="Fetch time from API", button_type="primary")
+time_display = pn.pane.Markdown(  # type: ignore[no-untyped-call]
+    "No data",
+    sizing_mode="stretch_width",
+)
+
+button = pn.widgets.Button(  # type: ignore[no-untyped-call]
+    name="Fetch time from API",
+    button_type="primary",
+)
 
 
-def on_click(_):
-    async def _update():
+def on_click(_: object) -> None:
+    async def _update() -> None:
         try:
             time_display.object = "Loading..."
             dt = await fetch_time()
@@ -32,13 +41,13 @@ def on_click(_):
     task.add_done_callback(pn.state._tasks.discard)
 
 
-button.on_click(on_click)
+button.on_click(on_click)  # type: ignore[no-untyped-call]
 
-layout = pn.Column(
+layout = pn.Column(  # type: ignore[no-untyped-call]
     "# Server Time",
     button,
     time_display,
     width=400,
 )
 
-layout.servable()
+layout.servable()  # type: ignore[no-untyped-call]
