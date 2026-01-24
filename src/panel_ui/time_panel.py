@@ -1,4 +1,3 @@
-import asyncio
 from typing import Any
 
 import httpx
@@ -39,9 +38,7 @@ def on_click(_: object) -> None:
         except Exception as exc:
             time_display.object = f"Error: `{exc}`"
 
-    task = asyncio.create_task(_update())
-    pn.state._tasks.add(task)
-    task.add_done_callback(pn.state._tasks.discard)
+    pn.state.execute(_update)
 
 
 button.on_click(on_click)
