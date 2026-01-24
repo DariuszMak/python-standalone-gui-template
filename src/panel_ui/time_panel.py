@@ -1,6 +1,7 @@
 import asyncio
-import panel as pn
+
 import httpx
+import panel as pn
 
 pn.extension()
 

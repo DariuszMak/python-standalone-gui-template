@@ -1,5 +1,5 @@
 import threading
-import panel as pn
+
 from panel.io.server import serve
 
 from src.panel_ui.time_panel import layout
