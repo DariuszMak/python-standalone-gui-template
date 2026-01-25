@@ -1,15 +1,17 @@
 import asyncio
+from collections.abc import Callable, Coroutine
 
+import panel as pn
 import pytest
 import respx
-from httpx import Response
+from httpx import HTTPStatusError, Response
 
 from src.panel_ui import time_panel
-from src.panel_ui.time_panel import fetch_time
+from src.panel_ui.time_panel import fetch_time, time_display
 
 
 @pytest.mark.asyncio
-async def test_fetch_time_success(monkeypatch) -> None:
+async def test_fetch_time_success(monkeypatch: pytest.MonkeyPatch) -> None:
     class DummyConfig:
         api_base_url = "http://testserver"
 
@@ -32,7 +34,7 @@ async def test_fetch_time_success(monkeypatch) -> None:
 
 
 @pytest.mark.asyncio
-async def test_fetch_time_http_error(monkeypatch) -> None:
+async def test_fetch_time_http_error(monkeypatch: pytest.MonkeyPatch) -> None:
     class DummyConfig:
         api_base_url = "http://testserver"
 
@@ -44,38 +46,38 @@ async def test_fetch_time_http_error(monkeypatch) -> None:
     with respx.mock:
         respx.get("http://testserver/time").mock(return_value=Response(500))
 
-        with pytest.raises(Exception):
+        with pytest.raises(HTTPStatusError):
             await fetch_time()
 
 
-def test_on_click_success(monkeypatch) -> None:
-    async def fake_fetch_time():
+def test_on_click_success(monkeypatch: pytest.MonkeyPatch) -> None:
+    async def fake_fetch_time() -> str:
         return "2026-01-25T12:00:00Z"
 
-    def immediate_execute(fn):
+    def immediate_execute(fn: Callable[[], Coroutine[None, None, None]]) -> None:
         asyncio.run(fn())
 
     monkeypatch.setattr(time_panel, "fetch_time", fake_fetch_time)
-    monkeypatch.setattr(time_panel.pn.state, "execute", immediate_execute)
+    monkeypatch.setattr(pn.state, "execute", immediate_execute)
 
-    assert time_panel.time_display.object == "No data"
+    assert time_display.object == "No data"
 
     time_panel.on_click(object())
 
-    assert time_panel.time_display.object == ("Server time: `2026-01-25T12:00:00Z`")
+    assert time_display.object == "Server time: `2026-01-25T12:00:00Z`"
 
 
-def test_on_click_error(monkeypatch) -> None:
-    async def fake_fetch_time():
+def test_on_click_error(monkeypatch: pytest.MonkeyPatch) -> None:
+    async def fake_fetch_time() -> str:
         raise RuntimeError("boom")
 
-    def immediate_execute(fn):
+    def immediate_execute(fn: Callable[[], Coroutine[None, None, None]]) -> None:
         asyncio.run(fn())
 
     monkeypatch.setattr(time_panel, "fetch_time", fake_fetch_time)
-    monkeypatch.setattr(time_panel.pn.state, "execute", immediate_execute)
+    monkeypatch.setattr(pn.state, "execute", immediate_execute)
 
     time_panel.on_click(object())
 
-    assert "Error:" in time_panel.time_display.object
-    assert "boom" in time_panel.time_display.object
+    assert "Error:" in time_display.object
+    assert "boom" in time_display.object

@@ -1,9 +1,10 @@
 import asyncio
 
+from _pytest.main import Session
 
-def pytest_sessionstart(session):
+
+def pytest_sessionstart(session: Session) -> None:  # noqa: ARG001
     try:
-        loop = asyncio.get_running_loop()
+        asyncio.get_running_loop()
     except RuntimeError:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
+        asyncio.new_event_loop()
