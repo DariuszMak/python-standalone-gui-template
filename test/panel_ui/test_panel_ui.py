@@ -9,7 +9,7 @@ from src.panel_ui.time_panel import fetch_time
 
 
 @pytest.mark.asyncio
-async def test_fetch_time_success(monkeypatch):
+async def test_fetch_time_success(monkeypatch) -> None:
     class DummyConfig:
         api_base_url = "http://testserver"
 
@@ -32,7 +32,7 @@ async def test_fetch_time_success(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_fetch_time_http_error(monkeypatch):
+async def test_fetch_time_http_error(monkeypatch) -> None:
     class DummyConfig:
         api_base_url = "http://testserver"
 
@@ -48,9 +48,7 @@ async def test_fetch_time_http_error(monkeypatch):
             await fetch_time()
 
 
-
-
-def test_on_click_success(monkeypatch):
+def test_on_click_success(monkeypatch) -> None:
     async def fake_fetch_time():
         return "2026-01-25T12:00:00Z"
 
@@ -64,11 +62,10 @@ def test_on_click_success(monkeypatch):
 
     time_panel.on_click(object())
 
-    assert time_panel.time_display.object == (
-        "Server time: `2026-01-25T12:00:00Z`"
-    )
+    assert time_panel.time_display.object == ("Server time: `2026-01-25T12:00:00Z`")
 
-def test_on_click_error(monkeypatch):
+
+def test_on_click_error(monkeypatch) -> None:
     async def fake_fetch_time():
         raise RuntimeError("boom")
 

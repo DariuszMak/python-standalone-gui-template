@@ -64,7 +64,6 @@ class MainWindow(DraggableMainWindow):
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
 
-
             loop.call_soon(self.fetch_server_time)
 
     def fetch_server_time(self) -> None:
