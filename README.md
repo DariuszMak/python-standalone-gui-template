@@ -115,7 +115,7 @@ Start-Sleep -Seconds 12 ;
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
 Start-Process "http://127.0.0.1:8000" ; 
-newman run collections\Python_GUI.postman_collection.json --environment collections\environments\Windows.postman_environment.json --bail ; 
+newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments\Windows.postman_environment.json --bail ; 
 ```
 
 
@@ -187,7 +187,7 @@ Start-Sleep -Seconds 12 ;
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
 Start-Process "http://127.0.0.1:8003" ; 
-newman run collections\Python_GUI.postman_collection.json --environment collections\environments\Windows.postman_environment.json --bail ; 
+newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments\Windows.postman_environment.json --bail ; 
 
 #####
 
@@ -205,7 +205,7 @@ Start-Sleep -Seconds 20 ;
 Start-Process "http://127.0.0.1:8002/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8002/schema/swagger" ; 
 Start-Process "http://127.0.0.1:8004" ; 
-newman run collections\Python_GUI.postman_collection.json --environment collections\environments\Linux.postman_environment.json --bail ; 
+newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments\Linux.postman_environment.json --bail ; 
 
 uv sync --dev --locked --no-cache ; 
 ```
@@ -297,7 +297,7 @@ docker-compose run app sh -c "uv sync --dev --locked --no-cache  && uv run pytes
 
 Run Newman tests from saved collection (run application before execution):
 ```commandline
-newman run collections\Python_GUI.postman_collection.json ; 
+newman run collections\Python_GUI_API.postman_collection.json ; 
 ```
 
 
