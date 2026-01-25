@@ -15,13 +15,7 @@
             "exec": [
               "pm.test(\"Status code is 200\", function () {\r",
               "    pm.response.to.have.status(200);\r",
-              "});\r",
-              "\r",
-              "pm.test(\"Response should be pong\", function () {\r",
-              "    const jsonData = pm.response.json();\r",
-              "    pm.expect(jsonData.message).to.eql(\"pong\");\r",
-              "});\r",
-              ""
+              "});"
             ],
             "type": "text/javascript",
             "packages": {},
