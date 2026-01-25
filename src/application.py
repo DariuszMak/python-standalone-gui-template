@@ -1,7 +1,7 @@
 import asyncio
 import sys
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QApplication, QSplashScreen
 from qasync import QEventLoop  # type: ignore
@@ -25,10 +25,12 @@ def run() -> None:
     splash.show()
     app.processEvents()
 
-    window = MainWindow()
+    window = MainWindow(fetch_server_time=False)
     window.show()
 
     splash.finish(window)
+
+    QTimer.singleShot(0, window.fetch_server_time)
 
     with loop:
         sys.exit(loop.run_forever())

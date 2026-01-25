@@ -24,6 +24,11 @@ class MainWindow(DraggableMainWindow):
         self._supports_opacity = QGuiApplication.platformName().lower() not in ["wayland", "xcb"]
         self._is_closing = False
 
+        self._server_time_task: asyncio.Task[None] | None = None
+
+        config = Config.from_env()
+        self._time_client = TimeClient(config.api_base_url)
+
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)  # type: ignore[no-untyped-call]
         StyleLoader.style_window(self)
@@ -53,8 +58,6 @@ class MainWindow(DraggableMainWindow):
         self.installEventFilter(self)
 
         if fetch_server_time:
-            self._server_time_task: asyncio.Task[None] | None = None
-
             config = Config.from_env()
             self._time_client = TimeClient(config.api_base_url)
 
