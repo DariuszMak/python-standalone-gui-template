@@ -13,7 +13,7 @@ a = Analysis(
     pathex=[str(base_path / 'src')],
     binaries=[],
     datas=[
-        (str(base_path / 'src' / 'ui' / 'themes' / 'main_theme.qss'), 'src/ui/themes')
+        (str(base_path / 'src' / 'pyside_ui' / 'themes' / 'main_theme.qss'), 'src/pyside_ui/themes')
     ],
     hiddenimports=[],
     hookspath=[],
@@ -46,7 +46,7 @@ exe = EXE(
     upx_exclude=[],
     runtime_tmpdir=None,
     console=True,
-    icon=str(base_path / 'src' / 'ui' / 'forms' / 'icons' / 'images' / 'program_icon.ico'),
+    icon=str(base_path / 'src' / 'pyside_ui' / 'forms' / 'icons' / 'images' / 'program_icon.ico'),
 )
 
 coll = COLLECT(

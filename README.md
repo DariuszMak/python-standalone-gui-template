@@ -306,8 +306,8 @@ newman run collections\Python_GUI_API.postman_collection.json ;
 ## Edit `ui` forms with QT Designer:
 
 ```commandline
-uv run pyqt6-tools designer src\ui\forms\main_window.ui ; 
-uv run pyqt6-tools designer src\ui\forms\warning_dialog.ui ; 
+uv run pyqt6-tools designer src\pyside_ui\forms\main_window.ui ; 
+uv run pyqt6-tools designer src\pyside_ui\forms\warning_dialog.ui ; 
 ```
 
 
