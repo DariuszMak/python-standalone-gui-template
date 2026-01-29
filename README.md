@@ -184,7 +184,7 @@ $env:API_PORT="8001" ;
 $env:PANEL_PORT="8003" ; 
 $env:PANEL_HOST="127.0.0.1" ; 
 Start-Process .\windows_distribution\GUI_client.exe ; 
-Start-Sleep -Seconds 15 ; 
+Start-Sleep -Seconds 20 ; 
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
 Start-Process "http://127.0.0.1:8003" ; 
