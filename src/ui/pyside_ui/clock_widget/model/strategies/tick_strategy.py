@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from src.pyside_ui.clock_widget.model.strategies.movement_strategy import MovementStrategy
+from src.ui.pyside_ui.clock_widget.model.strategies.movement_strategy import MovementStrategy
 
 
 class TickMovementStrategy(MovementStrategy):

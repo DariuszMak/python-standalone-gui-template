@@ -8,16 +8,16 @@ from src.api.models import ServerTimeResponse
 from src.api.time_client import TimeClient
 from src.config.config import Config
 from src.helpers.style_loader import StyleLoader
-from src.pyside_ui.clock_widget.view.clock_widget import ClockWidget
-from src.pyside_ui.dialog_windows import (
+from src.ui.pyside_ui.clock_widget.view.clock_widget import ClockWidget
+from src.ui.pyside_ui.dialog_windows import (
     ANIMATION_DURATION,
     MAINWINDOW_HEIGHT,
     MAINWINDOW_RESIZE_RANGE,
     MAINWINDOW_WIDTH,
 )
-from src.pyside_ui.dialog_windows.draggable_main_window import DraggableMainWindow
-from src.pyside_ui.dialog_windows.warning_dialog import WarningDialog
-from src.pyside_ui.forms.moc_main_window import Ui_MainWindow
+from src.ui.pyside_ui.dialog_windows.draggable_main_window import DraggableMainWindow
+from src.ui.pyside_ui.dialog_windows.warning_dialog import WarningDialog
+from src.ui.pyside_ui.forms.moc_main_window import Ui_MainWindow
 
 logger = logging.getLogger(__name__)
 

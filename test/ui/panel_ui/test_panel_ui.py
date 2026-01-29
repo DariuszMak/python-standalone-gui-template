@@ -6,8 +6,8 @@ import pytest
 import respx
 from httpx import HTTPStatusError, Response
 
-from src.panel_ui import time_panel
-from src.panel_ui.time_panel import fetch_time, time_display
+from src.ui.panel_ui import time_panel
+from src.ui.panel_ui.time_panel import fetch_time, time_display
 
 
 @pytest.mark.asyncio
@@ -16,7 +16,7 @@ async def test_fetch_time_success(monkeypatch: pytest.MonkeyPatch) -> None:
         api_base_url = "http://testserver"
 
     monkeypatch.setattr(
-        "src.panel_ui.time_panel.Config.from_env",
+        "src.ui.panel_ui.time_panel.Config.from_env",
         lambda: DummyConfig(),
     )
 
@@ -39,7 +39,7 @@ async def test_fetch_time_http_error(monkeypatch: pytest.MonkeyPatch) -> None:
         api_base_url = "http://testserver"
 
     monkeypatch.setattr(
-        "src.panel_ui.time_panel.Config.from_env",
+        "src.ui.panel_ui.time_panel.Config.from_env",
         lambda: DummyConfig(),
     )
 

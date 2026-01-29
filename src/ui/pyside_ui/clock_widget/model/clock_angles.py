@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 
-from src.pyside_ui.clock_widget.model.data_types import ClockHands
+from src.ui.pyside_ui.clock_widget.model.data_types import ClockHands
 
 
 class ClockAngles:

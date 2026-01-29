@@ -7,7 +7,7 @@ a = Analysis(
     ['..\\src\\main.py'],
     pathex=['..\src'],
     binaries=[],
-    datas=[('..\\src\\pyside_ui\\themes\\main_theme.qss', 'src\\pyside_ui\\themes')],
+    datas=[('..\\src\\ui\\pyside_ui\\themes\\main_theme.qss', 'src\\ui\\pyside_ui\\themes')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -40,7 +40,7 @@ exe = EXE(
     upx_exclude=[],
     runtime_tmpdir=None,
     console=True,
-    icon='..\\src\\pyside_ui\\forms\\icons\\images\\program_icon.ico',
+    icon='..\\src\\ui\\pyside_ui\\forms\\icons\\images\\program_icon.ico',
 )
 
 coll = COLLECT(
