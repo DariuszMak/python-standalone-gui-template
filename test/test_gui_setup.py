@@ -7,8 +7,8 @@ from PySide6.QtCore import QCoreApplication, QSize
 from PySide6.QtWidgets import QApplication
 
 from src.gui_setup import UiExtensions, create_moc
-from src.ui.dialog_windows import MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
-from src.ui.dialog_windows.main_window import MainWindow
+from src.pyside_ui.dialog_windows import MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
+from src.pyside_ui.dialog_windows.main_window import MainWindow
 
 
 @pytest.fixture

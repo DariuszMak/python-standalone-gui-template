@@ -5,8 +5,8 @@ from PySide6.QtGui import QCloseEvent, QPixmap
 from PySide6.QtWidgets import QWidget
 
 from src.helpers.style_loader import StyleLoader
-from src.ui.dialog_windows.draggable_dialog import DraggableDialog
-from src.ui.forms.moc_warning_dialog import Ui_Dialog
+from src.pyside_ui.dialog_windows.draggable_dialog import DraggableDialog
+from src.pyside_ui.forms.moc_warning_dialog import Ui_Dialog
 
 logger = logging.getLogger(__name__)
 

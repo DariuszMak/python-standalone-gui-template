@@ -7,7 +7,7 @@ from PySide6.QtWidgets import QApplication, QSplashScreen
 from qasync import QEventLoop  # type: ignore
 
 from src.helpers.style_loader import StyleLoader
-from src.ui.dialog_windows.main_window import MainWindow
+from src.pyside_ui.dialog_windows.main_window import MainWindow
 
 
 def run() -> None:
