@@ -1,12 +1,12 @@
 import logging
 import os
 import subprocess
-from enum import Enum
+from enum import StrEnum
 
 logger = logging.getLogger(__name__)
 
 
-class UiExtensions(str, Enum):
+class UiExtensions(StrEnum):
     UI = ".ui"
     QRC = ".qrc"
 
