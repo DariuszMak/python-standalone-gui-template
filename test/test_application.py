@@ -25,9 +25,7 @@ def test_create_app_wires_everything(qtbot):
 
         assert returned_app is app
 
-            
         try:
-
             MockSplash.assert_called_once()
             splash.show.assert_called_once()
             splash.finish.assert_called_once_with(window)
