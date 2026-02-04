@@ -2,15 +2,13 @@ import asyncio
 import sys
 from typing import Any
 
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import QCoreApplication, Qt, QTimer
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QApplication, QSplashScreen
 from qasync import QEventLoop  # type: ignore
 
 from src.helpers.style_loader import StyleLoader
 from src.ui.pyside_ui.dialog_windows.main_window import MainWindow
-from PySide6.QtCore import QCoreApplication
-
 
 
 def create_app() -> tuple[QCoreApplication, Any, MainWindow]:
