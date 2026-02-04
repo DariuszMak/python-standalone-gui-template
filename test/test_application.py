@@ -1,24 +1,54 @@
+import pytest
 from unittest.mock import MagicMock, patch
 
-import pytest
+from PySide6.QtWidgets import QApplication
 
 from src.application import create_app
 
 
 @pytest.mark.qt
-def test_create_app_sets_up_main_window(qtbot):
-    with (
-        patch("src.ui.pyside_ui.dialog_windows.main_window.MainWindow") as MockWindow,
-        patch("src.helpers.style_loader.StyleLoader.center_window") as center_window,
-        patch("PySide6.QtWidgets.QSplashScreen") as MockSplash,
-    ):
-        mock_window = MagicMock()
-        MockWindow.return_value = mock_window
+def test_create_app_wires_everything(qtbot):
+    """
+    Smoke-test the Qt bootstrap:
+    - reuses existing QApplication
+    - shows splash + main window
+    - schedules fetch_server_time
+    """
 
-        _app, _loop, _window = create_app()
+    # pytest-qt already created the QApplication
+    app = QApplication.instance()
+    assert app is not None
 
-        MockWindow.assert_called_once_with(fetch_server_time=False)
-        mock_window.show.assert_called_once()
+    with patch("src.application.QSplashScreen") as MockSplash, \
+         patch("src.application.StyleLoader.center_window") as center_window, \
+         patch("src.application.MainWindow") as MockMainWindow, \
+         patch("src.application.QTimer.singleShot") as single_shot:
 
-        MockSplash.return_value.show.assert_called_once()
-        center_window.assert_called_once()
+        # Arrange
+        splash = MagicMock()
+        MockSplash.return_value = splash
+
+        window = MagicMock()
+        MockMainWindow.return_value = window
+
+        # Act
+        returned_app, loop, returned_window = create_app()
+
+        # Assert QApplication
+        assert returned_app is app
+
+        # Splash screen
+        MockSplash.assert_called_once()
+        splash.show.assert_called_once()
+        splash.finish.assert_called_once_with(window)
+        center_window.assert_called_once_with(splash)
+
+        # Main window
+        MockMainWindow.assert_called_once_with(fetch_server_time=False)
+        window.show.assert_called_once()
+
+        # Timer setup
+        single_shot.assert_called_once_with(0, window.fetch_server_time)
+
+        # Sanity
+        assert returned_window is window
