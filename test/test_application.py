@@ -5,33 +5,33 @@ from PySide6.QtWidgets import QApplication
 from src.application import create_app
 
 
-def test_create_app_wires_everything(qtbot):
+def test_create_app_wires_everything(_qtbot):
     app = QApplication.instance()
     assert app is not None
 
     with (
-        patch("src.application.QSplashScreen") as MockSplash,
+        patch("src.application.QSplashScreen") as mock_splash_cls,
         patch("src.application.StyleLoader.center_window") as center_window,
-        patch("src.application.MainWindow") as MockMainWindow,
+        patch("src.application.MainWindow") as mock_main_window_cls,
         patch("src.application.QTimer.singleShot") as single_shot,
     ):
         splash = MagicMock()
-        MockSplash.return_value = splash
+        mock_splash_cls.return_value = splash
 
         window = MagicMock()
-        MockMainWindow.return_value = window
+        mock_main_window_cls.return_value = window
 
         returned_app, loop, returned_window = create_app()
 
         assert returned_app is app
 
         try:
-            MockSplash.assert_called_once()
+            mock_splash_cls.assert_called_once()
             splash.show.assert_called_once()
             splash.finish.assert_called_once_with(window)
             center_window.assert_called_once_with(splash)
 
-            MockMainWindow.assert_called_once_with(fetch_server_time=False)
+            mock_main_window_cls.assert_called_once_with(fetch_server_time=False)
             window.show.assert_called_once()
 
             single_shot.assert_called_once_with(0, window.fetch_server_time)
