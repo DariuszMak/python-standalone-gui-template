@@ -4,8 +4,9 @@ from PySide6.QtWidgets import QApplication
 
 from src.application import create_app
 
+from pytestqt.qtbot import QtBot
 
-def test_create_app_wires_everything(qtbot) -> None:
+def test_create_app_wires_everything(qtbot: QtBot) -> None:  # noqa: ARG001
     app = QApplication.instance()
     assert app is not None
 
