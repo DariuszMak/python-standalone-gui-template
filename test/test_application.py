@@ -21,18 +21,24 @@ def test_create_app_wires_everything(qtbot):
         window = MagicMock()
         MockMainWindow.return_value = window
 
-        returned_app, _loop, returned_window = create_app()
+        returned_app, loop, returned_window = create_app()
 
         assert returned_app is app
 
-        MockSplash.assert_called_once()
-        splash.show.assert_called_once()
-        splash.finish.assert_called_once_with(window)
-        center_window.assert_called_once_with(splash)
+            
+        try:
 
-        MockMainWindow.assert_called_once_with(fetch_server_time=False)
-        window.show.assert_called_once()
+            MockSplash.assert_called_once()
+            splash.show.assert_called_once()
+            splash.finish.assert_called_once_with(window)
+            center_window.assert_called_once_with(splash)
 
-        single_shot.assert_called_once_with(0, window.fetch_server_time)
+            MockMainWindow.assert_called_once_with(fetch_server_time=False)
+            window.show.assert_called_once()
 
-        assert returned_window is window
+            single_shot.assert_called_once_with(0, window.fetch_server_time)
+
+            assert returned_window is window
+
+        finally:
+            loop.close()
