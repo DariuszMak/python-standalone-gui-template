@@ -10,7 +10,7 @@ from src.helpers.style_loader import StyleLoader
 from src.ui.pyside_ui.dialog_windows.main_window import MainWindow
 
 
-def run() -> None:
+def create_app():
     app = QApplication(sys.argv)
 
     loop = QEventLoop(app)
@@ -29,8 +29,12 @@ def run() -> None:
     window.show()
 
     splash.finish(window)
-
     QTimer.singleShot(0, window.fetch_server_time)
 
+    return app, loop, window
+
+
+def run() -> None:
+    app, loop, _ = create_app()
     with loop:
         sys.exit(loop.run_forever())
