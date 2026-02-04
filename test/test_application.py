@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QApplication
 from src.application import create_app
 
 
-def test_create_app_wires_everything(qtbot):
+def test_create_app_wires_everything(qtbot) -> None:
     app = QApplication.instance()
     assert app is not None
 

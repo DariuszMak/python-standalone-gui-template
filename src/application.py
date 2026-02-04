@@ -10,7 +10,7 @@ from src.helpers.style_loader import StyleLoader
 from src.ui.pyside_ui.dialog_windows.main_window import MainWindow
 
 
-def create_app():
+def create_app() -> tuple[QApplication, QEventLoop, MainWindow]:
     app = QApplication.instance()
     if app is None:
         app = QApplication(sys.argv)
