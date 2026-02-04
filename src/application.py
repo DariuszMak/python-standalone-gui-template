@@ -9,9 +9,11 @@ from qasync import QEventLoop  # type: ignore
 
 from src.helpers.style_loader import StyleLoader
 from src.ui.pyside_ui.dialog_windows.main_window import MainWindow
+from PySide6.QtCore import QCoreApplication
 
 
-def create_app() -> tuple[QApplication, Any, MainWindow]:
+
+def create_app() -> tuple[QCoreApplication, Any, MainWindow]:
     app = QApplication.instance()
     if app is None:
         app = QApplication(sys.argv)
