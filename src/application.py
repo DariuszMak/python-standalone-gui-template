@@ -11,7 +11,9 @@ from src.ui.pyside_ui.dialog_windows.main_window import MainWindow
 
 
 def create_app():
-    app = QApplication(sys.argv)
+    app = QApplication.instance()
+    if app is None:
+        app = QApplication(sys.argv)
 
     loop = QEventLoop(app)
     asyncio.set_event_loop(loop)
