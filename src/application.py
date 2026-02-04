@@ -1,5 +1,6 @@
 import asyncio
 import sys
+from typing import Any
 
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QPixmap
@@ -10,7 +11,7 @@ from src.helpers.style_loader import StyleLoader
 from src.ui.pyside_ui.dialog_windows.main_window import MainWindow
 
 
-def create_app() -> tuple[QApplication, QEventLoop, MainWindow]:
+def create_app() -> tuple[QApplication, Any, MainWindow]:
     app = QApplication.instance()
     if app is None:
         app = QApplication(sys.argv)
