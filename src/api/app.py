@@ -1,15 +1,10 @@
 import uvicorn
 from litestar import Litestar
-from litestar.middleware.cors import CORSMiddleware
+from litestar.config.cors import CORSConfig
 from litestar.openapi.config import OpenAPIConfig
 
 from src.api.routes import current_time, ping
 from src.config.config import Config
-from litestar import Litestar
-from litestar.config.cors import CORSConfig
-
-from litestar import Litestar
-from litestar.config.cors import CORSConfig
 
 cors_config = CORSConfig(
     allow_origins=["http://127.0.0.1:8003", "http://127.0.0.1:8004"],
@@ -18,16 +13,12 @@ cors_config = CORSConfig(
     allow_credentials=True,
 )
 
-app = Litestar(
-    route_handlers=[...],
-    cors_config=cors_config,
-)
-
 openapi_config = OpenAPIConfig(title="My API", version="0.1.0", description="API documentation for my service")
 
 app = Litestar(
     route_handlers=[ping, current_time],
     openapi_config=openapi_config,
+    cors_config=cors_config,
 )
 
 
