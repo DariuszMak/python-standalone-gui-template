@@ -151,3 +151,8 @@ GitHub.sublime-settings
 !.vscode/launch.json
 !.vscode/extensions.json
 .history
+
+# Node config #
+
+frontend/node_modules/
+static/
