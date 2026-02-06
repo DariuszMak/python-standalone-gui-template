@@ -1,7 +1,9 @@
 import os
+
 import uvicorn
 from litestar import Litestar
 from litestar.static_files import StaticFiles
+
 
 def create_app() -> Litestar:
     return Litestar(
@@ -14,6 +16,7 @@ def create_app() -> Litestar:
         ]
     )
 
+
 def run() -> None:
     uvicorn.run(
         create_app(),
@@ -21,6 +24,7 @@ def run() -> None:
         port=int(os.getenv("REACT_PORT", 8005)),
         log_level="info",
     )
+
 
 if __name__ == "__main__":
     run()
