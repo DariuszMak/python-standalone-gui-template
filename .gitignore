@@ -111,7 +111,7 @@ uv.lock
 # Task
 .task
 
-# If you are using PyCharm #
+# PyCharm
 .idea/
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -144,7 +144,7 @@ Control.ca-bundle
 Control.system-ca-bundle
 GitHub.sublime-settings
 
-# Visual Studio Code #
+# Visual Studio Code
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -152,7 +152,6 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 
-# Node config #
-
+# React UI build
 frontend/node_modules/
 static/
