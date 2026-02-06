@@ -5,10 +5,21 @@ from litestar.openapi.config import OpenAPIConfig
 from src.api.routes import current_time, ping
 from src.config.config import Config
 
+from litestar.middleware.cors import CORSMiddleware
+
 openapi_config = OpenAPIConfig(title="My API", version="0.1.0", description="API documentation for my service")
 
-app = Litestar(route_handlers=[ping, current_time], openapi_config=openapi_config)
-
+app = Litestar(
+    route_handlers=[ping, current_time],
+    middleware=[
+        CORSMiddleware(
+            allow_origins=["http://127.0.0.1:8005"],
+            allow_methods=["GET", "POST"],
+            allow_headers=["*"],
+        )
+    ],
+    openapi_config=openapi_config,
+)
 
 def run_api() -> None:
     config = Config.from_env()
