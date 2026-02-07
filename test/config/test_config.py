@@ -7,12 +7,12 @@ def test_config_defaults() -> None:
     config = Config()
 
     assert config.panel_host == "127.0.0.1"
-    assert config.panel_port == 8000
-    assert config.panel_api_base_url == "http://127.0.0.1:8000"
+    assert config.panel_port == 8001
+    assert config.panel_api_base_url == "http://127.0.0.1:8001"
 
     assert config.api_host == "127.0.0.1"
-    assert config.api_port == 8001
-    assert config.api_base_url == "http://127.0.0.1:8001"
+    assert config.api_port == 8000
+    assert config.api_base_url == "http://127.0.0.1:8000"
 
 
 def test_config_custom_values() -> None:
@@ -58,8 +58,8 @@ def test_config_from_env_partial(monkeypatch: pytest.MonkeyPatch) -> None:
     config = Config.from_env()
 
     assert config.panel_host == "panel.only.env"
-    assert config.panel_port == 8000
-    assert config.panel_api_base_url == "http://panel.only.env:8000"
+    assert config.panel_port == 8001
+    assert config.panel_api_base_url == "http://panel.only.env:8001"
 
     assert config.api_host == "127.0.0.1"
     assert config.api_port == 9090

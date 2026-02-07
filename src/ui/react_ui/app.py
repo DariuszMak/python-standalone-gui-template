@@ -21,7 +21,7 @@ def run() -> None:
     uvicorn.run(
         create_app(),
         host=os.getenv("REACT_HOST", "127.0.0.1"),
-        port=int(os.getenv("REACT_PORT", 8005)),
+        port=int(os.getenv("REACT_PORT", 8002)),
         log_level="info",
     )
 

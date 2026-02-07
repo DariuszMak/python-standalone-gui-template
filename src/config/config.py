@@ -6,11 +6,11 @@ from src.config.env import EnvLoaderMixin
 @dataclass(frozen=True)
 class Config(EnvLoaderMixin):
     panel_host: str = "127.0.0.1"
-    panel_port: int = 8000
+    panel_port: int = 8001
     api_host: str = "127.0.0.1"
-    api_port: int = 8001
+    api_port: int = 8000
     react_host: str = "127.0.0.1"
-    react_port: int = 8005
+    react_port: int = 8002
 
     @property
     def panel_api_base_url(self) -> str:

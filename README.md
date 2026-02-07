@@ -63,7 +63,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 deactivate ; 
 clear ; 
 
-$ports = 8000, 8001, 8005
+$ports = 8001, 8000, 8002
 
 foreach ($port in $ports) {
     $conn = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
@@ -100,18 +100,18 @@ uv run pytest test/ --cov=src -vv ;
 
 ########## RUN APPLICATION LOCALLY
 
-$env:API_PORT="8001" ; 
+$env:API_PORT="8000" ; 
 $env:API_HOST="127.0.0.1" ; 
-$env:PANEL_PORT="8000" ; 
+$env:PANEL_PORT="8001" ; 
 $env:PANEL_HOST="127.0.0.1" ; 
 $env:VITE_API_BASE="http://127.0.0.1:8000" ; 
-$env:REACT_PORT="8005"
+$env:REACT_PORT="8002"
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 Start-Sleep -Seconds 20 ; 
-Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
-Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
-Start-Process "http://127.0.0.1:8000" ; 
-Start-Process "http://127.0.0.1:8005" ; 
+Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
+Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
+Start-Process "http://127.0.0.1:8001" ; 
+Start-Process "http://127.0.0.1:8002" ; 
 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json --bail ; 
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\UI_Native_Windows.postman_environment.json --bail ; 
@@ -123,7 +123,7 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 deactivate ; 
 clear ; 
 
-$ports = 8000, 8001, 8002
+$ports = 8001, 8000, 8002
 
 foreach ($port in $ports) {
     $conn = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
@@ -177,13 +177,13 @@ rm -r -fo .\dist, .\build ;
 ########## RUN APPLICATIONS LOCALLY
 
 $env:API_HOST="127.0.0.1" ; 
-$env:API_PORT="8001" ; 
+$env:API_PORT="8000" ; 
 $env:PANEL_PORT="8003" ; 
 $env:PANEL_HOST="127.0.0.1" ; 
 Start-Process .\windows_distribution\GUI_client.exe ; 
 Start-Sleep -Seconds 20 ; 
-Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
-Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
+Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
+Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
 Start-Process "http://127.0.0.1:8003" ; 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json --bail ; 
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\UI_Windows.postman_environment.json --bail ; 
