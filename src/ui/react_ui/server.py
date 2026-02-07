@@ -8,7 +8,10 @@ from litestar.static_files import StaticFilesConfig
 
 from src.config.config import Config
 
-STATIC_DIR = Path(sys._MEIPASS) / "static" if getattr(sys, "frozen", False) else Path(__file__).parent / "static"
+if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+    STATIC_DIR = Path(sys._MEIPASS) / "static"
+else:
+    STATIC_DIR = Path(__file__).parent / "static"
 
 app = Litestar(
     static_files_config=[
