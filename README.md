@@ -123,7 +123,7 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 deactivate ; 
 clear ; 
 
-$ports = 8000, 8001, 8002
+$ports = 8000, 8001, 8002, 8003, 8004
 
 foreach ($port in $ports) {
     $conn = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
