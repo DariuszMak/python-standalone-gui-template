@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 
 
-
 class IOFile:
     @staticmethod
     def get_real_path_from_relative_path(relative_path: str) -> str:

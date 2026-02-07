@@ -8,7 +8,7 @@ a = Analysis(
     ['..\\src\\main.py'],
     pathex=['..\src'],
     binaries=[],
-    datas = [
+    datas=[
         (
             str(Path('..', 'src', 'ui', 'pyside_ui', 'themes', 'main_theme.qss')),
             'src/ui/pyside_ui/themes',
