@@ -69,7 +69,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 deactivate ; 
 clear ; 
 
-$ports = 8000, 8001
+$ports = 8000, 8001, 8005
 
 foreach ($port in $ports) {
     $conn = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
@@ -115,9 +115,6 @@ Start-Sleep -Seconds 15 ;
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
 Start-Process "http://127.0.0.1:8000" ; 
-newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json --bail ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\UI_Native_Windows.postman_environment.json --bail ; 
-
 
 $env:VITE_API_BASE="http://127.0.0.1:8000" ; 
 $env:REACT_PORT="8005"
@@ -138,8 +135,10 @@ cd ../../../../
 Start-Process uv -ArgumentList "run", "python", "src\ui\react_ui\app.py" ; 
 Start-Sleep -Seconds 15 ; 
 Start-Process "http://127.0.0.1:8005"
-```
 
+newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json --bail ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\UI_Native_Windows.postman_environment.json --bail ; 
+```
 
 ## Thorough setup from scratch for Windows and Linux enviroment:
 
