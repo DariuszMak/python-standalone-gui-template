@@ -40,7 +40,7 @@ def create_moc(dir_path: str, file_name: str, extension: UiExtensions) -> None:
 
     logger.info("Mocking file %s...", input_file)
     process = subprocess.run(  # noqa: S603
-        command, capture_output=True, timeout=10, text=True
+        command, capture_output=True, text=True
     )
 
     if process.returncode != 0:
