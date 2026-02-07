@@ -116,6 +116,7 @@ Start-Process "http://127.0.0.1:8001/schema/redoc" ;
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
 Start-Process "http://127.0.0.1:8000" ; 
 
+
 $env:VITE_API_BASE="http://127.0.0.1:8000" ; 
 $env:REACT_PORT="8005"
 
@@ -230,6 +231,10 @@ Start-Process "http://127.0.0.1:8004" ;
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Linux.postman_environment.json --bail ; 
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\UI_Linux.postman_environment.json --bail ; 
 uv sync --dev --locked --no-cache ; 
+
+
+
+
 ```
 
 
