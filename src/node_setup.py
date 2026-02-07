@@ -3,12 +3,17 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import platform
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 FRONTEND_DIR = Path(__file__).parent / "frontend"
 STATIC_DIR = Path(__file__).parent / "static"
 DIST_DIR = FRONTEND_DIR / "dist"
+
+NPM_CMD = "npm"
+if platform.system() == "Windows":
+    NPM_CMD = "npm.cmd"
 
 
 def run_command(command, cwd=None):
@@ -19,17 +24,15 @@ def run_command(command, cwd=None):
         raise RuntimeError(f"Command {command} failed")
     return process.stdout
 
-
 def install_dependencies():
     node_modules = FRONTEND_DIR / "node_modules"
     if node_modules.exists():
         logger.info("Dependencies already installed, skipping npm install")
         return
-    run_command(["npm", "install"], cwd=FRONTEND_DIR)
-
+    run_command([NPM_CMD, "install"], cwd=FRONTEND_DIR)
 
 def build_frontend():
-    run_command(["npm", "run", "build"], cwd=FRONTEND_DIR)
+    run_command([NPM_CMD, "run", "build"], cwd=FRONTEND_DIR)
 
 
 def copy_dist_to_static():
