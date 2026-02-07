@@ -63,7 +63,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 deactivate ; 
 clear ; 
 
-$ports = 8001, 8000, 8002
+$ports = 8000, 8001, 8002
 
 foreach ($port in $ports) {
     $conn = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
@@ -100,11 +100,11 @@ uv run pytest test/ --cov=src -vv ;
 
 ########## RUN APPLICATION LOCALLY
 
-$env:API_PORT="8000" ; 
 $env:API_HOST="127.0.0.1" ; 
-$env:PANEL_PORT="8001" ; 
+$env:API_PORT="8000" ; 
 $env:PANEL_HOST="127.0.0.1" ; 
-$env:VITE_API_BASE="http://127.0.0.1:8000" ; 
+$env:PANEL_PORT="8001" ; 
+$env:REACT_HOST="127.0.0.1" ; 
 $env:REACT_PORT="8002"
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 Start-Sleep -Seconds 20 ; 
@@ -123,7 +123,7 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 deactivate ; 
 clear ; 
 
-$ports = 8001, 8000, 8002
+$ports = 8000, 8001, 8002
 
 foreach ($port in $ports) {
     $conn = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
