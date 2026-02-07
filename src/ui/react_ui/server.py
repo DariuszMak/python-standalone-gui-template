@@ -3,15 +3,15 @@ from pathlib import Path
 
 import uvicorn
 from litestar import Litestar
-from litestar.static_files import StaticFiles
+from litestar.static_files import StaticFilesConfig
 
 from src.config.config import Config
 
 STATIC_DIR = Path(__file__).parent / "static"
 
 app = Litestar(
-    route_handlers=[
-        StaticFiles(
+    static_files_config=[
+        StaticFilesConfig(
             path="/",
             directories=[STATIC_DIR],
             html_mode=True,
