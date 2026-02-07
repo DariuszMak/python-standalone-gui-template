@@ -7,12 +7,12 @@ import platform
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-# Corrected paths
+
 FRONTEND_DIR = Path(__file__).parent / "ui" / "react_ui" / "frontend"
 STATIC_DIR = Path(__file__).parent / "ui" / "react_ui" / "static"
 DIST_DIR = FRONTEND_DIR / "dist"
 
-# Windows requires npm.cmd
+
 NPM_CMD = "npm"
 if platform.system() == "Windows":
     NPM_CMD = "npm.cmd"
