@@ -7,7 +7,7 @@ a = Analysis(
     ['..\\src\\main.py'],
     pathex=['..\src'],
     binaries=[],
-    datas=[('..\\src\\ui\\pyside_ui\\themes\\main_theme.qss', 'src\\ui\\pyside_ui\\themes', `src\\ui\\react_ui\\static`)],
+    datas=[('..\\src\\ui\\pyside_ui\\themes\\main_theme.qss', 'src\\ui\\pyside_ui\\themes', 'src\\ui\\react_ui\\static')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
