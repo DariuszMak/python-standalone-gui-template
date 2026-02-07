@@ -22,7 +22,7 @@ def run_command(command, cwd=None):
     logger.info("Running command: %s", " ".join(command))
     if not cwd or not Path(cwd).exists():
         raise NotADirectoryError(f"Directory does not exist: {cwd}")
-    process = subprocess.run(command, cwd=cwd, capture_output=True, text=True)
+    process = subprocess.run(command, cwd=cwd, capture_output=True, text=True)  # noqa: S603
     if process.returncode != 0:
         logger.error("Command failed! stdout: %s, stderr: %s", process.stdout, process.stderr)
         raise RuntimeError(f"Command {command} failed")
