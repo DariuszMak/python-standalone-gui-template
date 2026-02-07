@@ -178,8 +178,8 @@ rm -r -fo .\dist, .\build ;
 
 $env:API_HOST="127.0.0.1" ; 
 $env:API_PORT="8000" ; 
-$env:PANEL_PORT="8003" ; 
 $env:PANEL_HOST="127.0.0.1" ; 
+$env:PANEL_PORT="8003" ; 
 Start-Process .\windows_distribution\GUI_client.exe ; 
 Start-Sleep -Seconds 20 ; 
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
