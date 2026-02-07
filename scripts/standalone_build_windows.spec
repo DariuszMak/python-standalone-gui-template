@@ -1,13 +1,23 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-block_cipher = None
+from pathlib import Path
 
+block_cipher = None
 
 a = Analysis(
     ['..\\src\\main.py'],
     pathex=['..\src'],
     binaries=[],
-    datas=[('..\\src\\ui\\pyside_ui\\themes\\main_theme.qss', 'src\\ui\\pyside_ui\\themes', 'src\\ui\\react_ui\\static')],
+    datas=[
+        (
+            str(Path('..', 'src', 'ui', 'pyside_ui', 'themes', 'main_theme.qss')),
+            str(Path('src', 'ui', 'pyside_ui', 'themes')),
+        ),
+        (
+            str(Path('..', 'src', 'ui', 'pyside_ui', 'themes', 'main_theme.qss')),
+            str(Path('src', 'ui', 'react_ui', 'static')),
+        ),
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

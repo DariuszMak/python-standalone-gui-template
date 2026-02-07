@@ -13,7 +13,14 @@ a = Analysis(
     pathex=[str(base_path / 'src')],
     binaries=[],
     datas=[
-        (str(base_path / 'src' / 'ui' / 'pyside_ui' / 'themes' / 'main_theme.qss'), 'src/ui/pyside_ui/themes', 'src/ui/react_ui/static')
+        (
+            str(base_path / 'src' / 'ui' / 'pyside_ui' / 'themes' / 'main_theme.qss'),
+            'src/ui/pyside_ui/themes',
+        ),
+        (
+            str(base_path / 'src' / 'ui' / 'pyside_ui' / 'themes' / 'main_theme.qss'),
+            'src/ui/react_ui/static',
+        ),
     ],
     hiddenimports=[],
     hookspath=[],
