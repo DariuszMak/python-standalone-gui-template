@@ -120,6 +120,7 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 
 
 $env:VITE_API_BASE="http://127.0.0.1:8000" ; 
+$env:REACT_PORT="8005"
 
 cd .\src\ui\react_ui\frontend\
 
@@ -134,10 +135,8 @@ cp -r dist/* ../static/
 
 cd ../../../../
 
-$env:REACT_PORT="8005"
-
-Start-Process python -ArgumentList "src/ui/react_ui/app.py"
-
+Start-Process uv -ArgumentList "run", "python", "src\ui\react_ui\app.py" ; 
+Start-Sleep -Seconds 15 ; 
 Start-Process "http://127.0.0.1:8005"
 # uv run python "src/ui/react_ui/app.py"
 ```
