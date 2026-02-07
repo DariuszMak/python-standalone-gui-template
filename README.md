@@ -133,6 +133,7 @@ Start-Sleep -Seconds 15 ;
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
 Start-Process "http://127.0.0.1:8000" ; 
+Start-Process "http://127.0.0.1:8005" ; 
 
 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json --bail ; 
