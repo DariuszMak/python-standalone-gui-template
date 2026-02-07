@@ -7,18 +7,17 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
+FRONTEND_DIR: Path = Path(__file__).parent / "ui" / "react_ui" / "frontend"
+STATIC_DIR: Path = Path(__file__).parent / "ui" / "react_ui" / "static"
+DIST_DIR: Path = FRONTEND_DIR / "dist"
 
-FRONTEND_DIR = Path(__file__).parent / "ui" / "react_ui" / "frontend"
-STATIC_DIR = Path(__file__).parent / "ui" / "react_ui" / "static"
-DIST_DIR = FRONTEND_DIR / "dist"
-
-
-NPM_CMD = "npm"
+NPM_CMD: str = "npm"
 if platform.system() == "Windows":
     NPM_CMD = "npm.cmd"
 
 
-def run_command(command, cwd=None):
+def run_command(command: list[str], cwd: Path | None = None) -> str:
+
     logger.info("Running command: %s", " ".join(command))
     if not cwd or not Path(cwd).exists():
         raise NotADirectoryError(f"Directory does not exist: {cwd}")
@@ -29,26 +28,29 @@ def run_command(command, cwd=None):
     return process.stdout
 
 
-def install_dependencies():
-    node_modules = FRONTEND_DIR / "node_modules"
+def install_dependencies() -> None:
+
+    node_modules: Path = FRONTEND_DIR / "node_modules"
     if node_modules.exists():
         logger.info("Dependencies already installed, skipping npm install")
         return
     run_command([NPM_CMD, "install"], cwd=FRONTEND_DIR)
 
 
-def build_frontend():
+def build_frontend() -> None:
+
     run_command([NPM_CMD, "run", "build"], cwd=FRONTEND_DIR)
 
 
-def copy_dist_to_static():
+def copy_dist_to_static() -> None:
+
     logger.info("Copying dist/* to static/")
     for item in DIST_DIR.iterdir():
-        dest = STATIC_DIR / item.name
+        dest: Path = STATIC_DIR / item.name
         if item.is_dir():
             if dest.exists():
                 for sub_item in item.rglob("*"):
-                    target_path = STATIC_DIR / sub_item.relative_to(DIST_DIR)
+                    target_path: Path = STATIC_DIR / sub_item.relative_to(DIST_DIR)
                     if sub_item.is_dir():
                         target_path.mkdir(parents=True, exist_ok=True)
                     else:
@@ -60,7 +62,8 @@ def copy_dist_to_static():
     logger.info("Copy finished!")
 
 
-def build_react_frontend():
+def build_react_frontend() -> None:
+
     install_dependencies()
     build_frontend()
     copy_dist_to_static()
