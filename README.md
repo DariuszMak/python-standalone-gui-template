@@ -123,7 +123,7 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 deactivate ; 
 clear ; 
 
-$ports = 8000, 8001, 8002, 8003, 8004
+$ports = 8000, 8001, 8002, 8003, 8004, 8005
 
 foreach ($port in $ports) {
     $conn = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
@@ -179,12 +179,15 @@ rm -r -fo .\dist, .\build ;
 $env:API_HOST="127.0.0.1" ; 
 $env:API_PORT="8000" ; 
 $env:PANEL_HOST="127.0.0.1" ; 
-$env:PANEL_PORT="8003" ; 
+$env:PANEL_PORT="8001" ; 
+$env:REACT_HOST="127.0.0.1" ; 
+$env:REACT_PORT="8002"
 Start-Process .\windows_distribution\GUI_client.exe ; 
-Start-Sleep -Seconds 20 ; 
+Start-Sleep -Seconds 25 ; 
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
-Start-Process "http://127.0.0.1:8003" ; 
+Start-Process "http://127.0.0.1:8001" ; 
+Start-Process "http://127.0.0.1:8002" ; 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json --bail ; 
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\UI_Windows.postman_environment.json --bail ; 
 
@@ -195,15 +198,18 @@ Start-Process wsl -ArgumentList @(
     'export DISPLAY=$(grep nameserver /etc/resolv.conf | awk "{print \$2}"):0 && \
      export QT_QPA_PLATFORM=wayland && \
      export API_HOST=127.0.0.1 && \
-     export API_PORT=8002 && \
+     export API_PORT=8003 && \
      export PANEL_HOST=127.0.0.1 && \
      export PANEL_PORT=8004 && \
+     export REACT_HOST=127.0.0.1 && \
+     export REACT_PORT=8005 && \
      ./linux_distribution/GUI_client'
 )
-Start-Sleep -Seconds 20 ; 
-Start-Process "http://127.0.0.1:8002/schema/redoc" ; 
-Start-Process "http://127.0.0.1:8002/schema/swagger" ; 
+Start-Sleep -Seconds 25 ; 
+Start-Process "http://127.0.0.1:8003/schema/redoc" ; 
+Start-Process "http://127.0.0.1:8003/schema/swagger" ; 
 Start-Process "http://127.0.0.1:8004" ; 
+Start-Process "http://127.0.0.1:8005" ; 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Linux.postman_environment.json --bail ; 
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\UI_Linux.postman_environment.json --bail ; 
 uv sync --dev --locked --no-cache ; 
