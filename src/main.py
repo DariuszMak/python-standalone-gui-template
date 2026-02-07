@@ -21,5 +21,4 @@ if __name__ == "__main__":
         start_panel_in_background()
         start_react_ui_in_background()
 
-
         application.run()

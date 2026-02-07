@@ -19,8 +19,7 @@ class Config(EnvLoaderMixin):
     @property
     def panel_api_base_url(self) -> str:
         return f"http://{self.panel_host}:{self.panel_port}"
-    
+
     @property
     def react_base_url(self) -> str:
         return f"http://{self.react_host}:{self.react_port}"
-

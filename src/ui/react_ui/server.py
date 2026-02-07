@@ -1,10 +1,10 @@
+import threading
 from pathlib import Path
 
+import uvicorn
 from litestar import Litestar
 from litestar.static_files import StaticFiles
-import uvicorn
 
-import threading
 from src.config.config import Config
 
 STATIC_DIR = Path(__file__).parent / "static"
