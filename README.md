@@ -119,6 +119,8 @@ newman run collections\Python_GUI_API.postman_collection.json --environment coll
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\UI_Native_Windows.postman_environment.json --bail ; 
 
 
+$env:VITE_API_BASE="http://127.0.0.1:8000" ; 
+
 cd .\src\ui\react_ui\frontend\
 
 # npm create vite@latest . # framework: react, typescript: yes
@@ -130,14 +132,13 @@ npm run build
 # output do ../static
 cp -r dist/* ../static/
 
-
 cd ../../../../
 
-# $env:REACT_PORT="8005"
-# Start-Process "http://127.0.0.1:8005"
+$env:REACT_PORT="8005"
 
 Start-Process python -ArgumentList "src/ui/react_ui/app.py"
 
+Start-Process "http://127.0.0.1:8005"
 # uv run python "src/ui/react_ui/app.py"
 ```
 
