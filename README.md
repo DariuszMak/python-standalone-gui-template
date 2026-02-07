@@ -119,7 +119,7 @@ npm install
 
 npm run build
 # output do ../static
-cp -r dist/* ../static/
+cp -r dist/* ../static/ -Force
 
 cd ../../../../
 
