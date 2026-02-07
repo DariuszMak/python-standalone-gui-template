@@ -113,7 +113,7 @@ $env:PANEL_HOST="127.0.0.1" ;
 $env:VITE_API_BASE="http://127.0.0.1:8000" ; 
 $env:REACT_PORT="8005"
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
-Start-Sleep -Seconds 15 ; 
+Start-Sleep -Seconds 20 ; 
 Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
 Start-Process "http://127.0.0.1:8000" ; 
