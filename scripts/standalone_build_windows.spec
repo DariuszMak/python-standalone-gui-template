@@ -17,7 +17,7 @@ a = Analysis(
             str(Path('..', 'src', 'ui', 'react_ui', 'static')),
             'static',
         ),
-    ]
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
