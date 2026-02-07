@@ -1,8 +1,8 @@
 import logging
+import platform
 import shutil
 import subprocess
 from pathlib import Path
-import platform
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
