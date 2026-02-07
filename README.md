@@ -106,16 +106,6 @@ uv run pytest test/ --cov=src -vv ;
 
 ########## RUN APPLICATION LOCALLY
 
-$env:API_PORT="8001" ; 
-$env:API_HOST="127.0.0.1" ; 
-$env:PANEL_PORT="8000" ; 
-$env:PANEL_HOST="127.0.0.1" ; 
-Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
-Start-Sleep -Seconds 15 ; 
-Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
-Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
-Start-Process "http://127.0.0.1:8000" ; 
-
 
 $env:VITE_API_BASE="http://127.0.0.1:8000" ; 
 $env:REACT_PORT="8005"
@@ -133,9 +123,17 @@ cp -r dist/* ../static/
 
 cd ../../../../
 
-Start-Process uv -ArgumentList "run", "python", "src\ui\react_ui\app.py" ; 
+
+$env:API_PORT="8001" ; 
+$env:API_HOST="127.0.0.1" ; 
+$env:PANEL_PORT="8000" ; 
+$env:PANEL_HOST="127.0.0.1" ; 
+Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 Start-Sleep -Seconds 15 ; 
-Start-Process "http://127.0.0.1:8005"
+Start-Process "http://127.0.0.1:8001/schema/redoc" ; 
+Start-Process "http://127.0.0.1:8001/schema/swagger" ; 
+Start-Process "http://127.0.0.1:8000" ; 
+
 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json --bail ; 
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\UI_Native_Windows.postman_environment.json --bail ; 
@@ -231,10 +229,6 @@ Start-Process "http://127.0.0.1:8004" ;
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Linux.postman_environment.json --bail ; 
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\UI_Linux.postman_environment.json --bail ; 
 uv sync --dev --locked --no-cache ; 
-
-
-
-
 ```
 
 
