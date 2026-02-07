@@ -138,7 +138,6 @@ cd ../../../../
 Start-Process uv -ArgumentList "run", "python", "src\ui\react_ui\app.py" ; 
 Start-Sleep -Seconds 15 ; 
 Start-Process "http://127.0.0.1:8005"
-# uv run python "src/ui/react_ui/app.py"
 ```
 
 
