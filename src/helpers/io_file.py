@@ -1,11 +1,13 @@
 import os
 import sys
+from pathlib import Path
+
 
 
 class IOFile:
     @staticmethod
     def get_real_path_from_relative_path(relative_path: str) -> str:
-        base_path = getattr(sys, "_MEIPASS", os.path.abspath("."))
+        base_path = getattr(sys, "_MEIPASS", Path(__file__).parent)
         return os.path.realpath(os.path.join(base_path, relative_path))
 
     @staticmethod

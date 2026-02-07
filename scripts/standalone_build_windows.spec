@@ -8,16 +8,16 @@ a = Analysis(
     ['..\\src\\main.py'],
     pathex=['..\src'],
     binaries=[],
-    datas=[
+    datas = [
         (
             str(Path('..', 'src', 'ui', 'pyside_ui', 'themes', 'main_theme.qss')),
-            str(Path('src', 'ui', 'pyside_ui', 'themes')),
+            'src/ui/pyside_ui/themes',
         ),
         (
-            str(Path('..', 'src', 'ui', 'pyside_ui', 'themes', 'main_theme.qss')),
-            str(Path('src', 'ui', 'react_ui', 'static')),
+            str(Path('..', 'src', 'ui', 'react_ui', 'static')),
+            'static',
         ),
-    ],
+    ]
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

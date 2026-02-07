@@ -7,12 +7,18 @@ from litestar.static_files import StaticFilesConfig
 
 from src.config.config import Config
 
-STATIC_DIR = Path(__file__).parent / "static"
+import sys
+from pathlib import Path
+
+if getattr(sys, "frozen", False):
+    STATIC_DIR = Path(sys._MEIPASS) / "static"
+else:
+    STATIC_DIR = Path(__file__).parent / "static"
 
 app = Litestar(
     static_files_config=[
         StaticFilesConfig(
-            path="/",
+            path="/static",
             directories=[STATIC_DIR],
             html_mode=True,
         )

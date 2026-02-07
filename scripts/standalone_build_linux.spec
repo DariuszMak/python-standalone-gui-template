@@ -18,8 +18,8 @@ a = Analysis(
             'src/ui/pyside_ui/themes',
         ),
         (
-            str(base_path / 'src' / 'ui' / 'pyside_ui' / 'themes' / 'main_theme.qss'),
-            'src/ui/react_ui/static',
+            str(base_path / 'src' / 'ui' / 'react_ui' / 'static'),
+            'static',
         ),
     ],
     hiddenimports=[],
