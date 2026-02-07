@@ -215,7 +215,6 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 uv sync --dev --locked --no-cache ; 
 ```
 
-
 ## Particular code snippets
 
 Make sure, that everything is committed or stashed and (optionally):
