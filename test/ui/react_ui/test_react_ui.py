@@ -1,12 +1,14 @@
-import os
 import threading
+from typing import TYPE_CHECKING
 
 import uvicorn
 from litestar import Litestar
-from litestar.static_files import StaticFilesConfig
 
-from src.ui.react_ui.server import create_app, run
-from src.ui.react_ui.background import run_react_ui, start_react_ui_in_background
+from src.ui.react_ui.app import create_app, run
+from src.ui.react_ui.server import run_react_ui, start_react_ui_in_background
+
+if TYPE_CHECKING:
+    from litestar.static_files import StaticFilesConfig
 
 
 def test_create_app_static_files_configured() -> None:
