@@ -90,8 +90,8 @@ Start-Process "http://127.0.0.1:8001" ;
 Start-Process "http://127.0.0.1:8002" ; 
 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json --bail ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Native_Windows.postman_environment.json --bail ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Native_Windows.postman_environment.json --bail ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Dev_Windows.postman_environment.json --bail ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Dev_Windows.postman_environment.json --bail ; 
 ```
 
 ## Thorough setup from scratch for Windows and Linux enviroment:
