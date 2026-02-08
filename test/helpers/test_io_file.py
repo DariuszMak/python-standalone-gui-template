@@ -1,6 +1,7 @@
 import os
 
-from src.helpers.io_file import IOFile 
+from src.helpers.io_file import IOFile
+
 
 def test_get_real_path_from_relative_path() -> None:
     your_instance = IOFile()
