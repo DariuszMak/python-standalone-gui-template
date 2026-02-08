@@ -16,7 +16,7 @@ else:
 app = Litestar(
     static_files_config=[
         StaticFilesConfig(
-            path="/static",
+            path="/",
             directories=[STATIC_DIR],
             html_mode=True,
         )
