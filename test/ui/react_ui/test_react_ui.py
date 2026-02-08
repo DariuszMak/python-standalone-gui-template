@@ -1,6 +1,8 @@
 import threading
+from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
+import pytest
 import uvicorn
 from litestar import Litestar
 
@@ -25,7 +27,7 @@ def test_create_app_static_files_configured() -> None:
     assert len(config.directories) == 1
 
 
-def test_run_calls_uvicorn(monkeypatch) -> None:
+def test_run_calls_uvicorn(monkeypatch: pytest.MonkeyPatch) -> None:
     called = {}
 
     def fake_run(app: Any, host: str, port: int, log_level: str) -> None:
@@ -45,10 +47,10 @@ def test_run_calls_uvicorn(monkeypatch) -> None:
     assert called["log_level"] == "info"
 
 
-def test_run_react_ui_calls_uvicorn(monkeypatch) -> None:
+def test_run_react_ui_calls_uvicorn(monkeypatch: pytest.MonkeyPatch) -> None:
     called = {}
 
-    def fake_run(app, host, port, log_level):
+    def fake_run(app: Any, host: str, port: int, log_level: str) -> None:
         called["app"] = app
         called["host"] = host
         called["port"] = port
@@ -63,15 +65,20 @@ def test_run_react_ui_calls_uvicorn(monkeypatch) -> None:
     assert called["log_level"] == "info"
 
 
-def test_start_react_ui_in_background(monkeypatch) -> None:
+def test_start_react_ui_in_background(monkeypatch: pytest.MonkeyPatch) -> None:
     class DummyConfig:
         panel_host = "localhost"
         react_port = 7777
 
-    started = {}
+    started: dict[str, Any] = {}
 
     class DummyThread:
-        def __init__(self, target, args, daemon):
+        def __init__(
+            self,
+            target: Callable[..., Any],
+            args: tuple[Any, ...],
+            daemon: bool,
+        ) -> None:
             started["target"] = target
             started["args"] = args
             started["daemon"] = daemon
