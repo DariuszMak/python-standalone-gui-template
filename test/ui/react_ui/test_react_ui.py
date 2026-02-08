@@ -80,7 +80,7 @@ def test_start_react_ui_in_background(monkeypatch) -> None:
             started["started"] = True
 
     monkeypatch.setattr(
-        "src.ui.react_ui.background.Config.from_env",
+        "src.ui.react_ui.server.Config.from_env",
         lambda: DummyConfig(),
     )
     monkeypatch.setattr(threading, "Thread", DummyThread)
