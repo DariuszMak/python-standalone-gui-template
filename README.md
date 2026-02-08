@@ -90,7 +90,8 @@ Start-Process "http://127.0.0.1:8001" ;
 Start-Process "http://127.0.0.1:8002" ; 
 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json --bail ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\UI_Native_Windows.postman_environment.json --bail ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Native_Windows.postman_environment.json --bail ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Native_Windows.postman_environment.json --bail ; 
 ```
 
 ## Thorough setup from scratch for Windows and Linux enviroment:
@@ -165,7 +166,8 @@ Start-Process "http://127.0.0.1:8000/schema/swagger" ;
 Start-Process "http://127.0.0.1:8001" ; 
 Start-Process "http://127.0.0.1:8002" ; 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json --bail ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\UI_Windows.postman_environment.json --bail ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Windows.postman_environment.json --bail ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Windows.postman_environment.json --bail ; 
 
 #####
 
@@ -187,7 +189,8 @@ Start-Process "http://127.0.0.1:8003/schema/swagger" ;
 Start-Process "http://127.0.0.1:8004" ; 
 Start-Process "http://127.0.0.1:8005" ; 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Linux.postman_environment.json --bail ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\UI_Linux.postman_environment.json --bail ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Linux.postman_environment.json --bail ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Linux.postman_environment.json --bail ; 
 uv sync --dev --locked --no-cache ; 
 ```
 
