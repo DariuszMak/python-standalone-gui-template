@@ -1,5 +1,5 @@
 import threading
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import uvicorn
 from litestar import Litestar
@@ -28,19 +28,19 @@ def test_create_app_static_files_configured() -> None:
 def test_run_calls_uvicorn(monkeypatch) -> None:
     called = {}
 
-    def fake_run(app, host, port, log_level):
+    def fake_run(app: Any, host: str, port: int, log_level: str) -> None:
         called["app"] = app
         called["host"] = host
         called["port"] = port
         called["log_level"] = log_level
 
     monkeypatch.setattr(uvicorn, "run", fake_run)
-    monkeypatch.setenv("REACT_HOST", "0.0.0.0")
+    monkeypatch.setenv("REACT_HOST", "0.0.0.1")
     monkeypatch.setenv("REACT_PORT", "9000")
 
     run()
 
-    assert called["host"] == "0.0.0.0"
+    assert called["host"] == "0.0.0.1"
     assert called["port"] == 9000
     assert called["log_level"] == "info"
 
@@ -76,7 +76,7 @@ def test_start_react_ui_in_background(monkeypatch) -> None:
             started["args"] = args
             started["daemon"] = daemon
 
-        def start(self):
+        def start(self) -> None:
             started["started"] = True
 
     monkeypatch.setattr(
