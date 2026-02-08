@@ -14,6 +14,10 @@ def test_config_defaults() -> None:
     assert config.panel_port == 8001
     assert config.panel_api_base_url == "http://127.0.0.1:8001"
 
+    assert config.react_host == "127.0.0.1"
+    assert config.react_port == 8002
+    assert config.react_base_url == "http://127.0.0.1:8002"
+
 
 def test_config_custom_values() -> None:
     config = Config(
@@ -21,6 +25,8 @@ def test_config_custom_values() -> None:
         api_port=9000,
         panel_host="panel.example.com",
         panel_port=7000,
+        react_host="react.example.com",
+        react_port=6000,
     )
 
     assert config.api_host == "api.example.com"
@@ -31,12 +37,18 @@ def test_config_custom_values() -> None:
     assert config.panel_port == 7000
     assert config.panel_api_base_url == "http://panel.example.com:7000"
 
+    assert config.react_host == "react.example.com"
+    assert config.react_port == 6000
+    assert config.react_base_url == "http://react.example.com:6000"
+
 
 def test_config_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("API_HOST", "env.example.com")
     monkeypatch.setenv("API_PORT", "8080")
     monkeypatch.setenv("PANEL_HOST", "panel.env.example.com")
     monkeypatch.setenv("PANEL_PORT", "9090")
+    monkeypatch.setenv("REACT_HOST", "react.env.example.com")
+    monkeypatch.setenv("REACT_PORT", "7070")
 
     config = Config.from_env()
 
@@ -48,12 +60,20 @@ def test_config_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     assert config.panel_port == 9090
     assert config.panel_api_base_url == "http://panel.env.example.com:9090"
 
+    assert config.react_host == "react.env.example.com"
+    assert config.react_port == 7070
+    assert config.react_base_url == "http://react.env.example.com:7070"
+
 
 def test_config_from_env_partial(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("API_HOST", raising=False)
     monkeypatch.setenv("API_PORT", "9090")
+
     monkeypatch.setenv("PANEL_HOST", "panel.only.env")
     monkeypatch.delenv("PANEL_PORT", raising=False)
+
+    monkeypatch.delenv("REACT_HOST", raising=False)
+    monkeypatch.setenv("REACT_PORT", "6060")
 
     config = Config.from_env()
 
@@ -64,3 +84,7 @@ def test_config_from_env_partial(monkeypatch: pytest.MonkeyPatch) -> None:
     assert config.panel_host == "panel.only.env"
     assert config.panel_port == 8001
     assert config.panel_api_base_url == "http://panel.only.env:8001"
+
+    assert config.react_host == "127.0.0.1"
+    assert config.react_port == 6060
+    assert config.react_base_url == "http://127.0.0.1:6060"
