@@ -142,13 +142,11 @@ docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest
 
 uv sync --no-dev --locked --no-cache ; 
 
-docker-compose run --rm --remove-orphans app sh -c "uv sync --dev --locked --no-cache && uv run pyinstaller --clean ./scripts/standalone_build_linux.spec && cp -r dist/* linux_distribution/" ; 
-
+docker-compose run --rm --remove-orphans app sh -c "uv sync --dev --locked --no-cache && uv run pyinstaller --clean ./scripts/standalone_build_linux.spec && cp -r dist/* releases/linux_distribution/" ; 
 rm -r -fo .\dist, .\build ; 
 
 uv run pyinstaller --clean .\scripts\standalone_build_windows.spec ; 
-cp -r -fo .\dist\* .\windows_distribution\ ; 
-
+cp -r -fo .\dist\* .\releases\windows_distribution\ ; 
 rm -r -fo .\dist, .\build ; 
 
 ########## RUN APPLICATIONS LOCALLY
@@ -159,7 +157,7 @@ $env:PANEL_HOST="127.0.0.1" ;
 $env:PANEL_PORT="8001" ; 
 $env:REACT_HOST="127.0.0.1" ; 
 $env:REACT_PORT="8002"
-Start-Process .\windows_distribution\GUI_client.exe ; 
+Start-Process .\releases\windows_distribution\GUI_client.exe ; 
 Start-Sleep -Seconds 25 ; 
 Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
 Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
@@ -181,7 +179,7 @@ Start-Process wsl -ArgumentList @(
      export PANEL_PORT=8004 && \
      export REACT_HOST=127.0.0.1 && \
      export REACT_PORT=8005 && \
-     ./linux_distribution/GUI_client'
+     ./releases/linux_distribution/GUI_client'
 )
 Start-Sleep -Seconds 25 ; 
 Start-Process "http://127.0.0.1:8003/schema/redoc" ; 
