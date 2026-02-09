@@ -4,13 +4,15 @@ import uvicorn
 from litestar import Litestar
 from litestar.static_files import StaticFilesConfig
 
+from src import STATIC_CATALGUE_NAME
+
 
 def create_app() -> Litestar:
     return Litestar(
         static_files_config=[
             StaticFilesConfig(
                 path="/",
-                directories=[os.path.join(os.path.dirname(__file__), "static")],
+                directories=[os.path.join(os.path.dirname(__file__), STATIC_CATALGUE_NAME)],
                 html_mode=True,
             )
         ]

@@ -6,12 +6,13 @@ import uvicorn
 from litestar import Litestar
 from litestar.static_files import StaticFilesConfig
 
+from src import STATIC_CATALGUE_NAME
 from src.config.config import Config
 
 if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
-    STATIC_DIR = Path(sys._MEIPASS) / "static"
+    STATIC_DIR = Path(sys._MEIPASS) / STATIC_CATALGUE_NAME
 else:
-    STATIC_DIR = Path(__file__).parent / "static"
+    STATIC_DIR = Path(__file__).parent / STATIC_CATALGUE_NAME
 
 app = Litestar(
     static_files_config=[

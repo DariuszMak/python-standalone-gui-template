@@ -4,11 +4,13 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from src import STATIC_CATALGUE_NAME
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 FRONTEND_DIR: Path = Path(__file__).parent / "ui" / "react_ui" / "frontend"
-STATIC_DIR: Path = Path(__file__).parent / "ui" / "react_ui" / "static"
+STATIC_DIR: Path = Path(__file__).parent / "ui" / "react_ui" / STATIC_CATALGUE_NAME
 DIST_DIR: Path = FRONTEND_DIR / "dist"
 
 NPM_CMD: str = "npm"
