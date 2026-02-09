@@ -9,8 +9,10 @@ from src import STATIC_CATALGUE_NAME
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-FRONTEND_DIR: Path = Path(__file__).parent / "ui" / "react_ui" / "frontend"
-STATIC_DIR: Path = Path(__file__).parent / "ui" / "react_ui" / STATIC_CATALGUE_NAME
+REACT_DIR = Path(__file__).parent / "ui" / "react_ui"
+
+FRONTEND_DIR: Path = REACT_DIR / "frontend"
+STATIC_DIR: Path = REACT_DIR / STATIC_CATALGUE_NAME
 DIST_DIR: Path = FRONTEND_DIR / "dist"
 
 NPM_CMD: str = "npm"
