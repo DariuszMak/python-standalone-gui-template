@@ -138,6 +138,7 @@ docker-compose run --build app ;
 $env:PYTHONPATH="." ; 
 
 .\scripts\format_and_lint.ps1 ; 
+.\src\ui\react_ui\frontend\frontend_format_and_lint.ps1 ; 
 
 uv run pytest test/ --cov=src -vv ; 
 docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest test/ --cov=src" ; 
