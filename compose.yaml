@@ -6,6 +6,6 @@ services:
         PYTHON_VERSION: 3.11
     volumes:
       - .:/app
-      - ./releases/linux_distribution:/app/linux_distribution
+      - ./releases/linux:/app/linux
     working_dir: /app
     entrypoint: ""
