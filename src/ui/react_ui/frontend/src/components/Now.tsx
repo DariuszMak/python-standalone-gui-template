@@ -10,7 +10,7 @@ export function Now() {
     setError(null);
 
     try {
-      const r = await fetch("/time");
+      const r = await fetch(`${import.meta.env.VITE_BACKEND_URL}/time`);
       if (!r.ok) {
         throw new Error(`HTTP ${r.status}`);
       }
