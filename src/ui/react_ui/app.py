@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-from src.ui.react_ui.routes import now
 import uvicorn
 from litestar import Litestar
 from litestar.static_files import StaticFilesConfig
@@ -11,15 +10,13 @@ def create_app() -> Litestar:
     dist_dir = Path(__file__).parent / "dist"
 
     return Litestar(
-            route_handlers=[now],
-
         static_files_config=[
             StaticFilesConfig(
                 path="/",
                 directories=[dist_dir],
                 html_mode=True,
             )
-        ]
+        ],
     )
 
 
