@@ -1,8 +1,8 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from litestar import get
+
 
 @get("/api/now")
 async def now() -> dict:
-    return {
-        "now": datetime.now(tz=timezone.utc).isoformat()
-    }
+    return {"now": datetime.now(tz=UTC).isoformat()}

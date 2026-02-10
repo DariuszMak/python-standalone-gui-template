@@ -11,15 +11,15 @@ from src.ui.react_ui.routes import now
 def create_app() -> Litestar:
     return Litestar(
         route_handlers=[
-        now,
-    ],
+            now,
+        ],
         static_files_config=[
             StaticFilesConfig(
                 path="/",
                 directories=[os.path.join(os.path.dirname(__file__), STATIC_CATALGUE_NAME)],
                 html_mode=True,
             )
-        ]
+        ],
     )
 
 
