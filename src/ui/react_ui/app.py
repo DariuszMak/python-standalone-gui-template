@@ -5,10 +5,14 @@ from litestar import Litestar
 from litestar.static_files import StaticFilesConfig
 
 from src import STATIC_CATALGUE_NAME
+from src.ui.react_ui.routes import now
 
 
 def create_app() -> Litestar:
     return Litestar(
+        route_handlers=[
+        now,
+    ],
         static_files_config=[
             StaticFilesConfig(
                 path="/",
