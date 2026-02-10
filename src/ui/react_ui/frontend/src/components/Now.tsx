@@ -10,7 +10,7 @@ export function Now() {
     setError(null);
 
     try {
-      const r = await fetch("/api/now");
+      const r = await fetch("/api/time");
       if (!r.ok) {
         throw new Error(`HTTP ${r.status}`);
       }
