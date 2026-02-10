@@ -14,9 +14,9 @@ export function Now() {
       if (!r.ok) {
         throw new Error(`HTTP ${r.status}`);
       }
-      const d = await r.json();
+      const d: { now: string } = await r.json();
       setNow(d.now);
-    } catch (e) {
+    } catch {
       setError("Failed to load time");
     } finally {
       setLoading(false);
