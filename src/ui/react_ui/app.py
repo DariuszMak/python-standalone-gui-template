@@ -1,6 +1,7 @@
 import os
-import uvicorn
 from pathlib import Path
+
+import uvicorn
 from litestar import Litestar
 from litestar.static_files import StaticFilesConfig
 
