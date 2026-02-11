@@ -10,7 +10,7 @@ export function Now() {
     setError(null);
 
     try {
-      const r = await fetch("http://localhost:8000/time"); // direct call
+      const r = await fetch("http://localhost:8000/time");
 
       if (!r.ok) {
         throw new Error(`HTTP ${r.status}`);
