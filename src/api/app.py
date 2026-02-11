@@ -7,13 +7,17 @@ from src.api.routes import current_time, ping
 from src.config.config import Config
 
 cors_config = CORSConfig(
-    allow_origins=["http://127.0.0.1:8003", "http://127.0.0.1:8004"],
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_origins=["*"],
+    allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=True,
 )
 
-openapi_config = OpenAPIConfig(title="My API", version="0.1.0", description="API documentation for my service")
+openapi_config = OpenAPIConfig(
+    title="My API",
+    version="0.1.0",
+    description="API documentation for my service",
+)
 
 app = Litestar(
     route_handlers=[ping, current_time],
