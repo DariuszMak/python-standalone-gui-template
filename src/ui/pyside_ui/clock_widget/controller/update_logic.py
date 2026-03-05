@@ -18,6 +18,6 @@ def update_clock_hands(
     current_values = (current.second, current.minute, current.hour)
     target_values = (target.second, target.minute, target.hour)
 
-    updated = [strategy.update(c, t) for c, t, strategy in zip(current_values, target_values, strategies)]
+    updated = [strategy.update(c, t) for c, t, strategy in zip(current_values, target_values, strategies, strict=True)]
 
     return ClockHands(*updated)
