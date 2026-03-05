@@ -23,6 +23,18 @@ def test_pid_update() -> None:
     assert output2 == pytest.approx(expected)
 
 
+def test_pid_reset() -> None:
+    pid = PID(kp=1.0, ki=0.1, kd=0.5)
+    pid.update(1.0)
+    pid.update(0.5)
+    assert pid.integral != 0.0
+    assert pid.prev_error != 0.0
+
+    pid.reset()
+    assert pid.integral == 0.0
+    assert pid.prev_error == 0.0
+
+
 def test_clock_hands_reset() -> None:
     hands = ClockHands(second=10.5, minute=20.3, hour=5.7)
     assert hands.second == 10.5
