@@ -14,8 +14,6 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-
-
 class ClockController:
     def __init__(self, start_time: datetime) -> None:
         self.start_time = start_time
