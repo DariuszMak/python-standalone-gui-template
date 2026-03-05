@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import math
 from datetime import datetime, time, timedelta
+from src.ui.pyside_ui.clock_widget.model.helpers import clock_hands_in_radians
+
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QPointF
@@ -18,8 +20,8 @@ def polar_to_cartesian(center: QPointF, length: float, angle_radians: float) -> 
     return QPointF(x, y)
 
 
-def convert_clock_pid_to_cartesian(clock_pid: ClockAngles, center: QPointF, radius: float) -> HandsPosition:
-    second_polar, minute_polar, hour_polar = clock_pid.angles_in_radians()
+def convert_clock_pid_to_cartesian(clock_hands: ClockHands, center: QPointF, radius: float) -> HandsPosition:
+    second_polar, minute_polar, hour_polar = clock_hands_in_radians(clock_hands)
 
     second_hand_cartesian = polar_to_cartesian(center, radius * 0.9, second_polar)
     minute_hand_cartesian = polar_to_cartesian(center, radius * 0.7, minute_polar)
