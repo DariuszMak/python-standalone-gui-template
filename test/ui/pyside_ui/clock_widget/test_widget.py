@@ -12,9 +12,9 @@ def test_clock_widget_runs() -> None:
     widget.show()
 
     before = (
-        widget.controller.clock_angles.clock_hands_angles.second,
-        widget.controller.clock_angles.clock_hands_angles.minute,
-        widget.controller.clock_angles.clock_hands_angles.hour,
+        widget.controller.clock_hands.second,
+        widget.controller.clock_hands.minute,
+        widget.controller.clock_hands.hour,
     )
 
     end_time = time.time() + 0.1
@@ -22,9 +22,9 @@ def test_clock_widget_runs() -> None:
         app.processEvents()
 
     after = (
-        widget.controller.clock_angles.clock_hands_angles.second,
-        widget.controller.clock_angles.clock_hands_angles.minute,
-        widget.controller.clock_angles.clock_hands_angles.hour,
+        widget.controller.clock_hands.second,
+        widget.controller.clock_hands.minute,
+        widget.controller.clock_hands.hour,
     )
 
     assert before != after
