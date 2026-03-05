@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 from src.ui.pyside_ui.clock_widget.controller.update_logic import update_clock_hands
 from src.ui.pyside_ui.clock_widget.model.clock_angles import ClockAngles
 from src.ui.pyside_ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
 from src.ui.pyside_ui.clock_widget.view.helpers import calculate_clock_hands_angles
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 logger = logging.getLogger(__name__)
 

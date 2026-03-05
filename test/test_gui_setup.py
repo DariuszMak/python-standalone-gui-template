@@ -46,6 +46,7 @@ def example_moc_content_qrc() -> str:
 </RCC>
 """
 
+
 @pytest.fixture(scope="session")
 def app() -> QCoreApplication:
     app = QApplication.instance()
@@ -117,7 +118,6 @@ def test_create_moc_error_when_create_ui_content_for_qrc(temp_dir: str, example_
 
     with pytest.raises(Exception, match=r"Mocking UI file failed!.*example\.ui"):
         create_moc(temp_dir, "example.ui", UiExtensions.QRC)
-
 
 
 def test_startup_size(main_window: MainWindow) -> None:
