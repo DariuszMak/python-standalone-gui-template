@@ -1,16 +1,13 @@
 import math
 
-from src.ui.pyside_ui.clock_widget.model.data_types import ClockHands
-
-import math
-
 import pytest
 
+from src.ui.pyside_ui.clock_widget.model.data_types import ClockHands
 from src.ui.pyside_ui.clock_widget.model.pid import PID
+
 
 def approx_eq(a: float, b: float, epsilon: float = 1e-10) -> bool:
     return abs(a - b) < epsilon
-
 
 
 def test_pid_update() -> None:
@@ -41,7 +38,6 @@ def test_clock_hands_reset() -> None:
     assert hands.minute == 20.3
     assert hands.hour == 5.7
 
-    # Reset manually
     hands.second = 0.0
     hands.minute = 0.0
     hands.hour = 0.0

@@ -1,21 +1,10 @@
 import math
 from datetime import UTC, datetime, timedelta
 
-from PySide6.QtCore import QPointF
-
-from src.ui.pyside_ui.clock_widget.model.data_types import ClockHands
-from src.ui.pyside_ui.clock_widget.view.helpers import (
-    calculate_clock_hands_angles,
-    convert_clock_pid_to_cartesian,
-    format_datetime,
-    polar_to_cartesian,
-)
-import math
-from datetime import UTC, datetime, timedelta
-
 import pytest
 from PySide6.QtCore import QPointF
 
+from src.ui.pyside_ui.clock_widget.model.data_types import ClockHands
 from src.ui.pyside_ui.clock_widget.view.helpers import (
     calculate_clock_hands_angles,
     convert_clock_pid_to_cartesian,
