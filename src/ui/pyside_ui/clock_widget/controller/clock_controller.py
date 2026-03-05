@@ -2,55 +2,44 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime
-from typing import TYPE_CHECKING
 
+from src.ui.pyside_ui.clock_widget.controller.update_logic import update_clock_hands
 from src.ui.pyside_ui.clock_widget.model.clock_angles import ClockAngles
 from src.ui.pyside_ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
 from src.ui.pyside_ui.clock_widget.view.helpers import calculate_clock_hands_angles
 
 logger = logging.getLogger(__name__)
 
-if TYPE_CHECKING:
-    from datetime import datetime
-
-    from src.ui.pyside_ui.clock_widget.model.data_types import ClockHands
-
 
 class ClockController:
-    def __init__(
-        self,
-        start_time: datetime,
-    ) -> None:
+    def __init__(self, start_time: datetime) -> None:
         self.start_time = start_time
 
-        self.second_strategy = PIDMovementStrategy(0.15, 0.005, 0.005)
-        self.minute_strategy = PIDMovementStrategy(0.08, 0.004, 0.004)
-        self.hour_strategy = PIDMovementStrategy(0.08, 0.002, 0.002)
+        self.strategies = (
+            PIDMovementStrategy(0.15, 0.005, 0.005),
+            PIDMovementStrategy(0.08, 0.004, 0.004),
+            PIDMovementStrategy(0.08, 0.002, 0.002),
+        )
 
         self.clock_angles = ClockAngles(0.0, 0.0, 0.0)
 
     def update(self, now: datetime) -> None:
         duration = now - self.start_time
-        calculated_clock_hands_angles: ClockHands = calculate_clock_hands_angles(self.start_time, duration)
+        target = calculate_clock_hands_angles(self.start_time, duration)
 
-        self.clock_angles.clock_hands_angles.second = self.second_strategy.update(
-            self.clock_angles.clock_hands_angles.second, calculated_clock_hands_angles.second
+        updated = update_clock_hands(
+            self.clock_angles.clock_hands_angles,
+            target,
+            self.strategies,
         )
-        self.clock_angles.clock_hands_angles.minute = self.minute_strategy.update(
-            self.clock_angles.clock_hands_angles.minute, calculated_clock_hands_angles.minute
-        )
-        self.clock_angles.clock_hands_angles.hour = self.hour_strategy.update(
-            self.clock_angles.clock_hands_angles.hour, calculated_clock_hands_angles.hour
-        )
+
+        self.clock_angles.clock_hands_angles = updated
 
     def reset(self, new_start_time: datetime) -> None:
         self.start_time = new_start_time
         self.clock_angles.reset()
-        for strategy in (
-            self.second_strategy,
-            self.minute_strategy,
-            self.hour_strategy,
-        ):
+
+        for strategy in self.strategies:
             try:
                 strategy.reset()
             except Exception as e:
