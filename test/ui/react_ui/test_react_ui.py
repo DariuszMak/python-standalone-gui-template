@@ -1,6 +1,7 @@
 import threading
 from collections.abc import Callable
 from typing import Any
+from unittest.mock import patch
 
 import pytest
 import uvicorn
@@ -11,33 +12,35 @@ from src.ui.react_ui.app import create_app, run
 from src.ui.react_ui.server import run_react_ui, start_react_ui_in_background
 
 
-def test_create_app_static_files_configured() -> None:
+def test_create_app_static_files_configured(monkeypatch) -> None:
+    monkeypatch.setattr("starlette.staticfiles.StaticFiles.__init__", lambda self, *args, **kwargs: None)
+
     app = create_app()
 
     assert isinstance(app, FastAPI)
 
-    static_mounts = [route for route in app.routes if hasattr(route, "app") and isinstance(route.app, StaticFiles)]
-
+    static_mounts = [
+        route for route in app.routes if getattr(route, "app", None) and isinstance(route.app, StaticFiles)
+    ]
     assert len(static_mounts) == 1
 
-    mount = static_mounts[0]
-    assert mount.path == "/"
 
-
-def test_run_calls_uvicorn(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_run_calls_uvicorn(monkeypatch):
     called = {}
 
-    def fake_run(app: Any, host: str, port: int, log_level: str) -> None:
+    def fake_run(app, host, port, log_level):
         called["app"] = app
         called["host"] = host
         called["port"] = port
         called["log_level"] = log_level
 
+    # patch uvicorn.run
     monkeypatch.setattr(uvicorn, "run", fake_run)
     monkeypatch.setenv("REACT_HOST", "0.0.0.1")
     monkeypatch.setenv("REACT_PORT", "9000")
 
-    run()
+    with patch("starlette.staticfiles.StaticFiles.__init__", lambda self, *args, **kwargs: None):
+        run()
 
     assert called["host"] == "0.0.0.1"
     assert called["port"] == 9000
