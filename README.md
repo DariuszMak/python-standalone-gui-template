@@ -86,9 +86,9 @@ $env:REACT_HOST="127.0.0.1" ;
 $env:REACT_PORT="8002"
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 Start-Sleep -Seconds 20 ; 
-Start-Process "http://localhost:8000/openapi.json" ; 
-Start-Process "http://localhost:8000/redoc" ; 
-Start-Process "http://localhost:8000/docs" ; 
+Start-Process "http://127.0.0.1:8000/openapi.json" ; 
+Start-Process "http://127.0.0.1:8000/redoc" ; 
+Start-Process "http://127.0.0.1:8000/docs" ; 
 Start-Process "http://127.0.0.1:8001" ; 
 Start-Process "http://127.0.0.1:8002" ; 
 
@@ -163,9 +163,9 @@ $env:REACT_HOST="127.0.0.1" ;
 $env:REACT_PORT="8002"
 Start-Process .\releases\windows\GUI_client.exe ; 
 Start-Sleep -Seconds 25 ; 
-Start-Process "http://localhost:8000/openapi.json" ; 
-Start-Process "http://localhost:8000/redoc" ; 
-Start-Process "http://localhost:8000/docs" ; 
+Start-Process "http://127.0.0.1:8000/openapi.json" ; 
+Start-Process "http://127.0.0.1:8000/redoc" ; 
+Start-Process "http://127.0.0.1:8000/docs" ; 
 Start-Process "http://127.0.0.1:8001" ; 
 Start-Process "http://127.0.0.1:8002" ; 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json --bail ; 
@@ -187,9 +187,9 @@ Start-Process wsl -ArgumentList @(
      ./releases/linux/GUI_client'
 )
 Start-Sleep -Seconds 25 ; 
-Start-Process "http://localhost:8003/openapi.json" ; 
-Start-Process "http://localhost:8003/redoc" ; 
-Start-Process "http://localhost:8003/docs" ; 
+Start-Process "http://127.0.0.1:8003/openapi.json" ; 
+Start-Process "http://127.0.0.1:8003/redoc" ; 
+Start-Process "http://127.0.0.1:8003/docs" ; 
 Start-Process "http://127.0.0.1:8004" ; 
 Start-Process "http://127.0.0.1:8005" ; 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Linux.postman_environment.json --bail ; 
