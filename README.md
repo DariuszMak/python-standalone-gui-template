@@ -86,8 +86,9 @@ $env:REACT_HOST="127.0.0.1" ;
 $env:REACT_PORT="8002"
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 Start-Sleep -Seconds 20 ; 
-Start-Process "http://127.0.0.1:8000/schema/redoc" ; 
-Start-Process "http://127.0.0.1:8000/schema/swagger" ; 
+Start-Process "http://localhost:8000/openapi.json" ; 
+Start-Process "http://localhost:8000/redoc" ; 
+Start-Process "http://localhost:8000/docs" ; 
 Start-Process "http://127.0.0.1:8001" ; 
 Start-Process "http://127.0.0.1:8002" ; 
 
