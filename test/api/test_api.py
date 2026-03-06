@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 
 import httpx
 import pytest
-from litestar.testing import TestClient
+from fastapi.testclient import TestClient
 
 from src.api.app import app
 from src.api.models import ServerTimeResponse
@@ -11,14 +11,14 @@ from src.api.time_client import TimeClient
 
 def test_redoc_available() -> None:
     with TestClient(app) as client:
-        resp = client.get("/schema/redoc")
+        resp = client.get("/redoc")
         assert resp.status_code == 200
         assert "html" in resp.headers["content-type"]
 
 
 def test_swagger_ui_available() -> None:
     with TestClient(app) as client:
-        resp = client.get("/schema/swagger")
+        resp = client.get("/docs")
         assert resp.status_code == 200
         assert "html" in resp.headers["content-type"]
 

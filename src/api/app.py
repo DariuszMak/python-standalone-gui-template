@@ -1,29 +1,26 @@
 import uvicorn
-from litestar import Litestar
-from litestar.config.cors import CORSConfig
-from litestar.openapi.config import OpenAPIConfig
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.routes import current_time, ping
 from src.config.config import Config
 
-cors_config = CORSConfig(
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-    allow_credentials=True,
-)
-
-openapi_config = OpenAPIConfig(
+app = FastAPI(
     title="My API",
     version="0.1.0",
     description="API documentation for my service",
 )
 
-app = Litestar(
-    route_handlers=[ping, current_time],
-    openapi_config=openapi_config,
-    cors_config=cors_config,
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
+
+app.include_router(ping)
+app.include_router(current_time)
 
 
 def run_api() -> None:

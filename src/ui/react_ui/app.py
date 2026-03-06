@@ -2,26 +2,25 @@ import os
 from pathlib import Path
 
 import uvicorn
-from litestar import Litestar
-from litestar.static_files import StaticFilesConfig
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 
-def create_app() -> Litestar:
+def create_app() -> FastAPI:
     dist_dir = Path(__file__).parent / "dist"
 
-    return Litestar(
-        static_files_config=[
-            StaticFilesConfig(
-                path="/",
-                directories=[dist_dir],
-                html_mode=True,
-            )
-        ],
+    app = FastAPI()
+
+    app.mount(
+        "/",
+        StaticFiles(directory=dist_dir, html=True),
+        name="static",
     )
+
+    return app
 
 
 def run() -> None:
-
     host = os.getenv("REACT_HOST", "127.0.0.1")
     port = int(os.getenv("REACT_PORT", "8000"))
 

@@ -3,8 +3,8 @@ import threading
 from pathlib import Path
 
 import uvicorn
-from litestar import Litestar
-from litestar.static_files import StaticFilesConfig
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from src import STATIC_CATALGUE_NAME
 from src.config.config import Config
@@ -14,14 +14,12 @@ if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
 else:
     STATIC_DIR = Path(__file__).parent / STATIC_CATALGUE_NAME
 
-app = Litestar(
-    static_files_config=[
-        StaticFilesConfig(
-            path="/",
-            directories=[STATIC_DIR],
-            html_mode=True,
-        )
-    ]
+app = FastAPI()
+
+app.mount(
+    "/",
+    StaticFiles(directory=STATIC_DIR, html=True),
+    name="static",
 )
 
 

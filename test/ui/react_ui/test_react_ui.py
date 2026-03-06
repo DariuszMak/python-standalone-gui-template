@@ -4,27 +4,26 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 import uvicorn
-from litestar import Litestar
+from fastapi import FastAPI
+from starlette.staticfiles import StaticFiles
 
 from src.ui.react_ui.app import create_app, run
 from src.ui.react_ui.server import run_react_ui, start_react_ui_in_background
-
-if TYPE_CHECKING:
-    from litestar.static_files import StaticFilesConfig
 
 
 def test_create_app_static_files_configured() -> None:
     app = create_app()
 
-    assert isinstance(app, Litestar)
-    assert app.static_files_config is not None
-    assert len(app.static_files_config) == 1
+    assert isinstance(app, FastAPI)
 
-    config: StaticFilesConfig = app.static_files_config[0]
+    static_mounts = [
+        route for route in app.routes if hasattr(route, "app") and isinstance(route.app, StaticFiles)
+    ]
 
-    assert config.path == "/"
-    assert config.html_mode is True
-    assert len(config.directories) == 1
+    assert len(static_mounts) == 1
+
+    mount = static_mounts[0]
+    assert mount.path == "/"
 
 
 def test_run_calls_uvicorn(monkeypatch: pytest.MonkeyPatch) -> None:

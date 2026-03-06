@@ -1,8 +1,10 @@
 from datetime import UTC, datetime
 
-from litestar import get
+from fastapi import APIRouter
+
+router = APIRouter()
 
 
-@get("/api/now")
+@router.get("/api/now")
 async def now() -> dict[str, str]:
     return {"now": datetime.now(tz=UTC).isoformat()}

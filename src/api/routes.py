@@ -2,9 +2,11 @@ import logging
 from datetime import datetime
 
 import httpx
-from litestar import get
+from fastapi import APIRouter
 
 logger = logging.getLogger(__name__)
+
+router = APIRouter()
 
 TIME_API_URLS = [
     "https://gettimeapi.dev/v1/time?timezone=UTC",
@@ -12,12 +14,12 @@ TIME_API_URLS = [
 ]
 
 
-@get("/ping")
+@router.get("/ping")
 async def ping() -> dict[str, str]:
     return {"message": "pong"}
 
 
-@get("/time")
+@router.get("/time")
 async def current_time() -> dict[str, str]:
     async with httpx.AsyncClient(timeout=2.0) as client:
         for url in TIME_API_URLS:
