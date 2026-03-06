@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.api.routes import current_time, ping
+from src.api.routes import router
 from src.config.config import Config
 
 app = FastAPI(
@@ -19,8 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(ping)
-app.include_router(current_time)
+app.include_router(router)
 
 
 def run_api() -> None:

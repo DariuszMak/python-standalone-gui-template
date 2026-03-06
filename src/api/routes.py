@@ -1,3 +1,4 @@
+# src/api/routes/time_and_ping.py
 import logging
 from datetime import datetime
 
@@ -5,7 +6,6 @@ import httpx
 from fastapi import APIRouter
 
 logger = logging.getLogger(__name__)
-
 router = APIRouter()
 
 TIME_API_URLS = [
@@ -31,16 +31,7 @@ async def current_time() -> dict[str, str]:
                 datetime_str = data.get("iso8601") or data.get("datetime")
                 if datetime_str:
                     dt = datetime.fromisoformat(datetime_str).astimezone()
-                    local_dt_str = dt.isoformat()
-                    logger.info("Got time from Internet (converted to local): %s", local_dt_str)
-                    return {"datetime": local_dt_str}
-            except httpx.HTTPError as exc:
-                logger.warning(
-                    "Failed to fetch time from Internet (%s), trying next source",
-                    exc.__class__.__name__,
-                )
+                    return {"datetime": dt.isoformat()}
+            except httpx.HTTPError:
                 continue
-
-    local_time = datetime.now().astimezone().isoformat()
-    logger.warning("All remote sources failed, returning system local time: %s", local_time)
-    return {"datetime": local_time}
+    return {"datetime": datetime.now().astimezone().isoformat()}
