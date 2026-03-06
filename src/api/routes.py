@@ -44,7 +44,7 @@ async def current_time() -> dict[str, str]:
 
 
 @router.get("/{full_path:path}", include_in_schema=False)
-async def ignore_noise(full_path: str):
+async def ignore_noise(full_path: str) -> Response:
     if full_path.startswith(".well-known") or full_path.endswith(".map"):
         return Response(status_code=204)
     return Response(status_code=404)
