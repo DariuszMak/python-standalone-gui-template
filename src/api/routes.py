@@ -1,9 +1,10 @@
-# src/api/routes/time_and_ping.py
 import logging
 from datetime import datetime
+from pathlib import Path
 
 import httpx
 from fastapi import APIRouter
+from fastapi.responses import FileResponse
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -35,3 +36,8 @@ async def current_time() -> dict[str, str]:
             except httpx.HTTPError:
                 continue
     return {"datetime": datetime.now().astimezone().isoformat()}
+
+
+@router.get("/favicon.ico", include_in_schema=False)
+async def favicon() -> FileResponse:
+    return FileResponse(Path("src/ui/pyside_ui/forms/icons/images/program_icon.ico"))

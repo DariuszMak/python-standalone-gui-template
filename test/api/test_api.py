@@ -23,6 +23,13 @@ def test_swagger_ui_available() -> None:
         assert "html" in resp.headers["content-type"]
 
 
+def test_favicon() -> None:
+    with TestClient(app) as client:
+        response = client.get("/favicon.ico")
+
+        assert response.status_code == 200
+
+
 def test_ping_route() -> None:
     with TestClient(app) as client:
         response = client.get("/ping")
