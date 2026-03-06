@@ -15,6 +15,11 @@ TIME_API_URLS = [
 ]
 
 
+@router.get("/favicon.ico", include_in_schema=False)
+async def favicon() -> FileResponse:
+    return FileResponse(Path("src/ui/pyside_ui/forms/icons/images/program_icon.ico"))
+
+
 @router.get("/ping")
 async def ping() -> dict[str, str]:
     return {"message": "pong"}
@@ -36,8 +41,3 @@ async def current_time() -> dict[str, str]:
             except httpx.HTTPError:
                 continue
     return {"datetime": datetime.now().astimezone().isoformat()}
-
-
-@router.get("/favicon.ico", include_in_schema=False)
-async def favicon() -> FileResponse:
-    return FileResponse(Path("src/ui/pyside_ui/forms/icons/images/program_icon.ico"))
