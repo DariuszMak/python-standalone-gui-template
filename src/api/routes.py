@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 
 import httpx
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 from fastapi.responses import FileResponse
 
 logger = logging.getLogger(__name__)
@@ -41,3 +41,10 @@ async def current_time() -> dict[str, str]:
             except httpx.HTTPError:
                 continue
     return {"datetime": datetime.now().astimezone().isoformat()}
+
+
+@router.get("/{full_path:path}", include_in_schema=False)
+async def ignore_noise(full_path: str):
+    if full_path.startswith(".well-known") or full_path.endswith(".map"):
+        return Response(status_code=204)
+    return Response(status_code=404)
