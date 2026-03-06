@@ -1,6 +1,7 @@
 import os
 import sys
 import threading
+from collections.abc import Awaitable, Callable
 from pathlib import Path
 
 import uvicorn
@@ -12,20 +13,20 @@ from src.config.config import Config
 
 
 def create_app() -> FastAPI:
-    # Determine static directory
+
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
         static_dir = Path(sys._MEIPASS) / STATIC_CATALGUE_NAME
     else:
         static_dir = Path(__file__).parent / STATIC_CATALGUE_NAME
 
     app = FastAPI()
-
-    # Mount React static files
     app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
 
-    # Middleware to silence noisy requests
     @app.middleware("http")
-    async def ignore_noise_requests(request: Request, call_next):
+    async def ignore_noise_requests(
+        request: Request,
+        call_next: Callable[[Request], Awaitable[Response]],
+    ) -> Response:
         path = request.url.path
         if path.startswith("/.well-known") or path.endswith(".map"):
             return Response(status_code=204)
@@ -34,22 +35,23 @@ def create_app() -> FastAPI:
     return app
 
 
-# Single FastAPI app instance
 app = create_app()
 
 
 def run_react_ui(host: str | None = None, port: int | None = None) -> None:
-    host = host or os.getenv("REACT_HOST", "127.0.0.1")
-    port = port or int(os.getenv("REACT_PORT", "8000"))
-
-    uvicorn.run(app, host=host, port=port, log_level="info")
+    host_str: str = host or os.getenv("REACT_HOST", "127.0.0.1")
+    port_int: int = port or int(os.getenv("REACT_PORT", "8000"))
+    uvicorn.run(app, host=host_str, port=port_int, log_level="info")
 
 
 def start_react_ui_in_background() -> None:
-    config = Config.from_env()
+    config: Config = Config.from_env()
+    host: str = config.panel_host or "127.0.0.1"
+    port: int = config.react_port or 8000
+
     thread = threading.Thread(
         target=run_react_ui,
-        args=(config.panel_host, config.react_port),
+        args=(host, port),
         daemon=True,
     )
     thread.start()
