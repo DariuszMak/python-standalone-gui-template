@@ -9,6 +9,12 @@ from src.api.models import ServerTimeResponse
 from src.api.time_client import TimeClient
 
 
+def test_chrome_devtools_json_not_found() -> None:
+    with TestClient(app) as client:
+        response = client.get("/.well-known/appspecific/com.chrome.devtools.json")
+        assert response.status_code == 204
+
+
 def test_redoc_available() -> None:
     with TestClient(app) as client:
         resp = client.get("/redoc")
