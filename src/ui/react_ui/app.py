@@ -39,7 +39,7 @@ app = create_app()
 
 
 def run_react_ui(host: str | None = None, port: int | None = None) -> None:
-    host_str: str = host or os.getenv("REACT_HOST", "127.0.0.1")
+    host_str: str = str(host or os.getenv("REACT_HOST") or "127.0.0.1")
     port_int: int = port or int(os.getenv("REACT_PORT", "8000"))
     uvicorn.run(app, host=host_str, port=port_int, log_level="info")
 
