@@ -1,6 +1,6 @@
 import threading
 from collections.abc import Callable
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import pytest
 import uvicorn
@@ -16,9 +16,7 @@ def test_create_app_static_files_configured() -> None:
 
     assert isinstance(app, FastAPI)
 
-    static_mounts = [
-        route for route in app.routes if hasattr(route, "app") and isinstance(route.app, StaticFiles)
-    ]
+    static_mounts = [route for route in app.routes if hasattr(route, "app") and isinstance(route.app, StaticFiles)]
 
     assert len(static_mounts) == 1
 
