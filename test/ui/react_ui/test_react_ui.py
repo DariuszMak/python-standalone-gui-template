@@ -24,9 +24,9 @@ def test_create_app_static_files_configured(monkeypatch: pytest.MonkeyPatch) -> 
 
 
 def test_run_calls_uvicorn(monkeypatch: pytest.MonkeyPatch) -> None:
-    called = {}
+    called: dict[str, Any] = {}
 
-    def fake_run(app, host, port, log_level):
+    def fake_run(app: FastAPI, host: str, port: int, log_level: str) -> None:
         called["app"] = app
         called["host"] = host
         called["port"] = port
