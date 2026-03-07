@@ -1,9 +1,9 @@
 import asyncio
 import logging
-from PySide6.QtWidgets import QSystemTrayIcon
 
 from PySide6.QtCore import QEasingCurve, QEvent, QObject, QPropertyAnimation, Qt, QTimer
 from PySide6.QtGui import QCloseEvent, QGuiApplication, QKeyEvent, QResizeEvent
+from PySide6.QtWidgets import QSystemTrayIcon
 
 from src.api.models import ServerTimeResponse
 from src.api.time_client import TimeClient
@@ -35,7 +35,8 @@ class MainWindow(DraggableMainWindow):
 
         config = Config.from_env()
         self._time_client = TimeClient(config.api_base_url)
-    
+
+        self.tray: TrayManager | None
         if QSystemTrayIcon.isSystemTrayAvailable():
             self.tray = TrayManager(self)
         else:
@@ -47,7 +48,10 @@ class MainWindow(DraggableMainWindow):
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setFocus()
 
-        self.setMinimumSize(MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE, MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE)
+        self.setMinimumSize(
+            MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE,
+            MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE,
+        )
         self.resize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT)
 
         self.ui.pushButton.setText("Click to open dialog window")
@@ -70,9 +74,6 @@ class MainWindow(DraggableMainWindow):
         self.installEventFilter(self)
 
         if fetch_server_time:
-            config = Config.from_env()
-            self._time_client = TimeClient(config.api_base_url)
-
             try:
                 loop = asyncio.get_running_loop()
             except RuntimeError:
@@ -101,6 +102,7 @@ class MainWindow(DraggableMainWindow):
     def fade_in_animation(self) -> None:
         if not self._supports_opacity:
             return
+
         self.setWindowOpacity(0.0)
         self.anim = QPropertyAnimation(self, b"windowOpacity")
         self.anim.setDuration(600)
@@ -113,6 +115,7 @@ class MainWindow(DraggableMainWindow):
         if not self._supports_opacity:
             self._final_close()
             return
+
         self.anim = QPropertyAnimation(self, b"windowOpacity")
         self.anim.setDuration(ANIMATION_DURATION)
         self.anim.setStartValue(0.9)
@@ -140,7 +143,9 @@ class MainWindow(DraggableMainWindow):
         self._is_maximized = not self._is_maximized
 
     def resizeEvent(self, event: QResizeEvent) -> None:  # noqa: N802
-        min_width, min_height = MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE, MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE
+        min_width = MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE
+        min_height = MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE
+
         new_width = max(event.size().width(), min_width)
         new_height = max(event.size().height(), min_height)
 
@@ -153,15 +158,15 @@ class MainWindow(DraggableMainWindow):
         if event.type() == QEvent.Type.LanguageChange:
             self.ui.retranslateUi(self)  # type: ignore[no-untyped-call]
 
-        elif event.type() == QEvent.Type.WindowStateChange and self.isMinimized():
-            if self.tray:
-                QTimer.singleShot(0, self._hide_to_tray)
+        elif event.type() == QEvent.Type.WindowStateChange and self.isMinimized() and self.tray:
+            QTimer.singleShot(0, self._hide_to_tray)
 
         super().changeEvent(event)
 
     def _hide_to_tray(self) -> None:
         if not self.tray:
             return
+
         self.hide()
         self.tray.notify_hidden()
 
@@ -189,3 +194,4 @@ class MainWindow(DraggableMainWindow):
     def _final_close(self) -> None:
         self._is_closing = True
         super().close()
+        
