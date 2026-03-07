@@ -35,8 +35,10 @@ class MainWindow(DraggableMainWindow):
         config = Config.from_env()
         self._time_client = TimeClient(config.api_base_url)
 
-        self.tray = TrayManager(self)
-
+        if QSystemTrayIcon.isSystemTrayAvailable() and platform.system() != "Linux":
+            self.tray = TrayManager(self)
+        else:
+            self.tray = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)  # type: ignore[no-untyped-call]
         StyleLoader.style_window(self)
@@ -150,14 +152,17 @@ class MainWindow(DraggableMainWindow):
             self.ui.retranslateUi(self)  # type: ignore[no-untyped-call]
 
         elif event.type() == QEvent.Type.WindowStateChange and self.isMinimized():
-            QTimer.singleShot(0, self._hide_to_tray)
+            if self.tray is not None:
+                QTimer.singleShot(0, self._hide_to_tray)
 
         super().changeEvent(event)
 
     def _hide_to_tray(self) -> None:
+        if self.tray is None:
+            return
         self.hide()
         self.tray.notify_hidden()
-
+        
     def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802
         if self._supports_opacity and not self._is_closing:
             logger.info("Closing main window...")
