@@ -1,10 +1,10 @@
 import asyncio
 import logging
-from sys import platform
-from PySide6.QtWidgets import QSystemTrayIcon
+import platform  # fixed: import module, not string
 
 from PySide6.QtCore import QEasingCurve, QEvent, QObject, QPropertyAnimation, Qt, QTimer
 from PySide6.QtGui import QCloseEvent, QGuiApplication, QKeyEvent, QResizeEvent
+from PySide6.QtWidgets import QSystemTrayIcon
 
 from src.api.models import ServerTimeResponse
 from src.api.time_client import TimeClient
@@ -31,12 +31,12 @@ class MainWindow(DraggableMainWindow):
 
         self._supports_opacity = QGuiApplication.platformName().lower() not in ["wayland", "xcb"]
         self._is_closing = False
-
         self._server_time_task: asyncio.Task[None] | None = None
 
         config = Config.from_env()
         self._time_client = TimeClient(config.api_base_url)
 
+        self.tray: TrayManager | None
         if QSystemTrayIcon.isSystemTrayAvailable() and platform.system() != "Linux":
             self.tray = TrayManager(self)
         else:
