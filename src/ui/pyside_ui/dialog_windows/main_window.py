@@ -1,5 +1,7 @@
 import asyncio
 import logging
+from sys import platform
+from PySide6.QtWidgets import QSystemTrayIcon
 
 from PySide6.QtCore import QEasingCurve, QEvent, QObject, QPropertyAnimation, Qt, QTimer
 from PySide6.QtGui import QCloseEvent, QGuiApplication, QKeyEvent, QResizeEvent
@@ -151,9 +153,8 @@ class MainWindow(DraggableMainWindow):
         if event.type() == QEvent.Type.LanguageChange:
             self.ui.retranslateUi(self)  # type: ignore[no-untyped-call]
 
-        elif event.type() == QEvent.Type.WindowStateChange and self.isMinimized():
-            if self.tray is not None:
-                QTimer.singleShot(0, self._hide_to_tray)
+        elif event.type() == QEvent.Type.WindowStateChange and self.isMinimized() and self.tray is not None:
+            QTimer.singleShot(0, self._hide_to_tray)
 
         super().changeEvent(event)
 
@@ -162,7 +163,7 @@ class MainWindow(DraggableMainWindow):
             return
         self.hide()
         self.tray.notify_hidden()
-        
+
     def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802
         if self._supports_opacity and not self._is_closing:
             logger.info("Closing main window...")
