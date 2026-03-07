@@ -150,14 +150,13 @@ class MainWindow(DraggableMainWindow):
             self.ui.retranslateUi(self)  # type: ignore[no-untyped-call]
         if event.type() == event.Type.WindowStateChange and self.isMinimized():
             self.tray.hide()
+            self.tray.notify_hidden()
         super().changeEvent(event)
 
     def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802
         if self._supports_opacity and not self._is_closing:
             logger.info("Closing main window...")
             event.ignore()
-            self.tray.hide()
-            self.tray.notify_hidden()
             self.clock_widget.reset()
             self.fade_out_animation()
         else:
