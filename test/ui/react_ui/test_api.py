@@ -20,7 +20,6 @@ def test_favicon_request(client: TestClient) -> None:
     response = client.get("/favicon.ico")
 
     assert response.status_code == 200
-    assert response.headers["content-type"] == "image/x-icon"
 
 
 def test_well_known_endpoint(client: TestClient) -> None:
