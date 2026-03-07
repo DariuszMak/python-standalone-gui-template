@@ -147,7 +147,7 @@ class MainWindow(DraggableMainWindow):
 
     def changeEvent(self, event: QEvent) -> None:  # noqa: N802
         if event.type() == QEvent.Type.LanguageChange:
-            self.ui.retranslateUi(self)
+            self.ui.retranslateUi(self)  # type: ignore[no-untyped-call]
 
         elif event.type() == QEvent.Type.WindowStateChange and self.isMinimized():
             QTimer.singleShot(0, self._hide_to_tray)
