@@ -1,13 +1,11 @@
-import sys
-import pytest
 from PySide6.QtCore import QEvent, Qt
-from PySide6.QtWidgets import QSystemTrayIcon
+import pytest
 from pytestqt.qtbot import QtBot
 
 from src.ui.pyside_ui.dialog_windows.main_window import MainWindow
 
-def test_minimize_hides_window_to_tray(qtbot: QtBot, monkeypatch) -> None:
-    # Patch window.tray to a dummy object if system tray unavailable
+
+def test_minimize_hides_window_to_tray(qtbot: QtBot, monkeypatch: pytest.MonkeyPatch) -> None:
     class DummyTray:
         def notify_hidden(self) -> None:
             called["notify"] = True
@@ -23,7 +21,6 @@ def test_minimize_hides_window_to_tray(qtbot: QtBot, monkeypatch) -> None:
     else:
         monkeypatch.setattr(window.tray, "notify_hidden", lambda: called.update({"notify": True}))
 
-    # Minimize and trigger event
     window.setWindowState(Qt.WindowState.WindowMinimized)
     event = QEvent(QEvent.Type.WindowStateChange)
     window.changeEvent(event)
