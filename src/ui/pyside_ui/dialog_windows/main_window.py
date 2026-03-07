@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from PySide6.QtCore import QEasingCurve, QEvent, QObject, QPropertyAnimation, QTimer, Qt
+from PySide6.QtCore import QEasingCurve, QEvent, QObject, QPropertyAnimation, Qt, QTimer
 from PySide6.QtGui import QCloseEvent, QGuiApplication, QKeyEvent, QResizeEvent
 
 from src.api.models import ServerTimeResponse
@@ -149,12 +149,10 @@ class MainWindow(DraggableMainWindow):
         if event.type() == QEvent.Type.LanguageChange:
             self.ui.retranslateUi(self)
 
-        elif event.type() == QEvent.Type.WindowStateChange:
-            if self.isMinimized():
-                QTimer.singleShot(0, self._hide_to_tray)
+        elif event.type() == QEvent.Type.WindowStateChange and self.isMinimized():
+            QTimer.singleShot(0, self._hide_to_tray)
 
         super().changeEvent(event)
-
 
     def _hide_to_tray(self) -> None:
         self.hide()
