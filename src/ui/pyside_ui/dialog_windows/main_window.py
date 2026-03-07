@@ -194,4 +194,3 @@ class MainWindow(DraggableMainWindow):
     def _final_close(self) -> None:
         self._is_closing = True
         super().close()
-        

@@ -1,4 +1,3 @@
-
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from PySide6.QtCore import QEvent, Qt
