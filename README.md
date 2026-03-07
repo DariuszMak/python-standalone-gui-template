@@ -198,96 +198,6 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 uv sync --dev --locked --no-cache ; 
 ```
 
-## Particular code snippets
-
-Make sure, that everything is committed or stashed and (optionally):
-
-```commandline
-git reset --hard HEAD ; 
-git clean -x -d -f ; 
-```
-
-#### Install Python 3.11:
-
-```commandline
-uv python install 3.11 ; 
-uv python pin 3.11 ; 
-```
-
-##### Run the application (compile mocks) from Docker
-
-```commandline
-docker system df ; 
-docker stop $(docker ps -a -q) ; 
-docker rm $(docker ps -a -q) ; 
-docker system prune -a ; 
-docker system df ; 
-
-docker-compose run --build app ; 
-```
-
-##### Setup local environment and install dependencies
-
-```commandline 
-uv self update ; 
-uv cache clean ; 
-uv python pin 3.11 ; 
-uv sync --dev --no-cache ; 
-uv lock ; 
-```
-
-##### Docker should compile ```ui``` files, but as an alternative you can do it manually
-
-```commandline
-.venv\Scripts\Activate.ps1 ; 
-$env:PYTHONPATH="." ; 
-
-uv run python src\gui_setup.py ; 
-```
-
-### Running application natively
-
-```commandline
-.venv\Scripts\Activate.ps1 ; 
-$env:PYTHONPATH="." ; 
-
-uv run python src\main.py ; 
-```
-
-### Running executable application via PyInstaller (generate UI forms before !!!)
-
-In order to generate executable application, run:
-```commandline
-.venv\Scripts\Activate.ps1 ; 
-$env:PYTHONPATH="." ; 
-
-uv run pyinstaller --clean .\scripts\standalone_build_windows.spec ; 
-```
-
-
-## Run tests:
-
-```commandline
-uv run pytest test/ -vv ; 
-```
-
-Run tests with coverage report:
-
-```commandline
-uv run pytest test/ --cov=. -vv ; 
-```
-
-Run tests in Docker:
-```commandline
-docker-compose run app sh -c "uv sync --dev --locked --no-cache  && uv run pytest test/ --cov=src -vv" ; 
-```
-
-Run Newman tests from saved collection (run application before execution):
-```commandline
-newman run collections\Python_GUI_API.postman_collection.json ; 
-```
-
-
 ## Edit `ui` forms with QT Designer:
 
 ```commandline
@@ -295,50 +205,7 @@ uv run pyqt6-tools designer src\ui\pyside_ui\forms\main_window.ui ;
 uv run pyqt6-tools designer src\ui\pyside_ui\forms\warning_dialog.ui ; 
 ```
 
-
-## Code linting
-
-```commandline
-.venv\Scripts\Activate.ps1 ; 
-$env:PYTHONPATH="." ; 
-
-clear ; 
-
-uv run pip-audit ; 
-uv run ruff check test src --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run ruff format --check test src --exclude 'moc_.*\.py|files_rc\.py' ; 
-
-uv run mypy --strict test src --exclude 'moc_.*\.py|files_rc\.py' ; 
-
-# uv run mypy --explicit-package-bases test src --exclude 'moc_.*\.py|files_rc\.py' ; 
-# uv run mypy --explicit-package-bases --check-untyped-defs test src --exclude 'moc_.*\.py|files_rc\.py' ; 
-# uv run mypy --strict test src ; 
-```
-
-
-## Code autoformat
-
-```commandline
-.venv\Scripts\Activate.ps1 ; 
-$env:PYTHONPATH="." ; 
-
-clear ; 
-
-uv run ruff format test src --exclude 'moc_.*\.py|files_rc\.py' ; 
-
-uv run ruff check --fix test src --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run ruff check --fix --unsafe-fixes test src --exclude 'moc_.*\.py|files_rc\.py' ; 
-uv run ruff check --fix --select I test src --exclude 'moc_.*\.py|files_rc\.py' ; 
-```
-
-## Running Docker container service
-
-##### Build and run
-```commandline
-docker-compose run --build app ; 
-```
-
-## GUI files specification
+### GUI files specification
 
 <mark>.qrc</mark> - resources file edited in QT Designer
 
