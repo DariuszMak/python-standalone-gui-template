@@ -36,11 +36,7 @@ class MainWindow(DraggableMainWindow):
         config = Config.from_env()
         self._time_client = TimeClient(config.api_base_url)
 
-        self.tray: TrayManager | None
-        if QSystemTrayIcon.isSystemTrayAvailable():
-            self.tray = TrayManager(self)
-        else:
-            self.tray = None
+        self.tray: TrayManager | None = None
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)  # type: ignore[no-untyped-call]
@@ -141,6 +137,12 @@ class MainWindow(DraggableMainWindow):
         else:
             self.showMaximized()
         self._is_maximized = not self._is_maximized
+
+    def showEvent(self, event):
+        super().showEvent(event)
+
+        if self.tray is None and QSystemTrayIcon.isSystemTrayAvailable():
+            self.tray = TrayManager(self)
 
     def resizeEvent(self, event: QResizeEvent) -> None:  # noqa: N802
         min_width = MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE

@@ -22,6 +22,7 @@ def test_minimize_hides_window_to_tray(qtbot: QtBot, monkeypatch: MonkeyPatch) -
     def fake_notify() -> None:
         called["notify"] = True
 
+    assert window.tray is not None
     monkeypatch.setattr(window.tray, "notify_hidden", fake_notify)
 
     window.setWindowState(Qt.WindowState.WindowMinimized)
