@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from PySide6.QtWidgets import QSystemTrayIcon
 
 from PySide6.QtCore import QEasingCurve, QEvent, QObject, QPropertyAnimation, Qt, QTimer
 from PySide6.QtGui import QCloseEvent, QGuiApplication, QKeyEvent, QResizeEvent
@@ -34,8 +35,11 @@ class MainWindow(DraggableMainWindow):
 
         config = Config.from_env()
         self._time_client = TimeClient(config.api_base_url)
-
-        self.tray = TrayManager(self)
+    
+        if QSystemTrayIcon.isSystemTrayAvailable():
+            self.tray = TrayManager(self)
+        else:
+            self.tray = None
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)  # type: ignore[no-untyped-call]
@@ -150,11 +154,14 @@ class MainWindow(DraggableMainWindow):
             self.ui.retranslateUi(self)  # type: ignore[no-untyped-call]
 
         elif event.type() == QEvent.Type.WindowStateChange and self.isMinimized():
-            QTimer.singleShot(0, self._hide_to_tray)
+            if self.tray:
+                QTimer.singleShot(0, self._hide_to_tray)
 
         super().changeEvent(event)
 
     def _hide_to_tray(self) -> None:
+        if not self.tray:
+            return
         self.hide()
         self.tray.notify_hidden()
 
