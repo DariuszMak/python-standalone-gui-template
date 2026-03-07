@@ -14,11 +14,11 @@ from src.ui.pyside_ui import (
     MAINWINDOW_RESIZE_RANGE,
     MAINWINDOW_WIDTH,
 )
-from src.ui.pyside_ui.tray_manager import TrayManager
 from src.ui.pyside_ui.clock_widget.view.clock_widget import ClockWidget
 from src.ui.pyside_ui.dialog_windows.draggable_main_window import DraggableMainWindow
 from src.ui.pyside_ui.dialog_windows.warning_dialog import WarningDialog
 from src.ui.pyside_ui.forms.moc_main_window import Ui_MainWindow
+from src.ui.pyside_ui.tray_manager import TrayManager
 
 logger = logging.getLogger(__name__)
 
@@ -148,9 +148,8 @@ class MainWindow(DraggableMainWindow):
     def changeEvent(self, event: QEvent) -> None:  # noqa: N802
         if event.type() == QEvent.Type.LanguageChange:
             self.ui.retranslateUi(self)  # type: ignore[no-untyped-call]
-        if event.type() == event.Type.WindowStateChange:
-            if self.isMinimized():
-                self.tray.hide()
+        if event.type() == event.Type.WindowStateChange and self.isMinimized():
+            self.tray.hide()
         super().changeEvent(event)
 
     def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802
