@@ -201,8 +201,8 @@ uv sync --dev --locked --no-cache ;
 ## Edit `ui` forms with QT Designer:
 
 ```commandline
-uv run pyqt6-tools designer src\ui\pyside_ui\forms\main_window.ui ; 
-uv run pyqt6-tools designer src\ui\pyside_ui\forms\warning_dialog.ui ; 
+uv run pyside6-designer src\ui\pyside_ui\forms\main_window.ui ; 
+uv run pyside6-designer src\ui\pyside_ui\forms\warning_dialog.ui ; 
 ```
 
 ### GUI files specification
