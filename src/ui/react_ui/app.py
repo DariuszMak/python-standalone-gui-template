@@ -6,6 +6,7 @@ from pathlib import Path
 
 import uvicorn
 from fastapi import FastAPI, Request, Response
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from src import STATIC_CATALGUE_NAME
@@ -20,6 +21,11 @@ def create_app() -> FastAPI:
         static_dir = Path(__file__).parent / STATIC_CATALGUE_NAME
 
     app = FastAPI()
+
+    @app.get("/favicon.ico", include_in_schema=False)
+    async def favicon() -> FileResponse:
+        return FileResponse(Path("src/ui/pyside_ui/forms/icons/images/program_icon.ico"))
+
     app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
 
     @app.middleware("http")
