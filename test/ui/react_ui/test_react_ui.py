@@ -11,7 +11,6 @@ from src.ui.react_ui.app import app, create_app, run_react_ui, start_react_ui_in
 
 
 def test_create_app_static_files_configured(monkeypatch: pytest.MonkeyPatch) -> None:
-    # patch StaticFiles init to avoid actually accessing disk
     monkeypatch.setattr("starlette.staticfiles.StaticFiles.__init__", lambda _self, *_args, **_kwargs: None)
 
     test_app = create_app()
