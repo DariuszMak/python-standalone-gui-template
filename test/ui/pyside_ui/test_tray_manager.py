@@ -1,4 +1,5 @@
 import sys
+
 import pytest
 from PySide6.QtCore import QEvent, Qt
 from PySide6.QtWidgets import QSystemTrayIcon
@@ -7,7 +8,7 @@ from pytestqt.qtbot import QtBot
 from src.ui.pyside_ui.dialog_windows.main_window import MainWindow
 
 
-def test_minimize_hides_window_to_tray(qtbot: QtBot, monkeypatch) -> None:
+def test_minimize_hides_window_to_tray(qtbot: QtBot, monkeypatch: pytest.MonkeyPatch) -> None:
     if not QSystemTrayIcon.isSystemTrayAvailable() or sys.platform.startswith("linux"):
         pytest.skip("System tray not available on this platform, skipping hide-to-tray test")
 
