@@ -81,12 +81,8 @@ uv run pytest test/ --cov=src -vv ;
 
 ########## RUN APPLICATION LOCALLY
 
-$env:API_HOST="127.0.0.1" ; 
-$env:API_PORT="8000" ; 
-$env:PANEL_HOST="127.0.0.1" ; 
-$env:PANEL_PORT="8001" ; 
-$env:REACT_HOST="127.0.0.1" ; 
-$env:REACT_PORT="8002"
+Get-Content dev.env | ForEach-Object { if ($_ -match '^\s*([^=]+?)\s*=\s*"?([^"]*)"?') { [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], [System.EnvironmentVariableTarget]::Process) } else { Write-Warning "Invalid entry: '$_'" } } ; 
+
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 Start-Sleep -Seconds 20 ; 
 Start-Process "http://127.0.0.1:8000/openapi.json" ; 
@@ -161,12 +157,8 @@ rm -r -fo .\dist, .\build ;
 
 ########## RUN APPLICATIONS LOCALLY
 
-$env:API_HOST="127.0.0.1" ; 
-$env:API_PORT="8000" ; 
-$env:PANEL_HOST="127.0.0.1" ; 
-$env:PANEL_PORT="8001" ; 
-$env:REACT_HOST="127.0.0.1" ; 
-$env:REACT_PORT="8002"
+Get-Content thorough.env | ForEach-Object { if ($_ -match '^\s*([^=]+?)\s*=\s*"?([^"]*)"?') { [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], [System.EnvironmentVariableTarget]::Process) } else { Write-Warning "Invalid entry: '$_'" } } ; 
+
 Start-Process .\releases\windows\GUI_client.exe ; 
 Start-Sleep -Seconds 25 ; 
 Start-Process "http://127.0.0.1:8000/openapi.json" ; 
@@ -184,12 +176,7 @@ Start-Process wsl -ArgumentList @(
     'bash', '-c',
     'export DISPLAY=$(grep nameserver /etc/resolv.conf | awk "{print \$2}"):0 && \
      export QT_QPA_PLATFORM=wayland && \
-     export API_HOST=127.0.0.1 && \
-     export API_PORT=8003 && \
-     export PANEL_HOST=127.0.0.1 && \
-     export PANEL_PORT=8004 && \
-     export REACT_HOST=127.0.0.1 && \
-     export REACT_PORT=8005 && \
+     set -a && source thorough.env && set +a && \
      ./releases/linux/GUI_client'
 )
 Start-Sleep -Seconds 25 ; 
