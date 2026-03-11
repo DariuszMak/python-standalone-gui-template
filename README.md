@@ -42,11 +42,14 @@ clear ;
 $ports = 8000, 8001, 8002
 
 foreach ($port in $ports) {
-    $conn = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
-    if ($conn) {
-        $pid = $conn.OwningProcess
-        Write-Host "Port $port is used by PID $pid. Killing..."
-        Stop-Process -Id $pid -Force
+    $conns = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
+    if ($conns) {
+        $conns | Select-Object -ExpandProperty OwningProcess -Unique |
+            Where-Object { $_ -gt 0 } |
+            ForEach-Object {
+                Write-Host "Port $port is used by PID $_. Killing..."
+                Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue
+            }
     } else {
         Write-Host "No process is using port $port."
     }
@@ -106,11 +109,14 @@ clear ;
 $ports = 8000, 8001, 8002, 8003, 8004, 8005
 
 foreach ($port in $ports) {
-    $conn = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
-    if ($conn) {
-        $pid = $conn.OwningProcess
-        Write-Host "Port $port is used by PID $pid. Killing..."
-        Stop-Process -Id $pid -Force
+    $conns = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
+    if ($conns) {
+        $conns | Select-Object -ExpandProperty OwningProcess -Unique |
+            Where-Object { $_ -gt 0 } |
+            ForEach-Object {
+                Write-Host "Port $port is used by PID $_. Killing..."
+                Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue
+            }
     } else {
         Write-Host "No process is using port $port."
     }
