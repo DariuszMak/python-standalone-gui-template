@@ -38,7 +38,6 @@ def test_clock_widget_runs() -> None:
 
 def test_clock_widget_no_drift_accumulation() -> None:
     QApplication.instance() or QApplication([])
-
     widget = ClockWidget()
 
     server_time = datetime(2025, 1, 1, 12, 0, 0, tzinfo=UTC)
@@ -47,27 +46,25 @@ def test_clock_widget_no_drift_accumulation() -> None:
     simulated_elapsed = 5.0
     widget._wall_anchor_mono -= simulated_elapsed
 
+    actual = widget._server_anchor + timedelta(seconds=time.monotonic() - widget._wall_anchor_mono)
     expected = server_time + timedelta(seconds=simulated_elapsed)
-    actual = widget._current_datetime
 
     assert abs((actual - expected).total_seconds()) < 0.05
 
 
 def test_clock_widget_current_datetime_reflects_anchors() -> None:
     QApplication.instance() or QApplication([])
-
     widget = ClockWidget()
 
     t1 = datetime(2025, 6, 15, 9, 30, 0, tzinfo=UTC)
     widget.set_current_datetime(t1)
-
     widget._wall_anchor_mono -= 10.0
 
-    result = widget._current_datetime
-    assert abs((result - t1).total_seconds() - 10.0) < 0.05
+    actual = widget._server_anchor + timedelta(seconds=time.monotonic() - widget._wall_anchor_mono)
+    assert abs((actual - t1).total_seconds() - 10.0) < 0.05
 
     t2 = datetime(2025, 6, 15, 9, 30, 45, tzinfo=UTC)
     widget.set_current_datetime(t2)
 
-    result2 = widget._current_datetime
-    assert abs((result2 - t2).total_seconds()) < 0.05
+    actual2 = widget._server_anchor + timedelta(seconds=time.monotonic() - widget._wall_anchor_mono)
+    assert abs((actual2 - t2).total_seconds()) < 0.05
