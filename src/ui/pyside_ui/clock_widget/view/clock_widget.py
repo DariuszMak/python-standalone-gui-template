@@ -31,12 +31,12 @@ class ClockWidget(QWidget):
         self._server_anchor: datetime = datetime(1970, 1, 1, tzinfo=UTC)
         self._wall_anchor_mono: float = time.monotonic()
 
-        self.current_datetime: datetime = self._server_anchor
-        self.controller = ClockController(self.current_datetime)
+        self._current_datetime: datetime = self._server_anchor
+        self._controller = ClockController(self._current_datetime)
 
     def on_tick(self) -> None:
-        self.current_datetime = self._server_anchor + timedelta(seconds=time.monotonic() - self._wall_anchor_mono)
-        self.controller.update(self.current_datetime)
+        self._current_datetime = self._server_anchor + timedelta(seconds=time.monotonic() - self._wall_anchor_mono)
+        self._controller.update(self._current_datetime)
         self.update()
 
     def set_current_datetime(self, dt: datetime) -> None:
@@ -45,14 +45,14 @@ class ClockWidget(QWidget):
         self.reset()
 
     def reset(self) -> None:
-        self.controller.reset(self.current_datetime)
+        self._controller.reset(self._current_datetime)
         self.update()
 
     def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802, ARG002
         painter = Painter(self)
 
         center, radius, font_size = painter.paint_clock_face(self.rect, self.palette)
-        hands_position = convert_clock_pid_to_cartesian(self.controller.clock_hands, center, radius)
+        hands_position = convert_clock_pid_to_cartesian(self._controller.clock_hands, center, radius)
 
         painter.paint_hands(center, hands_position)
-        painter.paint_current_time(self.current_datetime, center, radius, font_size)
+        painter.paint_current_time(self._current_datetime, center, radius, font_size)
