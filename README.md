@@ -69,7 +69,7 @@ uv lock ;
 ########## STATIC ANALYSIS & TESTS
 
 .venv\Scripts\Activate.ps1 ; 
-$env:PYTHONPATH="." ; 
+Get-Content dev.env | ForEach-Object { if ($_ -match '^\s*([^=]+?)\s*=\s*"?([^"]*)"?') { [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], [System.EnvironmentVariableTarget]::Process) } else { Write-Warning "Invalid entry: '$_'" } } ; 
 
 uv run python src\gui_setup.py ; 
 uv run python src\node_setup.py ; 
@@ -80,8 +80,6 @@ uv run python src\node_setup.py ;
 uv run pytest test/ --cov=src -vv ; 
 
 ########## RUN APPLICATION LOCALLY
-
-Get-Content dev.env | ForEach-Object { if ($_ -match '^\s*([^=]+?)\s*=\s*"?([^"]*)"?') { [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], [System.EnvironmentVariableTarget]::Process) } else { Write-Warning "Invalid entry: '$_'" } } ; 
 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 Start-Sleep -Seconds 20 ; 
