@@ -49,7 +49,8 @@ libdbus-1-3 \
 binutils \
 libgssapi-krb5-2 \
 libssl-dev \
-libqt5network5
+libqt5network5 \
+dos2unix
 
 RUN apt-get update \
  && apt-get install -y curl \

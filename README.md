@@ -144,6 +144,7 @@ $env:PYTHONPATH="." ;
 
 uv run pytest test/ --cov=src -vv ; 
 docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest test/ --cov=src" ; 
+docker-compose run app sh -c "dos2unix thorough.env" ; 
 
 uv sync --no-dev --locked --no-cache ; 
 
