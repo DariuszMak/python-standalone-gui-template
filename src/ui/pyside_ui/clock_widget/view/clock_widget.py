@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+import time
 from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING
 
@@ -28,17 +28,18 @@ class ClockWidget(QWidget):
         self._timer.timeout.connect(self._tick_subject.notify)
         self._timer.start(self.duration)
 
-        self.current_datetime = datetime(1970, 1, 1, tzinfo=UTC)
+        self._server_anchor: datetime = datetime(1970, 1, 1, tzinfo=UTC)
+        self._wall_anchor_mono: float = time.monotonic()
         self.controller = ClockController(self.current_datetime)
 
     def on_tick(self) -> None:
-        self.current_datetime = self.current_datetime + timedelta(milliseconds=self.duration)
-
+        self.current_datetime = self._server_anchor + timedelta(seconds=time.monotonic() - self._wall_anchor_mono)
         self.controller.update(self.current_datetime)
         self.update()
-
-    def set_current_datetime(self, datetime: datetime) -> None:
-        self.current_datetime = datetime
+        
+    def set_current_datetime(self, dt: datetime) -> None:
+        self._server_anchor = dt
+        self._wall_anchor_mono = time.monotonic()
         self.reset()
 
     def reset(self) -> None:
