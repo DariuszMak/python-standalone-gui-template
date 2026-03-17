@@ -123,6 +123,7 @@ def test_circled_clock_hands_angles_after_month() -> None:
     assert angles.minute == pytest.approx(53346.016, rel=1e-5)
     assert angles.hour == pytest.approx(889.1003, rel=1e-5)
 
+
 def test_clock_hands_angles_from_epoch_to_recent_date() -> None:
     epoch = datetime(1970, 1, 1, 0, 0, 0, tzinfo=UTC)
     recent = datetime(2025, 4, 27, 15, 30, 45, tzinfo=UTC)
@@ -133,15 +134,15 @@ def test_clock_hands_angles_from_epoch_to_recent_date() -> None:
 
     total_seconds = duration.total_seconds()
     total_minutes = total_seconds / 60.0
-    total_hours   = total_seconds / 3600.0
+    total_hours = total_seconds / 3600.0
 
     assert angles.second == pytest.approx(total_seconds, rel=1e-9)
     assert angles.minute == pytest.approx(total_minutes, rel=1e-9)
-    assert angles.hour   == pytest.approx(total_hours,   rel=1e-9)
+    assert angles.hour == pytest.approx(total_hours, rel=1e-9)
 
-    assert angles.second > 60.0 * 1_000_000   
-    assert angles.minute > 60.0 * 10_000      
-    assert angles.hour   > 12.0 * 1_000       
+    assert angles.second > 60.0 * 1_000_000
+    assert angles.minute > 60.0 * 10_000
+    assert angles.hour > 12.0 * 1_000
 
 
 def test_format_datetime() -> None:
