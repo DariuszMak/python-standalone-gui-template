@@ -3,7 +3,7 @@ import threading
 from panel.io.server import serve
 
 from src.config.config import Config
-from src.ui.panel_ui.time_panel import layout
+from src.ui.panel_ui.time_panel import create_layout
 
 
 def run_panel() -> None:
@@ -11,7 +11,7 @@ def run_panel() -> None:
 
     serve(
         {
-            "/": layout,
+            "/": create_layout,
         },
         address=config.panel_host,
         port=config.panel_port,

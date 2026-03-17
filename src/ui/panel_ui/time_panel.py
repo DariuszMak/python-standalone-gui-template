@@ -7,6 +7,25 @@ from src.config.config import Config
 
 pn.extension()
 
+def create_layout() -> pn.Column:
+    _time_display = pn.pane.Markdown("No data", sizing_mode="stretch_width")
+    _button = pn.widgets.Button(name="Fetch time from API", button_type="primary")
+
+    async def _fetch() -> None:
+        try:
+            _time_display.object = "Loading..."
+            dt = await fetch_time()
+            _time_display.object = f"Server time: `{dt}`"
+        except Exception as exc:
+            _time_display.object = f"Error: `{exc}`"
+
+    def on_click(_: object) -> None:
+        pn.state.execute(_fetch)
+
+    _button.on_click(on_click)
+    pn.state.onload(lambda: pn.state.execute(_fetch))  # działa, bo jesteśmy już w sesji
+
+    return pn.Column("# Server Time", _button, _time_display, width=400)
 
 async def fetch_time() -> str:
     config = Config.from_env()
@@ -43,6 +62,7 @@ def on_click(_: object) -> None:
 
 button.on_click(on_click)
 
+
 async def _auto_fetch() -> None:
     try:
         time_display.object = "Loading..."
@@ -54,11 +74,5 @@ async def _auto_fetch() -> None:
 
 pn.state.onload(lambda: pn.state.execute(_auto_fetch))
 
-layout = pn.Column(
-    "# Server Time",
-    button,
-    time_display,
-    width=400,
-)
 
-layout.servable()
+
