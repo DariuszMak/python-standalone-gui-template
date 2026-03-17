@@ -43,6 +43,17 @@ def on_click(_: object) -> None:
 
 button.on_click(on_click)
 
+async def _auto_fetch() -> None:
+    try:
+        time_display.object = "Loading..."
+        dt = await fetch_time()
+        time_display.object = f"Server time: `{dt}`"
+    except Exception as exc:
+        time_display.object = f"Error: `{exc}`"
+
+
+pn.state.onload(lambda: pn.state.execute(_auto_fetch))
+
 layout = pn.Column(
     "# Server Time",
     button,
