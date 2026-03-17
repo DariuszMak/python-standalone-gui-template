@@ -1,13 +1,17 @@
 import asyncio
 from collections.abc import Callable, Coroutine
 from typing import cast
+
 import panel as pn
 import pytest
 import respx
 from httpx import HTTPStatusError, Response
 
 from src.ui.panel_ui import time_panel
-from src.ui.panel_ui.time_panel import fetch_time, time_display
+from src.ui.panel_ui.time_panel import fetch_time
+
+from src.ui.panel_ui import time_panel
+from src.ui.panel_ui.time_panel import fetch_time 
 
 
 @pytest.mark.asyncio
@@ -62,8 +66,8 @@ def test_on_click_success(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(pn.state, "onload", lambda _: None)
 
     col = time_panel.create_layout()
-    _button = cast(pn.widgets.Button, col[1])
-    _time_display = cast(pn.pane.Markdown, col[2])
+    _button = cast("pn.widgets.Button", col[1])
+    _time_display = cast("pn.pane.Markdown", col[2])
 
     assert _time_display.object == "No data"
 
@@ -81,8 +85,13 @@ def test_on_click_error(monkeypatch: pytest.MonkeyPatch) -> None:
 
     monkeypatch.setattr(time_panel, "fetch_time", fake_fetch_time)
     monkeypatch.setattr(pn.state, "execute", immediate_execute)
+    monkeypatch.setattr(pn.state, "onload", lambda _: None)
 
-    time_panel.on_click(object())
+    col = time_panel.create_layout()
+    _button = cast("pn.widgets.Button", col[1])
+    _time_display = cast("pn.pane.Markdown", col[2])
 
-    assert "Error:" in time_display.object
-    assert "boom" in time_display.object
+    _button.clicks += 1
+
+    assert "Error:" in _time_display.object
+    assert "boom" in _time_display.object

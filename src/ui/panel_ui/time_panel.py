@@ -27,8 +27,11 @@ def create_layout() -> pn.Column:
     def on_click(_: object) -> None:
         pn.state.execute(_fetch)
 
+    def _on_load() -> None:
+        pn.state.execute(_fetch)
+
     _button.on_click(on_click)
-    pn.state.onload(lambda _: pn.state.execute(_fetch))
+    pn.state.onload(_on_load)
 
     return pn.Column("# Server Time", _button, _time_display, width=400)
 
