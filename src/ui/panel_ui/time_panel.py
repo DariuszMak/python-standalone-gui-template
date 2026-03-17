@@ -7,6 +7,7 @@ from src.config.config import Config
 
 pn.extension()
 
+
 def create_layout() -> pn.Column:
     _time_display = pn.pane.Markdown("No data", sizing_mode="stretch_width")
     _button = pn.widgets.Button(name="Fetch time from API", button_type="primary")
@@ -26,6 +27,7 @@ def create_layout() -> pn.Column:
     pn.state.onload(lambda: pn.state.execute(_fetch))  # działa, bo jesteśmy już w sesji
 
     return pn.Column("# Server Time", _button, _time_display, width=400)
+
 
 async def fetch_time() -> str:
     config = Config.from_env()
@@ -73,6 +75,3 @@ async def _auto_fetch() -> None:
 
 
 pn.state.onload(lambda: pn.state.execute(_auto_fetch))
-
-
-
