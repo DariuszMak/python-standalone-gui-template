@@ -10,9 +10,6 @@ from httpx import HTTPStatusError, Response
 from src.ui.panel_ui import time_panel
 from src.ui.panel_ui.time_panel import fetch_time
 
-from src.ui.panel_ui import time_panel
-from src.ui.panel_ui.time_panel import fetch_time 
-
 
 @pytest.mark.asyncio
 async def test_fetch_time_success(monkeypatch: pytest.MonkeyPatch) -> None:
