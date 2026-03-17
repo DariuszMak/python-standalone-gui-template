@@ -1,6 +1,6 @@
 import asyncio
 from collections.abc import Callable, Coroutine
-
+from typing import cast
 import panel as pn
 import pytest
 import respx
@@ -62,8 +62,8 @@ def test_on_click_success(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(pn.state, "onload", lambda _: None)
 
     col = time_panel.create_layout()
-    _button = col[1]
-    _time_display = col[2]
+    _button = cast(pn.widgets.Button, col[1])
+    _time_display = cast(pn.pane.Markdown, col[2])
 
     assert _time_display.object == "No data"
 
