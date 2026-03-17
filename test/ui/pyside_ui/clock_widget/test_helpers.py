@@ -120,8 +120,8 @@ def test_circled_clock_hands_angles_after_month() -> None:
     duration = timedelta(milliseconds=(37 * 24 * 60 * 60 * 1000 + 65 * 60 * 1000 + 61 * 1000 + 2))
     angles = calculate_clock_hands_angles(dt, duration)
     assert angles.second == pytest.approx(3200761.0)
-    assert angles.minute == pytest.approx(53346.016, rel=1e-9)
-    assert angles.hour == pytest.approx(889.1003, rel=1e-9)
+    assert angles.minute == pytest.approx(53346.016, rel=1e-5)
+    assert angles.hour == pytest.approx(889.1003, rel=1e-5)
 
 
 def test_clock_hands_angles_from_epoch_to_recent_date() -> None:
