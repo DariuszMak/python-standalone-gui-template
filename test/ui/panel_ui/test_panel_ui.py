@@ -59,7 +59,7 @@ def test_on_click_success(monkeypatch: pytest.MonkeyPatch) -> None:
 
     monkeypatch.setattr(time_panel, "fetch_time", fake_fetch_time)
     monkeypatch.setattr(pn.state, "execute", immediate_execute)
-    monkeypatch.setattr(pn.state, "onload", lambda fn: None)  
+    monkeypatch.setattr(pn.state, "onload", lambda _: None)
 
     col = time_panel.create_layout()
     _button = col[1]
@@ -67,7 +67,7 @@ def test_on_click_success(monkeypatch: pytest.MonkeyPatch) -> None:
 
     assert _time_display.object == "No data"
 
-    _button.clicks += 1 
+    _button.clicks += 1
 
     assert _time_display.object == "Server time: `2026-01-25T12:00:00Z`"
 
