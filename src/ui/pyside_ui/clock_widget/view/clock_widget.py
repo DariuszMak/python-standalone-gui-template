@@ -52,7 +52,7 @@ class ClockWidget(QWidget):
         painter = Painter(self)
 
         center, radius, font_size = painter.paint_clock_face(self.rect, self.palette)
-        hands_position = convert_clock_pid_to_cartesian(self._controller.clock_hands, center, radius)
+        hands_position = convert_clock_pid_to_cartesian(self._controller._clock_hands, center, radius)
 
         painter.paint_hands(center, hands_position)
         painter.paint_current_time(self._current_datetime, center, radius, font_size)
