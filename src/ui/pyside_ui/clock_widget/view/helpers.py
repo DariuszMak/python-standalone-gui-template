@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import math
-from datetime import datetime, time, timedelta
+from datetime import datetime, time, timedelta, timezone
+from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QPointF
 
@@ -25,9 +26,27 @@ def convert_clock_pid_to_cartesian(clock_hands: ClockHands, center: QPointF, rad
     return HandsPosition(second_hand_cartesian, minute_hand_cartesian, hour_hand_cartesian)
 
 
-def calculate_clock_hands_angles(start_dt: datetime, duration: timedelta) -> ClockHands:
-    midnight = datetime.combine(start_dt.date(), time(0, 0, 0), tzinfo=start_dt.tzinfo)
-    start_ms = int((start_dt - midnight).total_seconds() * 1000)
+def calculate_clock_hands_angles(
+    start_dt: datetime,
+    duration: timedelta,
+    display_tz: timezone | None = None,
+) -> ClockHands:
+    """Calculate clock-hand angles for the given start time and elapsed duration.
+
+    ``display_tz`` controls which timezone is used to determine "local midnight"
+    (i.e. what the clock face should show).  Pass ``timezone.utc`` in tests for
+    deterministic results.  Leave as ``None`` (the default) in production so the
+    clock displays the system's local wall-clock time.
+    """
+    # Convert to the display timezone so the clock face shows local wall time.
+    # Without this, a UTC-anchored datetime on a UTC+1 system would render 1 h behind.
+    if display_tz is not None:
+        local_dt = start_dt.astimezone(display_tz)
+    else:
+        local_dt = start_dt.astimezone()  # system local timezone
+
+    midnight = datetime.combine(local_dt.date(), time(0, 0, 0), tzinfo=local_dt.tzinfo)
+    start_ms = int((local_dt - midnight).total_seconds() * 1000)
     elapsed_ms = int(duration.total_seconds() * 1000)
 
     start_s = start_ms / 1000.0
