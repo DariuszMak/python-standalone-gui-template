@@ -14,22 +14,22 @@ logger = logging.getLogger(__name__)
 class WarningDialog(DraggableDialog):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__()
-        self.ui = Ui_Dialog()
-        self.ui.setupUi(self)  # type: ignore[no-untyped-call]
+        self._ui = Ui_Dialog()
+        self._ui.setupUi(self)  # type: ignore[no-untyped-call]
         StyleLoader.style_window(self)
 
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
-        self.ui.btn_close.clicked.connect(self.close)
+        self._ui.btn_close.clicked.connect(self.close)
         StyleLoader.center_window(self, parent)
 
         pixmap = QPixmap(":/logos/icons/images/warning.png")
-        self.ui.label_warning.setPixmap(pixmap.scaled(40, 40, Qt.AspectRatioMode.KeepAspectRatio))
+        self._ui.label_warning.setPixmap(pixmap.scaled(40, 40, Qt.AspectRatioMode.KeepAspectRatio))
 
     def changeEvent(self, event: QEvent) -> None:  # noqa: N802
         if event.type() == QEvent.Type.LanguageChange:
-            self.ui.retranslateUi(self)  # type: ignore[no-untyped-call]
+            self._ui.retranslateUi(self)  # type: ignore[no-untyped-call]
         super().changeEvent(event)
 
     def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802

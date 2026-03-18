@@ -57,16 +57,16 @@ def test_time_route() -> None:
 class MockResponse:
     def __init__(self, json_data: dict[str, str], status_code: int = 200) -> None:
         self._json_data = json_data
-        self.status_code = status_code
+        self._status_code = status_code
 
     def json(self) -> dict[str, str]:
         return self._json_data
 
     def raise_for_status(self) -> None:
-        if self.status_code >= 400:
+        if self._status_code >= 400:
             request = httpx.Request("GET", "http://testserver/time")
             response = httpx.Response(
-                status_code=self.status_code,
+                status_code=self._status_code,
                 request=request,
             )
             raise httpx.HTTPStatusError(

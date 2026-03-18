@@ -124,8 +124,8 @@ class MainWindow(DraggableMainWindow):
 
     def show_warning_dialog(self) -> None:
         dlg = WarningDialog(self)
-        dlg.ui.label_title_bar_top.setText("Warning title")
-        dlg.ui.label_info.setText("Warning message")
+        dlg._ui.label_title_bar_top.setText("Warning title")
+        dlg._ui.label_info.setText("Warning message")
 
         if dlg.exec_():
             logger.info("Accepted")

@@ -13,10 +13,10 @@ class DummyObserver(TickObserver):
 
 class DummyObserverAlt(TickObserver):
     def __init__(self) -> None:
-        self.value = 0
+        self._value = 0
 
     def on_tick(self) -> None:
-        self.value += 5
+        self._value += 5
 
 
 def test_single_observer_receives_ticks() -> None:
@@ -41,7 +41,7 @@ def test_multiple_observers_receive_ticks() -> None:
     subject.notify()
 
     assert obs1.count == 1
-    assert obs2.value == 5
+    assert obs2._value == 5
 
 
 def test_unsubscribed_observer_no_longer_receives_ticks() -> None:
