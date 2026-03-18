@@ -6,11 +6,11 @@ from src.ui.pyside_ui.clock_widget.model.strategies.movement_strategy import Mov
 
 class PIDMovementStrategy(MovementStrategy):
     def __init__(self, kp: float, ki: float, kd: float) -> None:
-        self.pid = PID(kp=kp, ki=ki, kd=kd)
+        self._pid = PID(kp=kp, ki=ki, kd=kd)
 
     def update(self, current_value: float, target_value: float) -> float:
         error = target_value - current_value
-        return current_value + self.pid.update(error)
+        return current_value + self._pid.update(error)
 
     def reset(self) -> None:
-        self.pid.reset()
+        self._pid.reset()

@@ -5,7 +5,7 @@ from src.ui.pyside_ui.clock_widget.model.strategies.movement_strategy import Mov
 
 class EasingMovementStrategy(MovementStrategy):
     def __init__(self, factor: float = 0.1) -> None:
-        self.factor = float(factor)
+        self._factor = float(factor)
 
     def update(self, current_value: float, target_value: float) -> float:
-        return current_value + (target_value - current_value) * self.factor
+        return current_value + (target_value - current_value) * self._factor
