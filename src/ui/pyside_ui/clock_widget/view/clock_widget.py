@@ -20,14 +20,14 @@ class ClockWidget(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
-        self.duration = 15
+        self._duration = 15
 
         self._tick_subject = TickEventSubject()
         self._tick_subject.subscribe(self)
 
         self._timer: QTimer = QTimer(self)
         self._timer.timeout.connect(self._tick_subject.notify)
-        self._timer.start(self.duration)
+        self._timer.start(self._duration)
         self._server_anchor: datetime = datetime(1970, 1, 1, tzinfo=UTC)
         self._wall_anchor_mono: float = time.monotonic()
 
