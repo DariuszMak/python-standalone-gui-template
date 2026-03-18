@@ -1,5 +1,3 @@
-
-
 import math
 from datetime import UTC, datetime, timedelta, timezone
 
@@ -13,10 +11,6 @@ from src.ui.pyside_ui.clock_widget.view.helpers import (
     format_datetime,
     polar_to_cartesian,
 )
-
-
-
-
 
 
 def test_polar_to_cartesian_zero_angle() -> None:
@@ -47,12 +41,6 @@ def test_polar_to_cartesian_180_degrees() -> None:
     res = polar_to_cartesian(QPointF(0.0, 0.0), length, angle)
     assert abs(res.x() - 0.0) < 1e-5
     assert abs(res.y() - 10.0) < 1e-5
-
-
-
-
-
-
 
 
 def test_midnight_clock_hands_angles() -> None:
@@ -157,26 +145,17 @@ def test_clock_hands_angles_from_epoch_to_recent_date() -> None:
     assert angles.hour > 12.0 * 1_000
 
 
-
-
-
-
-
-
-
-
-
 def test_timezone_utc_plus1_shows_local_hour() -> None:
     """UTC 14:30 in UTC+1 should display as 15:30 (hour angle ≈ 3.5)."""
     tz_plus1 = timezone(timedelta(hours=1))
-    
+
     local_dt = datetime(2025, 4, 27, 15, 30, 0, tzinfo=tz_plus1)
 
     angles = calculate_clock_hands_angles(local_dt, timedelta(0), display_tz=tz_plus1)
 
     assert angles.second == pytest.approx(0.0)
     assert angles.minute == pytest.approx(30.0)
-    assert angles.hour == pytest.approx(3.5)  
+    assert angles.hour == pytest.approx(3.5)
 
 
 def test_timezone_utc_and_local_same_instant_differ_by_offset() -> None:
@@ -188,11 +167,10 @@ def test_timezone_utc_and_local_same_instant_differ_by_offset() -> None:
     angles_utc = calculate_clock_hands_angles(utc_dt, timedelta(0), display_tz=UTC)
     angles_local = calculate_clock_hands_angles(local_dt, timedelta(0), display_tz=tz_plus1)
 
-    
     assert angles_utc.hour == pytest.approx(2.5)
-    
+
     assert angles_local.hour == pytest.approx(3.5)
-    
+
     assert angles_local.hour - angles_utc.hour == pytest.approx(1.0)
 
 
@@ -211,14 +189,13 @@ def test_timezone_utc_minus5_shows_local_hour() -> None:
 def test_timezone_utc_offset_does_not_bleed_into_elapsed() -> None:
     """Elapsed time should be unaffected by timezone; only the start offset shifts."""
     tz_plus2 = timezone(timedelta(hours=2))
-    
+
     start_local = datetime(2025, 4, 27, 0, 0, 0, tzinfo=tz_plus2)
-    
+
     duration = timedelta(hours=1)
 
     angles = calculate_clock_hands_angles(start_local, duration, display_tz=tz_plus2)
 
-    
     assert angles.second == pytest.approx(3600.0)
     assert angles.minute == pytest.approx(60.0)
     assert angles.hour == pytest.approx(1.0)
@@ -229,11 +206,8 @@ def test_timezone_noon_in_utc_plus1_is_not_midnight() -> None:
     tz_plus1 = timezone(timedelta(hours=1))
     utc_dt = datetime(2025, 4, 27, 11, 0, 0, tzinfo=UTC)
 
-    
-    
     angles = calculate_clock_hands_angles(utc_dt, timedelta(0), display_tz=tz_plus1)
 
-    
     assert angles.hour == pytest.approx(0.0)
     assert angles.minute == pytest.approx(0.0)
     assert angles.second == pytest.approx(0.0)
@@ -250,24 +224,14 @@ def test_timezone_old_bug_utc_shows_wrong_hour_on_utc_plus1() -> None:
     angles_wrong = calculate_clock_hands_angles(utc_dt, timedelta(0), display_tz=UTC)
     angles_correct = calculate_clock_hands_angles(utc_dt, timedelta(0), display_tz=tz_plus1)
 
-    assert angles_wrong.hour == pytest.approx(2.5)  
-    assert angles_correct.hour == pytest.approx(3.5)  
-
-
-
-
-
+    assert angles_wrong.hour == pytest.approx(2.5)
+    assert angles_correct.hour == pytest.approx(3.5)
 
 
 def test_format_datetime() -> None:
     dt = datetime(2024, 1, 2, 3, 4, 5, 678901, tzinfo=UTC)
     result = format_datetime(dt)
     assert result == "03:04:05.678"
-
-
-
-
-
 
 
 def test_convert_clock_pid_to_cartesian() -> None:
