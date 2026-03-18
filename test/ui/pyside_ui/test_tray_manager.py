@@ -19,7 +19,7 @@ def test_minimize_hides_window_to_tray(qtbot: QtBot, monkeypatch: pytest.MonkeyP
             def notify_hidden(self) -> None:
                 called["notify"] = True
 
-        monkeypatch.setattr(window, "tray", DummyTray())
+        monkeypatch.setattr(window, "_tray", DummyTray())
     else:
         monkeypatch.setattr(window._tray, "notify_hidden", lambda: called.update({"notify": True}))
 
