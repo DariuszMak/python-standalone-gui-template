@@ -5,50 +5,50 @@ from PySide6.QtWidgets import QApplication, QMenu, QSystemTrayIcon, QWidget
 
 class TrayManager:
     def __init__(self, window: QWidget) -> None:
-        self.window = window
-        self.tray_icon = QSystemTrayIcon(window)
+        self._window = window
+        self._tray_icon = QSystemTrayIcon(window)
 
         icon = QIcon(":/logos/icons/images/program_icon.ico")
-        self.tray_icon.setIcon(icon)
+        self._tray_icon.setIcon(icon)
 
-        self.menu = QMenu()
+        self._menu = QMenu()
 
-        self.restore_action = QAction("Restore")
-        self.restore_action.triggered.connect(self.restore)
+        self._restore_action = QAction("Restore")
+        self._restore_action.triggered.connect(self.restore)
 
-        self.quit_action = QAction("Quit")
-        self.quit_action.triggered.connect(self.quit)
+        self._quit_action = QAction("Quit")
+        self._quit_action.triggered.connect(self.quit)
 
-        self.menu.addAction(self.restore_action)
-        self.menu.addSeparator()
-        self.menu.addAction(self.quit_action)
+        self._menu.addAction(self._restore_action)
+        self._menu.addSeparator()
+        self._menu.addAction(self._quit_action)
 
-        self.tray_icon.setContextMenu(self.menu)
-        self.tray_icon.activated.connect(self.icon_activated)
+        self._tray_icon.setContextMenu(self._menu)
+        self._tray_icon.activated.connect(self.icon_activated)
 
-        self.tray_icon.show()
+        self._tray_icon.show()
 
     def restore(self) -> None:
-        self.window.show()
-        self.window.setWindowState(Qt.WindowState.WindowNoState)
-        self.window.activateWindow()
+        self._window.show()
+        self._window.setWindowState(Qt.WindowState.WindowNoState)
+        self._window.activateWindow()
 
     def hide(self) -> None:
-        self.window.hide()
+        self._window.hide()
 
     def quit(self) -> None:
-        self.tray_icon.hide()
+        self._tray_icon.hide()
         QApplication.quit()
 
     def icon_activated(self, reason: QSystemTrayIcon.ActivationReason) -> None:
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
-            if self.window.isVisible():
+            if self._window.isVisible():
                 self.hide()
             else:
                 self.restore()
 
     def notify_hidden(self) -> None:
-        self.tray_icon.showMessage(
+        self._tray_icon.showMessage(
             "Application",
             "Application minimized to tray",
             QSystemTrayIcon.MessageIcon.Information,

@@ -12,10 +12,10 @@ logger = logging.getLogger(__name__)
 
 class TimeClient:
     def __init__(self, base_url: str) -> None:
-        self.base_url = base_url.rstrip("/")
+        self._base_url = base_url.rstrip("/")
 
     async def fetch_time(self) -> ServerTimeResponse:
-        url = f"{self.base_url}/time"
+        url = f"{self._base_url}/time"
 
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
