@@ -36,13 +36,13 @@ class MainWindow(DraggableMainWindow):
         config = Config.from_env()
         self._time_client = TimeClient(config.api_base_url)
 
-        self.tray: TrayManager | None
+        self._tray: TrayManager | None
         if QSystemTrayIcon.isSystemTrayAvailable() and platform.system() != "Linux":
-            self.tray = TrayManager(self)
+            self._tray = TrayManager(self)
         else:
-            self.tray = None
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)  # type: ignore[no-untyped-call]
+            self._tray = None
+        self._ui = Ui_MainWindow()
+        self._ui.setupUi(self)  # type: ignore[no-untyped-call]
         StyleLoader.style_window(self)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setFocus()
@@ -50,17 +50,17 @@ class MainWindow(DraggableMainWindow):
         self.setMinimumSize(MAINWINDOW_WIDTH - MAINWINDOW_RESIZE_RANGE, MAINWINDOW_HEIGHT - MAINWINDOW_RESIZE_RANGE)
         self.resize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT)
 
-        self.ui.pushButton.setText("Click to open dialog window")
-        self.ui.pushButton.clicked.connect(self.show_warning_dialog)
+        self._ui.pushButton.setText("Click to open dialog window")
+        self._ui.pushButton.clicked.connect(self.show_warning_dialog)
 
-        self.ui.btn_minimize.clicked.connect(self.showMinimized)
-        self.ui.btn_maximize_restore.clicked.connect(self.toggle_maximize_restore)
-        self.ui.btn_close.clicked.connect(self.close)
+        self._ui.btn_minimize.clicked.connect(self.showMinimized)
+        self._ui.btn_maximize_restore.clicked.connect(self.toggle_maximize_restore)
+        self._ui.btn_close.clicked.connect(self.close)
 
-        self.clock_widget: ClockWidget = ClockWidget()
-        layout = self.ui.frame_clock_widget.layout()
+        self._clock_widget: ClockWidget = ClockWidget()
+        layout = self._ui.frame_clock_widget.layout()
         if layout is not None:
-            layout.addWidget(self.clock_widget)
+            layout.addWidget(self._clock_widget)
         else:
             logger.warning("frame_clock_widget has no layout set.")
 
@@ -96,7 +96,7 @@ class MainWindow(DraggableMainWindow):
 
     def _apply_server_time(self, server_time: ServerTimeResponse) -> None:
         logger.info("Server datetime received: %s", server_time.datetime.isoformat())
-        self.clock_widget.set_current_datetime(server_time.datetime)
+        self._clock_widget.set_current_datetime(server_time.datetime)
 
     def fade_in_animation(self) -> None:
         if not self._supports_opacity:
@@ -151,24 +151,24 @@ class MainWindow(DraggableMainWindow):
 
     def changeEvent(self, event: QEvent) -> None:  # noqa: N802
         if event.type() == QEvent.Type.LanguageChange:
-            self.ui.retranslateUi(self)  # type: ignore[no-untyped-call]
+            self._ui.retranslateUi(self)  # type: ignore[no-untyped-call]
 
-        elif event.type() == QEvent.Type.WindowStateChange and self.isMinimized() and self.tray is not None:
+        elif event.type() == QEvent.Type.WindowStateChange and self.isMinimized() and self._tray is not None:
             QTimer.singleShot(0, self._hide_to_tray)
 
         super().changeEvent(event)
 
     def _hide_to_tray(self) -> None:
-        if self.tray is None:
+        if self._tray is None:
             return
         self.hide()
-        self.tray.notify_hidden()
+        self._tray.notify_hidden()
 
     def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802
         if self._supports_opacity and not self._is_closing:
             logger.info("Closing main window...")
             event.ignore()
-            self.clock_widget.reset()
+            self._clock_widget.reset()
             self.fade_out_animation()
         else:
             super().closeEvent(event)
