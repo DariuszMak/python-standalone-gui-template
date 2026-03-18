@@ -258,7 +258,7 @@ def test_timezone_old_bug_utc_shows_wrong_hour_on_utc_plus1() -> None:
     angles_wrong = calculate_clock_hands_angles(utc_dt, timedelta(0), display_tz=UTC)
     angles_correct = calculate_clock_hands_angles(utc_dt, timedelta(0), display_tz=tz_plus1)
 
-    assert angles_wrong.hour == pytest.approx(2.5)   # 14:30 UTC → 2.5 (14 % 12)
+    assert angles_wrong.hour == pytest.approx(2.5)  # 14:30 UTC → 2.5 (14 % 12)
     assert angles_correct.hour == pytest.approx(3.5)  # 15:30 local → 3.5
 
 
