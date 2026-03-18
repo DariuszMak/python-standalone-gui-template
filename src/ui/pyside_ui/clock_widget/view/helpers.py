@@ -30,15 +30,6 @@ def calculate_clock_hands_angles(
     duration: timedelta,
     display_tz: timezone | None = None,
 ) -> ClockHands:
-    """Calculate clock-hand angles for the given start time and elapsed duration.
-
-    ``display_tz`` controls which timezone is used to determine "local midnight"
-    (i.e. what the clock face should show).  Pass ``timezone.utc`` in tests for
-    deterministic results.  Leave as ``None`` (the default) in production so the
-    clock displays the system's local wall-clock time.
-    """
-    # Convert to the display timezone so the clock face shows local wall time.
-    # Without this, a UTC-anchored datetime on a UTC+1 system would render 1 h behind.
     local_dt = start_dt.astimezone(display_tz) if display_tz is not None else start_dt.astimezone()
 
     midnight = datetime.combine(local_dt.date(), time(0, 0, 0), tzinfo=local_dt.tzinfo)

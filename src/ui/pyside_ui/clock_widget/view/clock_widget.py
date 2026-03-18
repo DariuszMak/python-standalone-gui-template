@@ -28,9 +28,6 @@ class ClockWidget(QWidget):
         self._timer: QTimer = QTimer(self)
         self._timer.timeout.connect(self._tick_subject.notify)
         self._timer.start(self._duration)
-
-        # Anchor to the real current UTC time so the clock shows local wall time
-        # on first render — not the Unix epoch.
         self._server_anchor: datetime = datetime.now(UTC)
         self._wall_anchor_mono: float = time.monotonic()
 
