@@ -39,10 +39,7 @@ def calculate_clock_hands_angles(
     """
     # Convert to the display timezone so the clock face shows local wall time.
     # Without this, a UTC-anchored datetime on a UTC+1 system would render 1 h behind.
-    if display_tz is not None:
-        local_dt = start_dt.astimezone(display_tz)
-    else:
-        local_dt = start_dt.astimezone()  # system local timezone
+    local_dt = start_dt.astimezone(display_tz) if display_tz is not None else start_dt.astimezone()
 
     midnight = datetime.combine(local_dt.date(), time(0, 0, 0), tzinfo=local_dt.tzinfo)
     start_ms = int((local_dt - midnight).total_seconds() * 1000)
