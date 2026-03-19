@@ -144,12 +144,12 @@ $env:PYTHONPATH="." ;
 
 uv run pytest test/ --cov=src -vv ; 
 docker-compose run app sh -c "dos2unix thorough.env" ; 
-docker-compose run app sh -c "dos2unix scripts/format_and_lint.ps1" ;
-docker-compose run app sh -c "dos2unix src/ui/react_ui/frontend/frontend_format_and_lint.ps1" ;
+docker-compose run app sh -c "cp scripts/format_and_lint.ps1 scripts/format_and_lint.sh ; dos2unix scripts/format_and_lint.sh" ;
+docker-compose run app sh -c "cp src/ui/react_ui/frontend/frontend_format_and_lint.ps1 src/ui/react_ui/frontend/frontend_format_and_lint.sh; dos2unix src/ui/react_ui/frontend/frontend_format_and_lint.sh" ;
 
 .\scripts\format_and_lint.ps1 ; 
-docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run ./scripts/format_and_lint.ps1" ; 
-docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run ./src/ui/react_ui/frontend/frontend_format_and_lint.ps1" ; 
+docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run ./scripts/format_and_lint.sh" ; 
+docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run ./src/ui/react_ui/frontend/frontend_format_and_lint.sh" ; 
 docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest test/ --cov=src" ; 
 
 uv sync --no-dev --locked --no-cache ; 
