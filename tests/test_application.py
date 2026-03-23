@@ -6,7 +6,7 @@ from pytestqt.qtbot import QtBot
 from src.application import create_app
 
 
-def test_create_app_wires_everything(qtbot: QtBot) -> None:  # noqa: ARG001
+def test_create_app_wires_everything(qtbot: QtBot) -> None:
     app = QApplication.instance()
     assert app is not None
 

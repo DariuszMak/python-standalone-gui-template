@@ -56,7 +56,7 @@ def app() -> QCoreApplication:
 
 
 @pytest.fixture
-def main_window(app: QApplication) -> Generator[MainWindow, None, None]:  # noqa: ARG001
+def main_window(app: QApplication) -> Generator[MainWindow, None, None]:
     window = MainWindow()
     window.show()
     yield window

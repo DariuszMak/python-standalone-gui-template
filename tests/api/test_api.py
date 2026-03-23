@@ -80,7 +80,7 @@ class MockResponse:
 async def test_fetch_time(monkeypatch: pytest.MonkeyPatch) -> None:
     iso_time = "2025-01-01T10:15:30"
 
-    async def mock_get(self: httpx.AsyncClient, url: str) -> MockResponse:  # noqa: ARG001
+    async def mock_get(self: httpx.AsyncClient, url: str) -> MockResponse:
         return MockResponse({"datetime": iso_time})
 
     monkeypatch.setattr(httpx.AsyncClient, "get", mock_get)
@@ -103,7 +103,7 @@ async def test_time_route_remote(monkeypatch: pytest.MonkeyPatch) -> None:
         def raise_for_status(self) -> None:
             return None
 
-    async def mock_get(self: httpx.AsyncClient, url: str) -> MockResponse:  # noqa: ARG001
+    async def mock_get(self: httpx.AsyncClient, url: str) -> MockResponse:
         return MockResponse()
 
     monkeypatch.setattr(httpx.AsyncClient, "get", mock_get)
@@ -125,7 +125,7 @@ async def test_time_route_remote(monkeypatch: pytest.MonkeyPatch) -> None:
 
 @pytest.mark.asyncio
 async def test_time_route_fallback_to_local(monkeypatch: pytest.MonkeyPatch) -> None:
-    async def mock_get(self: httpx.AsyncClient, url: str) -> None:  # noqa: ARG001
+    async def mock_get(self: httpx.AsyncClient, url: str) -> None:
         raise httpx.ConnectError("no internet")
 
     monkeypatch.setattr(httpx.AsyncClient, "get", mock_get)
