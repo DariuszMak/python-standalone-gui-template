@@ -8,10 +8,10 @@ import uvicorn
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from src.ui.react_ui.routes.time import router
 
 from src import STATIC_CATALGUE_NAME
 from src.config.config import Config
+from src.ui.react_ui.routes.time import router
 
 
 def create_app() -> FastAPI:
