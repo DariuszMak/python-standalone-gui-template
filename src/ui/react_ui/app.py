@@ -11,7 +11,6 @@ from fastapi.staticfiles import StaticFiles
 
 from src import STATIC_CATALGUE_NAME
 from src.config.config import Config
-from src.ui.react_ui.routes.time import router
 
 
 def create_app() -> FastAPI:
@@ -28,8 +27,6 @@ def create_app() -> FastAPI:
         return FileResponse(Path("src/ui/pyside_ui/forms/icons/images/program_icon.ico"))
 
     app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
-
-    app.include_router(router)
 
     @app.middleware("http")
     async def ignore_noise_requests(

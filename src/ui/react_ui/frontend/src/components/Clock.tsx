@@ -99,14 +99,16 @@ export function Clock() {
     makePIDStrategy(0.08, 0.002, 0.002),
   ]);
 
+  const [datetime, setDatetime] = useState<string | null>(null);
   const [status, setStatus] = useState<"loading" | "ok" | "error">("loading");
 
   const fetchTime = useCallback(async () => {
     setStatus("loading");
     try {
-      const res = await fetch("/time");
+      const res = await fetch("http://localhost:8000/time");
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data: { datetime: string } = await res.json();
+      setDatetime(data.datetime);
       serverAnchorRef.current = new Date(data.datetime);
       wallAnchorRef.current = performance.now();
       handsRef.current = { second: 0, minute: 0, hour: 0 };
@@ -245,7 +247,8 @@ export function Clock() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
-      <h1 style={{ margin: 0 }}>Clock</h1>
+      <h1 style={{ margin: 0 }}>Current datetime</h1>
+      {datetime && <p style={{ margin: 0 }}>{datetime}</p>}
       <canvas
         ref={canvasRef}
         style={{
@@ -256,10 +259,10 @@ export function Clock() {
         }}
       />
       <button onClick={fetchTime} disabled={status === "loading"}>
-        {status === "loading" ? "Syncing…" : "Sync time"}
+        {status === "loading" ? "Loading…" : "Reload time"}
       </button>
       {status === "error" && (
-        <p style={{ color: "red", margin: 0 }}>Failed to sync time from server</p>
+        <p style={{ color: "red", margin: 0 }}>Failed to load time</p>
       )}
     </div>
   );
