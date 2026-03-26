@@ -26,8 +26,7 @@ def create_app() -> FastAPI:
     async def favicon() -> FileResponse:
         return FileResponse(Path("src/ui/pyside_ui/forms/icons/images/program_icon.ico"))
 
-    if static_dir.exists():
-        app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+    app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
 
     @app.middleware("http")
     async def ignore_noise_requests(
@@ -42,17 +41,7 @@ def create_app() -> FastAPI:
     return app
 
 
-def _get_app() -> FastAPI:
-    """Return a module-level app instance, created lazily to avoid
-    requiring the static directory to exist at import time (e.g. during tests)."""
-    global _app
-    if _app is None:
-        _app = create_app()
-    return _app
-
-
-_app: FastAPI | None = None
-app = _get_app()
+app = create_app()
 
 
 def run_react_ui(host: str | None = None, port: int | None = None) -> None:
