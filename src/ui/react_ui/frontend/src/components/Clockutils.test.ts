@@ -1,27 +1,27 @@
 import { describe, it, expect } from "vitest";
 import { PID, calculateHandAngles, polarToCartesian, formatTime } from "./clockUtils";
 
-// ---------------------------------------------------------------------------
-// Helper: construct a Date whose local H/M/S/ms equal the given values,
-// regardless of the machine's timezone. We do this by finding the UTC epoch
-// whose LOCAL decomposition matches what we want.
-// ---------------------------------------------------------------------------
+
+
+
+
+
 
 function localDate(h: number, m: number, s: number, ms = 0): Date {
   const now = new Date();
-  // Use the current date as a base so DST offsets are realistic,
-  // but override the time components.
+  
+  
   return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s, ms);
 }
 
-// ---------------------------------------------------------------------------
-// PID
-// ---------------------------------------------------------------------------
+
+
+
 
 describe("PID", () => {
   it("first update applies kp, ki, kd correctly", () => {
     const pid = new PID(1.0, 0.1, 0.5);
-    // error=1, integral=1, derivative=1-0=1  →  1*1 + 0.1*1 + 0.5*1 = 1.6
+    
     expect(pid.update(1.0)).toBeCloseTo(1.6);
   });
 
@@ -29,8 +29,8 @@ describe("PID", () => {
     const pid = new PID(1.0, 0.1, 0.5);
     pid.update(1.0);
     const out = pid.update(0.5);
-    // error=0.5, integral=1.5, derivative=0.5-1.0=-0.5
-    // 1*0.5 + 0.1*1.5 + 0.5*(-0.5) = 0.5 + 0.15 - 0.25 = 0.4
+    
+    
     expect(out).toBeCloseTo(0.4);
   });
 
@@ -57,13 +57,13 @@ describe("PID", () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// calculateHandAngles
-//
-// All expected values are derived from the same Date.getHours/getMinutes/
-// getSeconds methods that the implementation itself uses, so tests pass
-// regardless of the machine's timezone.
-// ---------------------------------------------------------------------------
+
+
+
+
+
+
+
 
 describe("calculateHandAngles", () => {
   it("midnight gives all zeros", () => {
@@ -93,8 +93,8 @@ describe("calculateHandAngles", () => {
   it("23:59:59 maximum hand positions", () => {
     const dt = localDate(23, 59, 59);
     const h = calculateHandAngles(dt);
-    // local hour wraps: 23 % 12 = 11
-    const localH = dt.getHours() % 12; // 11
+    
+    const localH = dt.getHours() % 12; 
     const total = localH * 3600 + dt.getMinutes() * 60 + dt.getSeconds();
     expect(h.second).toBeCloseTo(total % 60, 4);
     expect(h.minute).toBeCloseTo((total / 60) % 60, 4);
@@ -136,15 +136,15 @@ describe("calculateHandAngles", () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// polarToCartesian
-// ---------------------------------------------------------------------------
+
+
+
 
 describe("polarToCartesian", () => {
   it("angle 0 points straight up (north)", () => {
     const [x, y] = polarToCartesian(100, 100, 50, 0);
     expect(x).toBeCloseTo(100);
-    expect(y).toBeCloseTo(50); // cy - length
+    expect(y).toBeCloseTo(50); 
   });
 
   it("angle π/2 points right (east)", () => {
@@ -168,13 +168,13 @@ describe("polarToCartesian", () => {
   it("respects center offset", () => {
     const [x, y] = polarToCartesian(50, 80, 20, 0);
     expect(x).toBeCloseTo(50);
-    expect(y).toBeCloseTo(60); // 80 - 20
+    expect(y).toBeCloseTo(60); 
   });
 });
 
-// ---------------------------------------------------------------------------
-// formatTime
-// ---------------------------------------------------------------------------
+
+
+
 
 describe("formatTime", () => {
   it("formats HH:MM:SS.mmm using local time fields", () => {

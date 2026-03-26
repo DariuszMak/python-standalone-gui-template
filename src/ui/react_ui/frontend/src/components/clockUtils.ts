@@ -1,6 +1,6 @@
-// ---------------------------------------------------------------------------
-// Data types
-// ---------------------------------------------------------------------------
+
+
+
 
 export interface ClockHands {
   second: number;
@@ -8,9 +8,9 @@ export interface ClockHands {
   hour: number;
 }
 
-// ---------------------------------------------------------------------------
-// PID controller
-// ---------------------------------------------------------------------------
+
+
+
 
 export class PID {
   private kp: number;
@@ -38,9 +38,9 @@ export class PID {
   }
 }
 
-// ---------------------------------------------------------------------------
-// PID movement strategy
-// ---------------------------------------------------------------------------
+
+
+
 
 export interface PIDStrategy {
   pid: PID;
@@ -62,9 +62,9 @@ export function makePIDStrategy(kp: number, ki: number, kd: number): PIDStrategy
   };
 }
 
-// ---------------------------------------------------------------------------
-// Clock maths
-// ---------------------------------------------------------------------------
+
+
+
 
 export function calculateHandAngles(dt: Date): ClockHands {
   const h = dt.getHours() % 12;
