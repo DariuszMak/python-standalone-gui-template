@@ -74,6 +74,10 @@ class Painter:
         self._painter.setPen(QPen(QColor(255, 0, 0), 2.0))
         self._painter.drawLine(center, hands_position.second)
 
+        self._painter.setPen(QPen(QColor(255, 0, 0)))
+        self._painter.setBrush(QColor(255, 0, 0))
+        self._painter.drawEllipse(center, 5.0, 5.0)
+
     def paint_current_time(self, current_time: datetime, center: QPointF, radius: float, font_size: int) -> None:
         formatted = format_datetime(current_time)
         self._painter.setPen(QPen(QColor(150, 255, 190)))
