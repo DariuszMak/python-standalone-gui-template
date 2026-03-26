@@ -104,9 +104,7 @@ describe("calculateHandAngles", () => {
   it("milliseconds contribute to smoothness", () => {
     const dt0 = localDate(0, 0, 30, 0);
     const dt500 = localDate(0, 0, 30, 500);
-    expect(calculateHandAngles(dt500).second).toBeGreaterThan(
-      calculateHandAngles(dt0).second,
-    );
+    expect(calculateHandAngles(dt500).second).toBeGreaterThan(calculateHandAngles(dt0).second);
   });
 
   it("second hand equals total-seconds mod 60", () => {
