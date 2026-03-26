@@ -1,13 +1,17 @@
 import { describe, it, expect } from "vitest";
-import { PID, calculateHandAngles, polarToCartesian, formatTime } from "./Clock";
+import { PID, calculateHandAngles, polarToCartesian, formatTime } from "./clockUtils";
 
 // ---------------------------------------------------------------------------
-// Helpers
+// Helper: construct a Date whose local H/M/S/ms equal the given values,
+// regardless of the machine's timezone. We do this by finding the UTC epoch
+// whose LOCAL decomposition matches what we want.
 // ---------------------------------------------------------------------------
 
-/** Build a UTC Date without any local-timezone offset influencing the result. */
-function utc(h: number, m: number, s: number, ms = 0): Date {
-  return new Date(Date.UTC(2025, 3, 27, h, m, s, ms)); // month is 0-indexed
+function localDate(h: number, m: number, s: number, ms = 0): Date {
+  const now = new Date();
+  // Use the current date as a base so DST offsets are realistic,
+  // but override the time components.
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s, ms);
 }
 
 // ---------------------------------------------------------------------------
@@ -55,15 +59,15 @@ describe("PID", () => {
 
 // ---------------------------------------------------------------------------
 // calculateHandAngles
-// Note: calculateHandAngles uses local time (getHours etc.), so we construct
-// dates via Date.UTC and rely on the test runner using UTC (TZ=UTC in CI) or
-// we derive expected values from the same Date methods — making tests
-// timezone-agnostic.
+//
+// All expected values are derived from the same Date.getHours/getMinutes/
+// getSeconds methods that the implementation itself uses, so tests pass
+// regardless of the machine's timezone.
 // ---------------------------------------------------------------------------
 
 describe("calculateHandAngles", () => {
   it("midnight gives all zeros", () => {
-    const dt = utc(0, 0, 0);
+    const dt = localDate(0, 0, 0);
     const h = calculateHandAngles(dt);
     expect(h.second).toBeCloseTo(0);
     expect(h.minute).toBeCloseTo(0);
@@ -71,7 +75,7 @@ describe("calculateHandAngles", () => {
   });
 
   it("noon gives all zeros (12-hour wrap)", () => {
-    const dt = utc(12, 0, 0);
+    const dt = localDate(12, 0, 0);
     const h = calculateHandAngles(dt);
     expect(h.second).toBeCloseTo(0);
     expect(h.minute).toBeCloseTo(0);
@@ -79,7 +83,7 @@ describe("calculateHandAngles", () => {
   });
 
   it("half past three", () => {
-    const dt = utc(3, 30, 0);
+    const dt = localDate(3, 30, 0);
     const h = calculateHandAngles(dt);
     expect(h.second).toBeCloseTo(0);
     expect(h.minute).toBeCloseTo(30);
@@ -87,43 +91,50 @@ describe("calculateHandAngles", () => {
   });
 
   it("23:59:59 maximum hand positions", () => {
-    const dt = utc(23, 59, 59);
+    const dt = localDate(23, 59, 59);
     const h = calculateHandAngles(dt);
-    expect(h.second).toBeCloseTo(59);
-    expect(h.minute).toBeCloseTo(59 + 59 / 3600, 4); // ~59.9833…
-    expect(h.hour).toBeCloseTo(11 + (59 * 60 + 59) / 3600, 4); // ~11.9997…
+    // local hour wraps: 23 % 12 = 11
+    const localH = dt.getHours() % 12; // 11
+    const total = localH * 3600 + dt.getMinutes() * 60 + dt.getSeconds();
+    expect(h.second).toBeCloseTo(total % 60, 4);
+    expect(h.minute).toBeCloseTo((total / 60) % 60, 4);
+    expect(h.hour).toBeCloseTo((total / 3600) % 12, 4);
   });
 
   it("milliseconds contribute to smoothness", () => {
-    const dt_0ms = utc(0, 0, 30, 0);
-    const dt_500ms = utc(0, 0, 30, 500);
-    const h0 = calculateHandAngles(dt_0ms);
-    const h500 = calculateHandAngles(dt_500ms);
-    expect(h500.second).toBeGreaterThan(h0.second);
+    const dt0 = localDate(0, 0, 30, 0);
+    const dt500 = localDate(0, 0, 30, 500);
+    expect(calculateHandAngles(dt500).second).toBeGreaterThan(
+      calculateHandAngles(dt0).second,
+    );
   });
 
   it("second hand equals total-seconds mod 60", () => {
-    const dt = utc(1, 2, 3);
-    const h = calculateHandAngles(dt);
+    const dt = localDate(1, 2, 3);
     const localH = dt.getHours() % 12;
     const total = localH * 3600 + dt.getMinutes() * 60 + dt.getSeconds();
-    expect(h.second).toBeCloseTo(total % 60);
+    expect(calculateHandAngles(dt).second).toBeCloseTo(total % 60);
   });
 
   it("minute hand equals total-seconds/60 mod 60", () => {
-    const dt = utc(2, 45, 10);
-    const h = calculateHandAngles(dt);
+    const dt = localDate(2, 45, 10);
     const localH = dt.getHours() % 12;
     const total = localH * 3600 + dt.getMinutes() * 60 + dt.getSeconds();
-    expect(h.minute).toBeCloseTo((total / 60) % 60, 5);
+    expect(calculateHandAngles(dt).minute).toBeCloseTo((total / 60) % 60, 5);
   });
 
   it("hour hand equals total-seconds/3600 mod 12", () => {
-    const dt = utc(7, 15, 0);
-    const h = calculateHandAngles(dt);
+    const dt = localDate(7, 15, 0);
     const localH = dt.getHours() % 12;
     const total = localH * 3600 + dt.getMinutes() * 60 + dt.getSeconds();
-    expect(h.hour).toBeCloseTo((total / 3600) % 12, 5);
+    expect(calculateHandAngles(dt).hour).toBeCloseTo((total / 3600) % 12, 5);
+  });
+
+  it("PM hour wraps correctly: 15:30 same as 3:30", () => {
+    const am = localDate(3, 30, 0);
+    const pm = localDate(15, 30, 0);
+    expect(calculateHandAngles(pm).hour).toBeCloseTo(calculateHandAngles(am).hour, 5);
+    expect(calculateHandAngles(pm).minute).toBeCloseTo(calculateHandAngles(am).minute, 5);
   });
 });
 
@@ -168,11 +179,8 @@ describe("polarToCartesian", () => {
 // ---------------------------------------------------------------------------
 
 describe("formatTime", () => {
-  it("formats HH:MM:SS.mmm from a UTC date", () => {
-    // Build a date whose *local* fields match what we want to assert.
-    // We read back via the same getHours/getMinutes/getSeconds methods
-    // the implementation uses, so the test is tz-agnostic.
-    const dt = utc(3, 4, 5, 678);
+  it("formats HH:MM:SS.mmm using local time fields", () => {
+    const dt = localDate(3, 4, 5, 678);
     const result = formatTime(dt);
     const hh = String(dt.getHours()).padStart(2, "0");
     const mm = String(dt.getMinutes()).padStart(2, "0");
@@ -181,15 +189,14 @@ describe("formatTime", () => {
   });
 
   it("pads single-digit fields with zeros", () => {
-    const dt = utc(1, 2, 3, 4);
+    const dt = localDate(1, 2, 3, 4);
     const result = formatTime(dt);
     expect(result).toMatch(/^\d{2}:\d{2}:\d{2}\.\d{3}$/);
     expect(result.endsWith(".004")).toBe(true);
   });
 
   it("milliseconds are floored, not rounded", () => {
-    const dt = utc(0, 0, 0, 999);
-    const result = formatTime(dt);
-    expect(result.endsWith(".999")).toBe(true);
+    const dt = localDate(0, 0, 0, 999);
+    expect(formatTime(dt).endsWith(".999")).toBe(true);
   });
 });
