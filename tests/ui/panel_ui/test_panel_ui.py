@@ -7,9 +7,9 @@ import panel as pn
 import pytest
 import respx
 from httpx import HTTPStatusError, Response
+from src.ui.panel_ui.time_panel import fetch_time
 
-from src.ui.panel_ui import clock_panel
-from src.ui.panel_ui.clock_panel import fetch_time
+from src.ui.panel_ui import time_panel
 
 
 @pytest.mark.asyncio
@@ -18,7 +18,7 @@ async def test_fetch_time_success(monkeypatch: pytest.MonkeyPatch) -> None:
         api_base_url = "http://testserver"
 
     monkeypatch.setattr(
-        "src.ui.panel_ui.clock_panel.Config.from_env",
+        "src.ui.panel_ui.time_panel.Config.from_env",
         lambda: DummyConfig(),
     )
 
@@ -41,7 +41,7 @@ async def test_fetch_time_http_error(monkeypatch: pytest.MonkeyPatch) -> None:
         api_base_url = "http://testserver"
 
     monkeypatch.setattr(
-        "src.ui.panel_ui.clock_panel.Config.from_env",
+        "src.ui.panel_ui.time_panel.Config.from_env",
         lambda: DummyConfig(),
     )
 
@@ -67,13 +67,13 @@ def _make_layout(
     def immediate_execute(fn: Callable[[], Coroutine[None, None, None]]) -> None:
         asyncio.run(fn())
 
-    monkeypatch.setattr(clock_panel, "fetch_time", fake_fetch)
+    monkeypatch.setattr(time_panel, "fetch_time", fake_fetch)
     monkeypatch.setattr(pn.state, "execute", immediate_execute)
     monkeypatch.setattr(pn.state, "onload", lambda _: None)
 
     # Suppress the periodic callback so no Bokeh server is required
     with patch.object(pn.state, "add_periodic_callback", return_value=MagicMock()):
-        return clock_panel.create_layout()
+        return time_panel.create_layout()
 
 
 def test_on_click_success(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -120,9 +120,9 @@ def test_on_click_sets_clock_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
     async def fake_fetch_time() -> str:
         return "2026-01-25T12:00:00+00:00"
 
-    original_init = clock_panel.ClockWidget.__init__
+    original_init = time_panel.ClockWidget.__init__
 
-    def patched_init(self: clock_panel.ClockWidget, size: int = 300) -> None:
+    def patched_init(self: time_panel.ClockWidget, size: int = 300) -> None:
         original_init(self, size)
         original_set = self.set_current_datetime
 
@@ -132,7 +132,7 @@ def test_on_click_sets_clock_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
 
         self.set_current_datetime = capturing_set  # type: ignore[method-assign]
 
-    monkeypatch.setattr(clock_panel.ClockWidget, "__init__", patched_init)
+    monkeypatch.setattr(time_panel.ClockWidget, "__init__", patched_init)
 
     col = _make_layout(monkeypatch, fake_fetch_time)
     _button = cast("pn.widgets.Button", col[2])
@@ -151,7 +151,7 @@ def test_layout_structure(monkeypatch: pytest.MonkeyPatch) -> None:
 
     col = _make_layout(monkeypatch, fake_fetch_time)
 
-    assert len(col) == 4  # noqa: PLR2004
+    assert len(col) == 4
     assert isinstance(col[1], pn.pane.Bokeh)
     assert isinstance(col[2], pn.widgets.Button)
     assert isinstance(col[3], pn.pane.Markdown)

@@ -239,6 +239,7 @@ class ClockWidget:
 
         def pad(n):
             return str(n).zfill(2)
+
         ms = str(now.microsecond // 1000).zfill(3)
         ts = f"{pad(now.hour)}:{pad(now.minute)}:{pad(now.second)}.{ms}"
         self._sources["time_text"].data = {"x": [0.0], "y": [-0.55], "text": [ts]}
