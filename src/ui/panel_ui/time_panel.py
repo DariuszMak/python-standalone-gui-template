@@ -15,9 +15,6 @@ from src.config.config import Config
 pn.extension()
 
 
-
-
-
 class PID:
     def __init__(self, kp: float = 0.0, ki: float = 0.0, kd: float = 0.0) -> None:
         self._kp = float(kp)
@@ -49,9 +46,6 @@ class PIDMovementStrategy:
         self._pid.reset()
 
 
-
-
-
 def calculate_clock_hands_angles(now_dt: datetime) -> tuple[float, float, float]:
     """Return (second, minute, hour) angles, same semantics as the PySide helper."""
     local = now_dt.astimezone()
@@ -68,11 +62,8 @@ def hand_endpoint(cx: float, cy: float, radius: float, value: float, max_value: 
     angle = (value / max_value) * 2.0 * math.pi
     return (
         cx + math.sin(angle) * radius,
-        cy + math.cos(angle) * radius,  
+        cy + math.cos(angle) * radius,
     )
-
-
-
 
 
 def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSource]]:
@@ -91,10 +82,8 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
     p.axis.visible = False
     p.grid.visible = False
 
-    
     p.circle(x=0, y=0, radius=r, fill_color="#1a1a1a", line_color="rgba(255,255,255,0.18)", line_width=2)
 
-    
     for i in range(60):
         ang = (i / 60.0) * 2.0 * math.pi
         is_maj = i % 5 == 0
@@ -108,7 +97,6 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
             line_width=2.5 if is_maj else 1.2,
         )
 
-    
     font_size = max(8, int(r * 300 * 0.036))
     for h in range(12):
         ang = (h / 12.0) * 2.0 * math.pi
@@ -125,7 +113,6 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
             text_font_size=f"{font_size}px",
         )
 
-    
     src_hour = ColumnDataSource({"x": [cx, cx], "y": [cy, cy]})
     src_min = ColumnDataSource({"x": [cx, cx], "y": [cy, cy]})
     src_sec = ColumnDataSource({"x": [cx, cx], "y": [cy, cy]})
@@ -134,10 +121,8 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
     p.line("x", "y", source=src_min, line_width=6, line_color="rgba(200,200,200,0.75)", line_cap="round")
     p.line("x", "y", source=src_sec, line_width=2, line_color="#ff4444", line_cap="round")
 
-    
     p.circle(x=0, y=0, radius=0.035, fill_color="#ff4444", line_color=None)
 
-    
     src_text = ColumnDataSource({"x": [0.0], "y": [-0.55], "text": ["00:00:00.000"]})
     p.text(
         "x",
@@ -153,9 +138,6 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
 
     sources = {"hour": src_hour, "minute": src_min, "second": src_sec, "time_text": src_text}
     return p, sources
-
-
-
 
 
 class ClockWidget:
@@ -190,8 +172,6 @@ class ClockWidget:
 
         self._cb = pn.state.add_periodic_callback(self._tick, period=self.TICK_MS)
 
-    
-
     def panel(self) -> pn.pane.Bokeh:
         """Return the renderable Panel pane."""
         return self._pane
@@ -205,8 +185,6 @@ class ClockWidget:
     def stop(self) -> None:
         """Stop the tick callback (call on cleanup)."""
         self._cb.stop()
-
-    
 
     def _current_datetime(self) -> datetime:
         elapsed = time.monotonic() - self._wall_anchor_mono
@@ -243,9 +221,6 @@ class ClockWidget:
         ms = str(now.microsecond // 1000).zfill(3)
         ts = f"{pad(now.hour)}:{pad(now.minute)}:{pad(now.second)}.{ms}"
         self._sources["time_text"].data = {"x": [0.0], "y": [-0.55], "text": [ts]}
-
-
-
 
 
 async def fetch_time() -> str:
