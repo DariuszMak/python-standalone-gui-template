@@ -16,9 +16,8 @@ export function Now() {
         throw new Error(`HTTP ${r.status}`);
       }
 
-    const d: { datetime: string } = await r.json();
-    setNow(d.datetime);
-
+      const d: { datetime: string } = await r.json();
+      setNow(d.datetime);
     } catch (err) {
       console.error(err);
       setError("Failed to load time");
