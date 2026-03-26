@@ -3,7 +3,7 @@ from __future__ import annotations
 import math
 import time
 from datetime import UTC, datetime, timedelta
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import httpx
 import panel as pn
@@ -11,6 +11,9 @@ from bokeh.models import ColumnDataSource, Range1d
 from bokeh.plotting import figure
 
 from src.config.config import Config
+
+if TYPE_CHECKING:
+    from panel.io.callbacks import PeriodicCallback
 
 pn.extension()
 
@@ -47,7 +50,6 @@ class PIDMovementStrategy:
 
 
 def calculate_clock_hands_angles(now_dt: datetime) -> tuple[float, float, float]:
-    """Return (second, minute, hour) angles, same semantics as the PySide helper."""
     local = now_dt.astimezone()
     midnight = datetime.combine(local.date(), datetime.min.time(), tzinfo=local.tzinfo)
     start_s = (local - midnight).total_seconds()
@@ -72,8 +74,8 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
     p = figure(
         width=size,
         height=size,
-        x_range=Range1d(-1.25, 1.25),
-        y_range=Range1d(-1.25, 1.25),
+        x_range=Range1d(start=-1.25, end=1.25),
+        y_range=Range1d(start=-1.25, end=1.25),
         toolbar_location=None,
         background_fill_color="#1a1a1a",
         border_fill_color="#1a1a1a",
@@ -82,7 +84,14 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
     p.axis.visible = False
     p.grid.visible = False
 
-    p.circle(x=0, y=0, radius=r, fill_color="#1a1a1a", line_color="rgba(255,255,255,0.18)", line_width=2)
+    p.circle(
+        x=0,
+        y=0,
+        radius=r,
+        fill_color="#1a1a1a",
+        line_color="rgba(255,255,255,0.18)",
+        line_width=2,
+    )
 
     for i in range(60):
         ang = (i / 60.0) * 2.0 * math.pi
@@ -141,16 +150,6 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
 
 
 class ClockWidget:
-    """
-    Analog clock widget for Panel with PID-smoothed hands.
-
-    Usage::
-
-        widget = ClockWidget()
-        widget.set_current_datetime(datetime(..., tzinfo=UTC))
-        layout = widget.panel()
-    """
-
     TICK_MS = 15
 
     def __init__(self, size: int = 300) -> None:
@@ -168,23 +167,21 @@ class ClockWidget:
         )
 
         self._fig, self._sources = _build_clock_figure(size)
-        self._pane = pn.pane.Bokeh(self._fig, sizing_mode="fixed")  # type: ignore[no-untyped-call]
+        self._pane: pn.pane.Bokeh = pn.pane.Bokeh(self._fig, sizing_mode="fixed")  # type: ignore
 
-        self._cb = pn.state.add_periodic_callback(self._tick, period=self.TICK_MS)
+        self._cb: PeriodicCallback = pn.state.add_periodic_callback(self._tick, period=self.TICK_MS)
 
     def panel(self) -> pn.pane.Bokeh:
-        """Return the renderable Panel pane."""
         return self._pane
 
     def set_current_datetime(self, dt: datetime) -> None:
-        """Sync the clock to a server-provided datetime (like ClockWidget.set_current_datetime)."""
         self._server_anchor = dt
         self._wall_anchor_mono = time.monotonic()
         self._reset()
 
     def stop(self) -> None:
-        """Stop the tick callback (call on cleanup)."""
-        self._cb.stop()
+        if self._cb is not None:
+            self._cb.stop()  # type: ignore[no-untyped-call]
 
     def _current_datetime(self) -> datetime:
         elapsed = time.monotonic() - self._wall_anchor_mono
@@ -215,7 +212,7 @@ class ClockWidget:
         self._sources["minute"].data = {"x": [cx, ex_m], "y": [cy, ey_m]}
         self._sources["second"].data = {"x": [cx, ex_s], "y": [cy, ey_s]}
 
-        def pad(n):
+        def pad(n: int) -> str:
             return str(n).zfill(2)
 
         ms = str(now.microsecond // 1000).zfill(3)
@@ -224,7 +221,6 @@ class ClockWidget:
 
 
 async def fetch_time() -> str:
-
     config = Config.from_env()
     async with httpx.AsyncClient(timeout=2.0) as client:
         resp = await client.get(f"{config.api_base_url}/time")
@@ -235,10 +231,12 @@ async def fetch_time() -> str:
 
 def create_layout() -> pn.Column:
     _clock = ClockWidget(size=300)
-    _time_display: pn.pane.Markdown = pn.pane.Markdown(  # type: ignore[no-untyped-call]
+
+    _time_display: pn.pane.Markdown = pn.pane.Markdown(  # type: ignore
         "No data", sizing_mode="stretch_width"
     )
-    _button: pn.widgets.Button = pn.widgets.Button(  # type: ignore[no-untyped-call]
+
+    _button: pn.widgets.Button = pn.widgets.Button(  # type: ignore
         name="Fetch time from API", button_type="primary"
     )
 
