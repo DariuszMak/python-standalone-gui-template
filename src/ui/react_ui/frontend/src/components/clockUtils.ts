@@ -1,16 +1,8 @@
-
-
-
-
 export interface ClockHands {
   second: number;
   minute: number;
   hour: number;
 }
-
-
-
-
 
 export class PID {
   private kp: number;
@@ -38,10 +30,6 @@ export class PID {
   }
 }
 
-
-
-
-
 export interface PIDStrategy {
   pid: PID;
   update(current: number, target: number): number;
@@ -61,10 +49,6 @@ export function makePIDStrategy(kp: number, ki: number, kd: number): PIDStrategy
     },
   };
 }
-
-
-
-
 
 export function calculateHandAngles(dt: Date): ClockHands {
   const h = dt.getHours() % 12;

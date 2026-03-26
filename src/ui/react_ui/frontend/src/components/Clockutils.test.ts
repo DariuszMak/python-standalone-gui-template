@@ -1,27 +1,16 @@
 import { describe, it, expect } from "vitest";
 import { PID, calculateHandAngles, polarToCartesian, formatTime } from "./clockUtils";
 
-
-
-
-
-
-
 function localDate(h: number, m: number, s: number, ms = 0): Date {
   const now = new Date();
-  
-  
+
   return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s, ms);
 }
-
-
-
-
 
 describe("PID", () => {
   it("first update applies kp, ki, kd correctly", () => {
     const pid = new PID(1.0, 0.1, 0.5);
-    
+
     expect(pid.update(1.0)).toBeCloseTo(1.6);
   });
 
@@ -29,8 +18,7 @@ describe("PID", () => {
     const pid = new PID(1.0, 0.1, 0.5);
     pid.update(1.0);
     const out = pid.update(0.5);
-    
-    
+
     expect(out).toBeCloseTo(0.4);
   });
 
@@ -56,14 +44,6 @@ describe("PID", () => {
     expect(pid.update(5.0)).toBeCloseTo(first);
   });
 });
-
-
-
-
-
-
-
-
 
 describe("calculateHandAngles", () => {
   it("midnight gives all zeros", () => {
@@ -93,8 +73,8 @@ describe("calculateHandAngles", () => {
   it("23:59:59 maximum hand positions", () => {
     const dt = localDate(23, 59, 59);
     const h = calculateHandAngles(dt);
-    
-    const localH = dt.getHours() % 12; 
+
+    const localH = dt.getHours() % 12;
     const total = localH * 3600 + dt.getMinutes() * 60 + dt.getSeconds();
     expect(h.second).toBeCloseTo(total % 60, 4);
     expect(h.minute).toBeCloseTo((total / 60) % 60, 4);
@@ -136,15 +116,11 @@ describe("calculateHandAngles", () => {
   });
 });
 
-
-
-
-
 describe("polarToCartesian", () => {
   it("angle 0 points straight up (north)", () => {
     const [x, y] = polarToCartesian(100, 100, 50, 0);
     expect(x).toBeCloseTo(100);
-    expect(y).toBeCloseTo(50); 
+    expect(y).toBeCloseTo(50);
   });
 
   it("angle π/2 points right (east)", () => {
@@ -168,13 +144,9 @@ describe("polarToCartesian", () => {
   it("respects center offset", () => {
     const [x, y] = polarToCartesian(50, 80, 20, 0);
     expect(x).toBeCloseTo(50);
-    expect(y).toBeCloseTo(60); 
+    expect(y).toBeCloseTo(60);
   });
 });
-
-
-
-
 
 describe("formatTime", () => {
   it("formats HH:MM:SS.mmm using local time fields", () => {
