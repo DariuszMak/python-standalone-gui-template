@@ -1,14 +1,5 @@
 from __future__ import annotations
 
-from typing import Any
-
-import httpx
-import panel as pn
-
-from src.config.config import Config
-
-
-
 import math
 import time
 from datetime import UTC, datetime, timedelta
@@ -19,10 +10,13 @@ import panel as pn
 from bokeh.models import ColumnDataSource, Range1d
 from bokeh.plotting import figure
 
+from src.config.config import Config
+
 pn.extension()
 
 
 # ─── PID ──────────────────────────────────────────────────────────────────────
+
 
 class PID:
     def __init__(self, kp: float = 0.0, ki: float = 0.0, kd: float = 0.0) -> None:
@@ -57,6 +51,7 @@ class PIDMovementStrategy:
 
 # ─── Angle helpers ────────────────────────────────────────────────────────────
 
+
 def calculate_clock_hands_angles(now_dt: datetime) -> tuple[float, float, float]:
     """Return (second, minute, hour) angles, same semantics as the PySide helper."""
     local = now_dt.astimezone()
@@ -69,23 +64,23 @@ def calculate_clock_hands_angles(now_dt: datetime) -> tuple[float, float, float]
     )
 
 
-def hand_endpoint(
-    cx: float, cy: float, radius: float, value: float, max_value: float
-) -> tuple[float, float]:
+def hand_endpoint(cx: float, cy: float, radius: float, value: float, max_value: float) -> tuple[float, float]:
     angle = (value / max_value) * 2.0 * math.pi
     return (
         cx + math.sin(angle) * radius,
-        cy + math.cos(angle) * radius,   # Bokeh y-axis is upward
+        cy + math.cos(angle) * radius,  # Bokeh y-axis is upward
     )
 
 
 # ─── Bokeh clock figure ───────────────────────────────────────────────────────
 
+
 def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSource]]:
     cx, cy, r = 0.0, 0.0, 1.0
 
     p = figure(
-        width=size, height=size,
+        width=size,
+        height=size,
         x_range=Range1d(-1.25, 1.25),
         y_range=Range1d(-1.25, 1.25),
         toolbar_location=None,
@@ -97,8 +92,7 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
     p.grid.visible = False
 
     # Face ring
-    p.circle(x=0, y=0, radius=r, fill_color="#1a1a1a",
-             line_color="rgba(255,255,255,0.18)", line_width=2)
+    p.circle(x=0, y=0, radius=r, fill_color="#1a1a1a", line_color="rgba(255,255,255,0.18)", line_width=2)
 
     # Tick marks
     for i in range(60):
@@ -108,7 +102,8 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
         inner_r = r - (0.08 if is_maj else 0.04)
         inner = (math.sin(ang) * inner_r, math.cos(ang) * inner_r)
         p.line(
-            x=[inner[0], outer[0]], y=[inner[1], outer[1]],
+            x=[inner[0], outer[0]],
+            y=[inner[1], outer[1]],
             line_color="rgba(180,180,180,0.65)",
             line_width=2.5 if is_maj else 1.2,
         )
@@ -121,43 +116,47 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
         tx = math.sin(ang) * label_r
         ty = math.cos(ang) * label_r
         p.text(
-            x=[tx], y=[ty],
+            x=[tx],
+            y=[ty],
             text=[str(((h + 11) % 12) + 1)],
-            text_align="center", text_baseline="middle",
+            text_align="center",
+            text_baseline="middle",
             text_color="rgba(255,255,255,0.85)",
             text_font_size=f"{font_size}px",
         )
 
     # Clock hands (mutable sources)
-    src_hour = ColumnDataSource(dict(x=[cx, cx], y=[cy, cy]))
-    src_min  = ColumnDataSource(dict(x=[cx, cx], y=[cy, cy]))
-    src_sec  = ColumnDataSource(dict(x=[cx, cx], y=[cy, cy]))
+    src_hour = ColumnDataSource({"x": [cx, cx], "y": [cy, cy]})
+    src_min = ColumnDataSource({"x": [cx, cx], "y": [cy, cy]})
+    src_sec = ColumnDataSource({"x": [cx, cx], "y": [cy, cy]})
 
-    p.line("x", "y", source=src_hour, line_width=8,
-           line_color="rgba(255,255,255,0.9)", line_cap="round")
-    p.line("x", "y", source=src_min,  line_width=6,
-           line_color="rgba(200,200,200,0.75)", line_cap="round")
-    p.line("x", "y", source=src_sec,  line_width=2,
-           line_color="#ff4444", line_cap="round")
+    p.line("x", "y", source=src_hour, line_width=8, line_color="rgba(255,255,255,0.9)", line_cap="round")
+    p.line("x", "y", source=src_min, line_width=6, line_color="rgba(200,200,200,0.75)", line_cap="round")
+    p.line("x", "y", source=src_sec, line_width=2, line_color="#ff4444", line_cap="round")
 
     # Center dot
     p.circle(x=0, y=0, radius=0.035, fill_color="#ff4444", line_color=None)
 
     # Time text source
-    src_text = ColumnDataSource(dict(x=[0.0], y=[-0.55], text=["00:00:00.000"]))
+    src_text = ColumnDataSource({"x": [0.0], "y": [-0.55], "text": ["00:00:00.000"]})
     p.text(
-        "x", "y", text="text", source=src_text,
-        text_align="center", text_baseline="middle",
+        "x",
+        "y",
+        text="text",
+        source=src_text,
+        text_align="center",
+        text_baseline="middle",
         text_color="#7af0a0",
         text_font="Consolas, monospace",
         text_font_size=f"{max(8, int(font_size * 0.95))}px",
     )
 
-    sources = dict(hour=src_hour, minute=src_min, second=src_sec, time_text=src_text)
+    sources = {"hour": src_hour, "minute": src_min, "second": src_sec, "time_text": src_text}
     return p, sources
 
 
 # ─── ClockWidget (Panel) ──────────────────────────────────────────────────────
+
 
 class ClockWidget:
     """
@@ -178,7 +177,7 @@ class ClockWidget:
 
         self._second = 0.0
         self._minute = 0.0
-        self._hour   = 0.0
+        self._hour = 0.0
 
         self._strategies = (
             PIDMovementStrategy(0.15, 0.005, 0.005),
@@ -199,7 +198,7 @@ class ClockWidget:
 
     def set_current_datetime(self, dt: datetime) -> None:
         """Sync the clock to a server-provided datetime (like ClockWidget.set_current_datetime)."""
-        self._server_anchor   = dt
+        self._server_anchor = dt
         self._wall_anchor_mono = time.monotonic()
         self._reset()
 
@@ -216,7 +215,7 @@ class ClockWidget:
     def _reset(self) -> None:
         self._second = 0.0
         self._minute = 0.0
-        self._hour   = 0.0
+        self._hour = 0.0
         for s in self._strategies:
             s.reset()
 
@@ -226,28 +225,30 @@ class ClockWidget:
 
         self._second = self._strategies[0].update(self._second, tgt_sec)
         self._minute = self._strategies[1].update(self._minute, tgt_min)
-        self._hour   = self._strategies[2].update(self._hour,   tgt_hr)
+        self._hour = self._strategies[2].update(self._hour, tgt_hr)
 
         cx, cy, r = 0.0, 0.0, 1.0
 
-        ex_h, ey_h = hand_endpoint(cx, cy, r * 0.5, self._hour,   12.0)
+        ex_h, ey_h = hand_endpoint(cx, cy, r * 0.5, self._hour, 12.0)
         ex_m, ey_m = hand_endpoint(cx, cy, r * 0.7, self._minute, 60.0)
         ex_s, ey_s = hand_endpoint(cx, cy, r * 0.9, self._second, 60.0)
 
-        self._sources["hour"].data   = dict(x=[cx, ex_h], y=[cy, ey_h])
-        self._sources["minute"].data = dict(x=[cx, ex_m], y=[cy, ey_m])
-        self._sources["second"].data = dict(x=[cx, ex_s], y=[cy, ey_s])
+        self._sources["hour"].data = {"x": [cx, ex_h], "y": [cy, ey_h]}
+        self._sources["minute"].data = {"x": [cx, ex_m], "y": [cy, ey_m]}
+        self._sources["second"].data = {"x": [cx, ex_s], "y": [cy, ey_s]}
 
-        pad = lambda n: str(n).zfill(2)
-        ms  = str(now.microsecond // 1000).zfill(3)
-        ts  = f"{pad(now.hour)}:{pad(now.minute)}:{pad(now.second)}.{ms}"
-        self._sources["time_text"].data = dict(x=[0.0], y=[-0.55], text=[ts])
+        def pad(n):
+            return str(n).zfill(2)
+        ms = str(now.microsecond // 1000).zfill(3)
+        ts = f"{pad(now.hour)}:{pad(now.minute)}:{pad(now.second)}.{ms}"
+        self._sources["time_text"].data = {"x": [0.0], "y": [-0.55], "text": [ts]}
 
 
 # ─── Panel layout (matches time_panel.py structure) ───────────────────────────
 
+
 async def fetch_time() -> str:
-    from src.config.config import Config  # local import keeps module importable standalone
+
     config = Config.from_env()
     async with httpx.AsyncClient(timeout=2.0) as client:
         resp = await client.get(f"{config.api_base_url}/time")
