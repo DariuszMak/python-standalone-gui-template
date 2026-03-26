@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 
-interface ClockHands {
+export interface ClockHands {
   second: number;
   minute: number;
   hour: number;
 }
 
-class PID {
+export class PID {
   private kp: number;
   private ki: number;
   private kd: number;
-  private prevError = 0;
-  private integral = 0;
+  /** @internal */ _prevError = 0;
+  /** @internal */ _integral = 0;
 
   constructor(kp: number, ki: number, kd: number) {
     this.kp = kp;
@@ -20,15 +20,15 @@ class PID {
   }
 
   update(error: number): number {
-    this.integral += error;
-    const derivative = error - this.prevError;
-    this.prevError = error;
-    return this.kp * error + this.ki * this.integral + this.kd * derivative;
+    this._integral += error;
+    const derivative = error - this._prevError;
+    this._prevError = error;
+    return this.kp * error + this.ki * this._integral + this.kd * derivative;
   }
 
   reset(): void {
-    this.prevError = 0;
-    this.integral = 0;
+    this._prevError = 0;
+    this._integral = 0;
   }
 }
 
@@ -52,7 +52,7 @@ function makePIDStrategy(kp: number, ki: number, kd: number): PIDStrategy {
   };
 }
 
-function calculateHandAngles(dt: Date): ClockHands {
+export function calculateHandAngles(dt: Date): ClockHands {
   const h = dt.getHours() % 12;
   const m = dt.getMinutes();
   const s = dt.getSeconds();
@@ -67,16 +67,19 @@ function calculateHandAngles(dt: Date): ClockHands {
   };
 }
 
-function polarToCartesian(
+export function polarToCartesian(
   cx: number,
   cy: number,
   length: number,
-  angleRad: number,
+  angleRad: number
 ): [number, number] {
-  return [cx + Math.sin(angleRad) * length, cy - Math.cos(angleRad) * length];
+  return [
+    cx + Math.sin(angleRad) * length,
+    cy - Math.cos(angleRad) * length,
+  ];
 }
 
-function formatTime(dt: Date): string {
+export function formatTime(dt: Date): string {
   const h = String(dt.getHours()).padStart(2, "0");
   const m = String(dt.getMinutes()).padStart(2, "0");
   const s = String(dt.getSeconds()).padStart(2, "0");
@@ -258,7 +261,9 @@ export function Clock() {
       <button onClick={fetchTime} disabled={status === "loading"}>
         {status === "loading" ? "Loading…" : "Reload time"}
       </button>
-      {status === "error" && <p style={{ color: "red", margin: 0 }}>Failed to load time</p>}
+      {status === "error" && (
+        <p style={{ color: "red", margin: 0 }}>Failed to load time</p>
+      )}
     </div>
   );
 }
