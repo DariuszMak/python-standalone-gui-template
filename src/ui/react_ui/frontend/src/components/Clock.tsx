@@ -71,12 +71,9 @@ export function polarToCartesian(
   cx: number,
   cy: number,
   length: number,
-  angleRad: number
+  angleRad: number,
 ): [number, number] {
-  return [
-    cx + Math.sin(angleRad) * length,
-    cy - Math.cos(angleRad) * length,
-  ];
+  return [cx + Math.sin(angleRad) * length, cy - Math.cos(angleRad) * length];
 }
 
 export function formatTime(dt: Date): string {
@@ -261,9 +258,7 @@ export function Clock() {
       <button onClick={fetchTime} disabled={status === "loading"}>
         {status === "loading" ? "Loading…" : "Reload time"}
       </button>
-      {status === "error" && (
-        <p style={{ color: "red", margin: 0 }}>Failed to load time</p>
-      )}
+      {status === "error" && <p style={{ color: "red", margin: 0 }}>Failed to load time</p>}
     </div>
   );
 }
