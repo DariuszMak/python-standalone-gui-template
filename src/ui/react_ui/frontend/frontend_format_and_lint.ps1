@@ -1,6 +1,7 @@
 Push-Location $PSScriptRoot
 
-npx audit
+npm audit fix
+npm audit --audit-level=moderate
 npx --yes prettier --write .
 npx --yes eslint . --fix
 npx --yes tsc --noEmit
