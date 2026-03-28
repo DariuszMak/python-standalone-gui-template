@@ -7,6 +7,6 @@ npx --yes eslint . --fix
 npx --yes tsc --noEmit
 npx --yes vitest run
 npx --yes vite build
-npx knip                          # dead code
+npx knip
 
 Pop-Location
