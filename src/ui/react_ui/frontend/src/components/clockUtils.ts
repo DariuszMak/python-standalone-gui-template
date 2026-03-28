@@ -30,7 +30,7 @@ export class PID {
   }
 }
 
-export interface PIDStrategy {
+interface PIDStrategy {
   pid: PID;
   update(current: number, target: number): number;
   reset(): void;

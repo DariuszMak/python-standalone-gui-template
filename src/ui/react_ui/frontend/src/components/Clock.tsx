@@ -26,8 +26,8 @@ export function Clock() {
     setStatus("loading");
     try {
       const res = await fetch("http://localhost:8000/time");
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data: { datetime: string } = await res.json();
+      if (!res.ok) throw new Error(`HTTP ${String(res.status)}`);
+      const data = (await res.json()) as { datetime: string };
       setDatetime(data.datetime);
       serverAnchorRef.current = new Date(data.datetime);
       wallAnchorRef.current = performance.now();
@@ -42,7 +42,7 @@ export function Clock() {
   }, []);
 
   useEffect(() => {
-    fetchTime();
+    void fetchTime();
   }, [fetchTime]);
 
   useEffect(() => {
@@ -105,7 +105,7 @@ export function Clock() {
       }
 
       const fontSize = Math.max(8, Math.floor(radius * 0.13));
-      ctx.font = `${fontSize}px system-ui, Arial, sans-serif`;
+      ctx.font = `${String(fontSize)}px system-ui, Arial, sans-serif`;
       ctx.fillStyle = isDark ? "#ddd" : "#333";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
@@ -154,7 +154,7 @@ export function Clock() {
 
       const timeStr = formatTime(now);
       const tfSize = Math.max(10, Math.floor(radius * 0.12));
-      ctx.font = `${tfSize}px "Consolas", monospace`;
+      ctx.font = `${String(tfSize)}px "Consolas", monospace`;
       ctx.fillStyle = isDark ? "#96ffbe" : "#1a7a40";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
@@ -169,6 +169,10 @@ export function Clock() {
     };
   }, []);
 
+  const handleReload = () => {
+    void fetchTime();
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
       <h1 style={{ margin: 0 }}>Current datetime</h1>
@@ -182,7 +186,7 @@ export function Clock() {
           display: "block",
         }}
       />
-      <button onClick={fetchTime} disabled={status === "loading"}>
+      <button onClick={handleReload} disabled={status === "loading"}>
         {status === "loading" ? "Loading…" : "Reload time"}
       </button>
       {status === "error" && <p style={{ color: "red", margin: 0 }}>Failed to load time</p>}
