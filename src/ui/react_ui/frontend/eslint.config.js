@@ -13,8 +13,8 @@ export default defineConfig([
     files: ["**/*.{ts,tsx}"],
     extends: [
       js.configs.recommended,
-      tseslint.configs.strictTypeChecked,      
-      tseslint.configs.stylisticTypeChecked,   
+      tseslint.configs.strictTypeChecked,
+      tseslint.configs.stylisticTypeChecked,
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
       security.configs.recommended,
@@ -23,7 +23,7 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
       parserOptions: {
-        projectService: true,                  
+        projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -37,7 +37,7 @@ export default defineConfig([
       "@typescript-eslint/no-misused-promises": "error",
       "@typescript-eslint/consistent-type-imports": "warn",
       "no-console": "warn",
-      "eqeqeq": "error",
+      eqeqeq: "error",
     },
   },
 ]);
