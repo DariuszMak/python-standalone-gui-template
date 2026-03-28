@@ -13,28 +13,31 @@ export function Now() {
       const r = await fetch("http://localhost:8000/time");
 
       if (!r.ok) {
-        throw new Error(`HTTP ${r.status}`);
+        throw new Error(`HTTP ${String(r.status)}`);
       }
 
-      const d: { datetime: string } = await r.json();
+      const d = (await r.json()) as { datetime: string };
       setNow(d.datetime);
     } catch (err) {
-      console.error(err);
-      setError("Failed to load time");
+      setError(`Failed to load time: ${String(err)}`);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadNow();
+    void loadNow();
   }, []);
+
+  const handleReload = () => {
+    void loadNow();
+  };
 
   return (
     <div>
       <h1>Current datetime</h1>
 
-      <button onClick={loadNow} disabled={loading}>
+      <button onClick={handleReload} disabled={loading}>
         {loading ? "Loading…" : "Reload time"}
       </button>
 
