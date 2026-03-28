@@ -1,9 +1,10 @@
 import asyncio
-
 from _pytest.main import Session
 
 
-def pytest_sessionstart(_session: Session) -> None:
+def pytest_sessionstart(session: Session) -> None:
+    _ = session
+
     try:
         asyncio.get_running_loop()
     except RuntimeError:
