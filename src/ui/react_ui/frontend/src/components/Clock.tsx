@@ -32,7 +32,9 @@ export function Clock() {
       serverAnchorRef.current = new Date(data.datetime);
       wallAnchorRef.current = performance.now();
       handsRef.current = { second: 0, minute: 0, hour: 0 };
-      strategiesRef.current.forEach((s) => s.reset());
+      strategiesRef.current.forEach((s) => {
+        s.reset();
+      });
       setStatus("ok");
     } catch {
       setStatus("error");
@@ -162,7 +164,9 @@ export function Clock() {
     };
 
     animRef.current = requestAnimationFrame(draw);
-    return () => cancelAnimationFrame(animRef.current);
+    return () => {
+      cancelAnimationFrame(animRef.current);
+    };
   }, []);
 
   return (
