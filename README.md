@@ -142,17 +142,15 @@ $env:PYTHONPATH="." ;
 .\scripts\format_and_lint.ps1 ; 
 .\src\ui\react_ui\frontend\frontend_format_and_lint.ps1 ; 
 
-uv run pytest tests/ --cov=src -vv ; 
-docker-compose run app sh -c "dos2unix thorough.env" ; 
-docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest tests/ --cov=src" ; 
-
+uv run pytest tests/ --cov=src -vv ;
 uv sync --no-dev --locked --no-cache ; 
-
-docker-compose run --rm --remove-orphans app sh -c "uv sync --dev --locked --no-cache && uv run pyinstaller --clean ./scripts/standalone_build_linux.spec && cp -r dist/* releases/linux/" ; 
-rm -r -fo .\dist, .\build ; 
-
 uv run pyinstaller --clean .\scripts\standalone_build_windows.spec ; 
 cp -r -fo .\dist\* .\releases\windows\ ; 
+rm -r -fo .\dist, .\build ; 
+
+docker-compose run app sh -c "dos2unix thorough.env" ; 
+docker-compose run app sh -c "uv sync --dev --locked --no-cache && uv run pytest tests/ --cov=src" ; 
+docker-compose run --rm --remove-orphans app sh -c "uv sync --dev --locked --no-cache && uv run pyinstaller --clean ./scripts/standalone_build_linux.spec && cp -r dist/* releases/linux/" ; 
 rm -r -fo .\dist, .\build ; 
 
 ########## RUN APPLICATIONS LOCALLY
