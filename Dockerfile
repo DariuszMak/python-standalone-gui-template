@@ -36,15 +36,10 @@ RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
 
 COPY pyproject.toml /app/
 
-ARG UID=10001
-RUN adduser --disabled-password --gecos "" --home "/nonexistent" --shell "/sbin/nologin" --no-create-home --uid "${UID}" appuser \
-    && adduser appuser sudo \
-    && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
 RUN sudo mkdir -p /venv /tmp/uv-cache \
     && sudo chown -R ${UID}:${UID} /venv /tmp/uv-cache
 
-USER appuser
+USER root
 
 RUN uv sync --no-dev --no-cache
 RUN uv add debugpy
