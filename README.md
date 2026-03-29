@@ -124,11 +124,6 @@ uv cache clean ;
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
 
-uv python install 3.11 ; 
-uv python pin 3.11 ; 
-uv sync --dev --no-cache ; 
-uv lock ; 
-
 docker system df ; 
 docker stop $(docker ps -a -q) ; 
 docker rm -f $(docker ps -a -q) ; 
@@ -136,6 +131,11 @@ docker system prune --volumes -a -f ;
 docker system df ; 
 
 docker-compose run --build app ; 
+
+uv python install 3.11 ; 
+uv python pin 3.11 ; 
+uv sync --dev --no-cache ; 
+uv lock ; 
 
 .venv\Scripts\Activate.ps1 ; 
 $env:PYTHONPATH="." ; 
