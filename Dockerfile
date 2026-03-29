@@ -50,7 +50,9 @@ binutils \
 libgssapi-krb5-2 \
 libssl-dev \
 libqt5network5 \
-dos2unix
+dos2unix \
+nodejs \
+npm
 
 RUN apt-get update \
  && apt-get install -y curl \
