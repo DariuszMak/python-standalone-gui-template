@@ -44,14 +44,21 @@ binutils \
 libgssapi-krb5-2 \
 libssl-dev \
 libqt5network5 \
-dos2unix \
-nodejs \
-npm
+dos2unix
 
 RUN apt-get update \
  && apt-get install -y curl \
  && curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
  && apt-get install -y nodejs
+
+WORKDIR /app/src/ui/react_ui/frontend
+
+RUN npm install -g npm@latest
+RUN rm -rf node_modules package-lock.json
+RUN npm install --include=optional
+RUN npm run build
+
+WORKDIR /app
 
 USER appuser
 
