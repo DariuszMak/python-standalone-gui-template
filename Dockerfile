@@ -51,14 +51,12 @@ RUN apt-get update && apt-get install -y curl \
  && apt-get install -y nodejs
 
 WORKDIR /app/src/ui/react_ui/frontend
-
 COPY src/ui/react_ui/frontend/package*.json ./
 RUN npm install -g npm@latest
-RUN rm -rf node_modules package-lock.json
+RUN rm -rf node_modules dist package-lock.json
 RUN npm install --include=optional --force
 COPY src/ui/react_ui/frontend ./
 RUN npm run build
-
 WORKDIR /app
 
 USER appuser
