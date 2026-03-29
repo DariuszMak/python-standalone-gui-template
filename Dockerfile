@@ -52,9 +52,11 @@ RUN apt-get update && apt-get install -y curl \
 
 WORKDIR /app/src/ui/react_ui/frontend
 
+COPY src/ui/react_ui/frontend/package*.json ./
 RUN npm install -g npm@latest
 RUN rm -rf node_modules package-lock.json
 RUN npm install --include=optional --force
+COPY src/ui/react_ui/frontend ./
 RUN npm run build
 
 WORKDIR /app
