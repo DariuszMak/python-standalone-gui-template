@@ -157,21 +157,6 @@ rm -r -fo .\dist, .\build ;
 
 ########## RUN APPLICATIONS LOCALLY
 
-Get-Content thorough.env | ForEach-Object { if ($_ -match '^\s*([^=]+?)\s*=\s*"?([^"]*)"?') { [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], [System.EnvironmentVariableTarget]::Process) } else { Write-Warning "Invalid entry: '$_'" } } ; 
-
-Start-Process .\releases\windows\GUI_client.exe ; 
-Start-Sleep -Seconds 25 ; 
-Start-Process "http://127.0.0.1:8000/openapi.json" ; 
-Start-Process "http://127.0.0.1:8000/redoc" ; 
-Start-Process "http://127.0.0.1:8000/docs" ; 
-Start-Process "http://127.0.0.1:8001" ; 
-Start-Process "http://127.0.0.1:8002" ; 
-newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Windows.postman_environment.json ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Windows.postman_environment.json ; 
-
-#####
-
 Start-Process wsl -ArgumentList @(
     'bash', '-c',
     'export DISPLAY=$(grep nameserver /etc/resolv.conf | awk "{print \$2}"):0 && \
@@ -194,6 +179,24 @@ Start-Process "http://127.0.0.1:8005" ;
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Linux.postman_environment.json ; 
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Linux.postman_environment.json ; 
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Linux.postman_environment.json ; 
+
+#####
+
+Get-Content thorough.env | ForEach-Object { if ($_ -match '^\s*([^=]+?)\s*=\s*"?([^"]*)"?') { [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], [System.EnvironmentVariableTarget]::Process) } else { Write-Warning "Invalid entry: '$_'" } } ; 
+
+Start-Process .\releases\windows\GUI_client.exe ; 
+Start-Sleep -Seconds 25 ; 
+Start-Process "http://127.0.0.1:8000/openapi.json" ; 
+Start-Process "http://127.0.0.1:8000/redoc" ; 
+Start-Process "http://127.0.0.1:8000/docs" ; 
+Start-Process "http://127.0.0.1:8001" ; 
+Start-Process "http://127.0.0.1:8002" ; 
+newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Windows.postman_environment.json ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Windows.postman_environment.json ; 
+
+#####
+
 uv sync --dev --locked --no-cache ; 
 ```
 
