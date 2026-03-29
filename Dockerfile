@@ -50,11 +50,11 @@ RUN apt-get update && apt-get install -y curl \
  && curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
  && apt-get install -y nodejs
 
-COPY src/ui/react_ui/frontend/package*.json /app/src/ui/react_ui/frontend/
 WORKDIR /app/src/ui/react_ui/frontend
+
 RUN npm install -g npm@latest
-RUN npm install --include=optional
-COPY src/ui/react_ui/frontend /app/src/ui/react_ui/frontend
+RUN rm -rf node_modules package-lock.json
+RUN npm install --include=optional --force
 RUN npm run build
 
 WORKDIR /app
