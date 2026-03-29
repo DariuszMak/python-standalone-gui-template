@@ -33,8 +33,6 @@ appuser
 RUN adduser appuser sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-USER appuser
-
 RUN apt-get update && apt-get install -y \
 libgl1-mesa-dev \
 libxkbcommon-x11-0 \
@@ -61,10 +59,14 @@ RUN npm run build
 
 WORKDIR /app
 
+USER appuser
+
 RUN sudo mkdir -p /venv \
 && sudo chown -R 10001:10001 /venv \
 && sudo mkdir -p /tmp/uv-cache \
 && sudo chown -R 10001:10001 /tmp/uv-cache
+
+USER root
 
 RUN uv sync --no-dev --locked --no-cache
 RUN uv add debugpy
