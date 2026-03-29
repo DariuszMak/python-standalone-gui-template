@@ -134,8 +134,7 @@ docker-compose run --build app ;
 
 uv python install 3.11 ; 
 uv python pin 3.11 ; 
-uv sync --dev --no-cache ; 
-uv lock ; 
+uv sync --dev --no-cache --locked ; 
 
 .venv\Scripts\Activate.ps1 ; 
 $env:PYTHONPATH="." ; 
