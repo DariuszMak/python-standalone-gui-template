@@ -13,8 +13,6 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /app
 
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
 RUN apt-get update \
 && apt-get install -y sudo \
 && pip install uv
@@ -35,10 +33,6 @@ appuser
 RUN adduser appuser sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
-# Leverage a bind mount to requirements.txt to avoid having to copy them into
-# into this layer.
 RUN apt-get update && apt-get install -y \
 libgl1-mesa-dev \
 libxkbcommon-x11-0 \
