@@ -33,6 +33,8 @@ appuser
 RUN adduser appuser sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
+USER appuser
+
 RUN apt-get update && apt-get install -y \
 libgl1-mesa-dev \
 libxkbcommon-x11-0 \
@@ -46,28 +48,23 @@ libssl-dev \
 libqt5network5 \
 dos2unix
 
-RUN apt-get update \
- && apt-get install -y curl \
+RUN apt-get update && apt-get install -y curl \
  && curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
  && apt-get install -y nodejs
 
+COPY src/ui/react_ui/frontend/package*.json /app/src/ui/react_ui/frontend/
 WORKDIR /app/src/ui/react_ui/frontend
-
 RUN npm install -g npm@latest
-RUN rm -rf node_modules package-lock.json
 RUN npm install --include=optional
+COPY src/ui/react_ui/frontend /app/src/ui/react_ui/frontend
 RUN npm run build
 
 WORKDIR /app
-
-USER appuser
 
 RUN sudo mkdir -p /venv \
 && sudo chown -R 10001:10001 /venv \
 && sudo mkdir -p /tmp/uv-cache \
 && sudo chown -R 10001:10001 /tmp/uv-cache
-
-USER root
 
 RUN uv sync --no-dev --locked --no-cache
 RUN uv add debugpy
