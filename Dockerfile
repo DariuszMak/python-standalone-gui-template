@@ -33,7 +33,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm@latest
 
-COPY pyproject.toml uv.lock /app/
+COPY pyproject.toml /app/
 
 ARG UID=10001
 RUN adduser --disabled-password --gecos "" --home "/nonexistent" --shell "/sbin/nologin" --no-create-home --uid "${UID}" appuser \
@@ -45,7 +45,7 @@ RUN sudo mkdir -p /venv /tmp/uv-cache \
 
 USER appuser
 
-RUN uv sync --no-dev --locked --no-cache
+RUN uv sync --no-dev --no-cache
 RUN uv add debugpy
 
 WORKDIR /app/src/ui/react_ui/frontend
