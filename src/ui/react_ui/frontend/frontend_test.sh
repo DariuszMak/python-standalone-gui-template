@@ -1,6 +1,10 @@
 CURRENT_DIR="$(pwd)"
 cd "$(dirname "$0")"
 
-npx --yes vitest run
+if [ ! -d "node_modules" ]; then
+  npm ci
+fi
+
+npx vitest run
 
 cd "$CURRENT_DIR"
