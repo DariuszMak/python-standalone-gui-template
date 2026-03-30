@@ -47,7 +47,7 @@ RUN uv add debugpy
 WORKDIR /app/src/ui/react_ui/frontend
 
 COPY src/ui/react_ui/frontend/package.json ./
-RUN rm -r node_modules package-lock.json
+RUN rm -r ./node_modules ./package-lock.json
 
 WORKDIR /app
 
