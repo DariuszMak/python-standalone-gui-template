@@ -45,16 +45,10 @@ RUN uv sync --no-dev --no-cache
 RUN uv add debugpy
 
 WORKDIR /app/src/ui/react_ui/frontend
-
-COPY src/ui/react_ui/frontend/package*.json ./
-
-RUN rm -rf node_modules package-lock.json dist \
-    && npm install --include=optional --force
-
 COPY src/ui/react_ui/frontend ./
-
+RUN rm -rf node_modules package-lock.json dist \
+    && npm install --include=optional
 RUN npm run build
-
 WORKDIR /app
 
 CMD uv run python src/gui_setup.py \
