@@ -1,5 +1,4 @@
 import logging
-import os
 import platform
 import shutil
 import subprocess
@@ -22,7 +21,6 @@ if platform.system() == "Windows":
 
 
 def run_command(command: list[str], cwd: Path | None = None) -> str:
-
     logger.info("Running command: %s", " ".join(command))
     if not cwd or not Path(cwd).exists():
         raise NotADirectoryError(f"Directory does not exist: {cwd}")
@@ -34,7 +32,6 @@ def run_command(command: list[str], cwd: Path | None = None) -> str:
 
 
 def install_dependencies() -> None:
-
     node_modules: Path = FRONTEND_DIR / "node_modules"
     if node_modules.exists():
         logger.info("Dependencies already installed, skipping npm install")
@@ -43,12 +40,10 @@ def install_dependencies() -> None:
 
 
 def build_frontend() -> None:
-
     run_command([NPM_CMD, "run", "build"], cwd=FRONTEND_DIR)
 
 
 def copy_dist_to_static() -> None:
-
     logger.info("Copying dist/* to static/")
     for item in DIST_DIR.iterdir():
         dest: Path = STATIC_DIR / item.name
@@ -68,12 +63,6 @@ def copy_dist_to_static() -> None:
 
 
 def build_react_frontend() -> None:
-
-    if os.environ.get("DOCKER_RUNTIME"):
-        logger.info("Docker runtime detected — skipping npm install and build, copying dist to static only")
-        copy_dist_to_static()
-        return
-
     install_dependencies()
     build_frontend()
     copy_dist_to_static()
