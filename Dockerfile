@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1
 
 ARG PYTHON_VERSION
-
 FROM python:${PYTHON_VERSION}-slim
 
 ENV PYTHONUNBUFFERED=1 \
@@ -35,23 +34,13 @@ RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && npm install -g npm@latest
 
 COPY pyproject.toml /app/
-
-RUN mkdir -p /venv /tmp/uv-cache \
-    && chown -R root:root /venv /tmp/uv-cache
-
+RUN mkdir -p /venv /tmp/uv-cache
 RUN uv sync --no-dev --no-cache
 RUN uv add debugpy
 
-WORKDIR /app/src/ui/react_ui/frontend
-
-COPY src/ui/react_ui/frontend/package.json ./
-COPY src/ui/react_ui/frontend/package-lock.json ./
-
-RUN npm install
+COPY . /app
 
 WORKDIR /app
-
-COPY . /app
 
 CMD uv run python src/gui_setup.py \
     && uv run python src/node_setup.py \
