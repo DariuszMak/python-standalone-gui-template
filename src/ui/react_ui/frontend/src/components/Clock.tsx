@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import {
-  type ClockHands,
   makePIDStrategy,
   calculateHandAngles,
   polarToCartesian,
@@ -9,10 +8,10 @@ import {
 
 export function Clock() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animRef = useRef<number>(0);
-  const serverAnchorRef = useRef<Date>(new Date(0));
-  const wallAnchorRef = useRef<number>(performance.now());
-  const handsRef = useRef<ClockHands>({ second: 0, minute: 0, hour: 0 });
+  const animRef = useRef(0);
+  const serverAnchorRef = useRef(new Date(0));
+  const wallAnchorRef = useRef(performance.now());
+  const handsRef = useRef({ second: 0, minute: 0, hour: 0 });
   const strategiesRef = useRef([
     makePIDStrategy(0.15, 0.005, 0.005),
     makePIDStrategy(0.08, 0.004, 0.004),
