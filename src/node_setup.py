@@ -1,4 +1,5 @@
 import logging
+import os
 import platform
 import shutil
 import subprocess
@@ -67,6 +68,11 @@ def copy_dist_to_static() -> None:
 
 
 def build_react_frontend() -> None:
+
+    if os.environ.get("DOCKER_RUNTIME"):
+        logger.info("Docker runtime detected — skipping npm install and build, copying dist to static only")
+        copy_dist_to_static()
+        return
 
     install_dependencies()
     build_frontend()
