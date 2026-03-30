@@ -1,10 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import {
-  makePIDStrategy,
-  calculateHandAngles,
-  polarToCartesian,
-  formatTime,
-} from "./clockUtils";
+import { makePIDStrategy, calculateHandAngles, polarToCartesian, formatTime } from "./clockUtils";
 
 export function Clock() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
