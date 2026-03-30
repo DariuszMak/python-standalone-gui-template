@@ -47,9 +47,7 @@ RUN uv add debugpy
 WORKDIR /app/src/ui/react_ui/frontend
 
 COPY src/ui/react_ui/frontend/package.json ./
-RUN npm install --include=optional
-COPY src/ui/react_ui/frontend ./
-RUN npm run build && ls -la dist/
+RUN rm -r node_modules package-lock.json
 
 WORKDIR /app
 
