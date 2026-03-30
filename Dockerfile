@@ -36,10 +36,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
 
 COPY pyproject.toml /app/
 
-RUN sudo mkdir -p /venv /tmp/uv-cache \
-    && sudo chown -R ${UID}:${UID} /venv /tmp/uv-cache
-
-USER root
+RUN mkdir -p /venv /tmp/uv-cache \
+    && chown -R root:root /venv /tmp/uv-cache
 
 RUN uv sync --no-dev --no-cache
 RUN uv add debugpy
@@ -47,9 +45,13 @@ RUN uv add debugpy
 WORKDIR /app/src/ui/react_ui/frontend
 
 COPY src/ui/react_ui/frontend/package.json ./
-RUN rm -r ./node_modules ./package-lock.json
+COPY src/ui/react_ui/frontend/package-lock.json ./
+
+RUN npm install
 
 WORKDIR /app
+
+COPY . /app
 
 CMD uv run python src/gui_setup.py \
     && uv run python src/node_setup.py \
