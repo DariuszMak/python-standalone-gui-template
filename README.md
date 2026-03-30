@@ -184,7 +184,7 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 Get-Content thorough.env | ForEach-Object { if ($_ -match '^\s*([^=]+?)\s*=\s*"?([^"]*)"?') { [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], [System.EnvironmentVariableTarget]::Process) } else { Write-Warning "Invalid entry: '$_'" } } ; 
 
 Start-Process .\releases\windows\GUI_client.exe ; 
-Start-Sleep -Seconds 25 ; 
+Start-Sleep -Seconds 30 ; 
 Start-Process "http://127.0.0.1:8000/openapi.json" ; 
 Start-Process "http://127.0.0.1:8000/redoc" ; 
 Start-Process "http://127.0.0.1:8000/docs" ; 
