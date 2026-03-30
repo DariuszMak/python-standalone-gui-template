@@ -47,10 +47,9 @@ RUN uv add debugpy
 WORKDIR /app/src/ui/react_ui/frontend
 
 COPY src/ui/react_ui/frontend/package.json ./
-RUN npm install --include=optional \
-    && npm install --save-optional @rollup/rollup-linux-x64-gnu
+RUN npm install --include=optional
 COPY src/ui/react_ui/frontend ./
-RUN npm run build
+RUN npm run build && ls -la dist/
 
 WORKDIR /app
 
