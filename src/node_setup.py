@@ -36,7 +36,7 @@ def install_dependencies() -> None:
     if node_modules.exists():
         logger.info("Dependencies already installed, skipping npm install")
         return
-    run_command([NPM_CMD, "install"], cwd=FRONTEND_DIR)
+    run_command([NPM_CMD, "ci"], cwd=FRONTEND_DIR)
 
 
 def build_frontend() -> None:
