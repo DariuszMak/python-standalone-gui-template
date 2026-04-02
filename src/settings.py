@@ -1,0 +1,1 @@
+STATIC_CATALOGUE_NAME = "static"
