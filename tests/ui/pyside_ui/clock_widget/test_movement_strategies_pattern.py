@@ -24,13 +24,13 @@ def test_easing_strategy_factor_1_moves_directly() -> None:
 
 def test_easing_strategy_factor_0_stays_same() -> None:
     strat = EasingMovementStrategy(factor=0.0)
-    assert strat.update(3.0, 10.0) == 3.0
+    assert strat.update(3.0, 10.0) == pytest.approx(3.0)
 
 
 def test_tick_strategy_snaps_to_target() -> None:
     strat = TickMovementStrategy()
-    assert strat.update(5.0, 20.0) == 20.0
-    assert strat.update(-10.0, -3.5) == -3.5
+    assert strat.update(5.0, 20.0) == pytest.approx(20.0)
+    assert strat.update(-10.0, -3.5) == pytest.approx(-3.5)
 
 
 def test_pid_strategy_moves_toward_target() -> None:

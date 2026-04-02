@@ -24,27 +24,27 @@ def test_pid_reset() -> None:
     pid = PID(kp=1.0, ki=0.1, kd=0.5)
     pid.update(1.0)
     pid.update(0.5)
-    assert pid._integral != 0.0
-    assert pid._prev_error != 0.0
+    assert pid._integral != pytest.approx(0.0)
+    assert pid._prev_error != pytest.approx(0.0)
 
     pid.reset()
-    assert pid._integral == 0.0
-    assert pid._prev_error == 0.0
+    assert pid._integral == pytest.approx(0.0)
+    assert pid._prev_error == pytest.approx(0.0)
 
 
 def test_clock_hands_reset() -> None:
     hands = ClockHands(second=10.5, minute=20.3, hour=5.7)
-    assert hands.second == 10.5
-    assert hands.minute == 20.3
-    assert hands.hour == 5.7
+    assert hands.second == pytest.approx(10.5)
+    assert hands.minute == pytest.approx(20.3)
+    assert hands.hour == pytest.approx(5.7)
 
     hands.second = 0.0
     hands.minute = 0.0
     hands.hour = 0.0
 
-    assert hands.second == 0.0
-    assert hands.minute == 0.0
-    assert hands.hour == 0.0
+    assert hands.second == pytest.approx(0.0)
+    assert hands.minute == pytest.approx(0.0)
+    assert hands.hour == pytest.approx(0.0)
 
 
 def test_clock_hands_angles_in_radians() -> None:

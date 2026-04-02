@@ -47,18 +47,18 @@ def test_midnight_clock_hands_angles() -> None:
     dt = datetime(2025, 4, 27, 0, 0, 0, tzinfo=UTC)
     duration = timedelta(0)
     angles = calculate_clock_hands_angles(dt, duration, display_tz=UTC)
-    assert angles.second == 0.0
-    assert angles.minute == 0.0
-    assert angles.hour == 0.0
+    assert angles.second == pytest.approx(0.0)
+    assert angles.minute == pytest.approx(0.0)
+    assert angles.hour == pytest.approx(0.0)
 
 
 def test_noon_clock_hands_angles() -> None:
     dt = datetime(2025, 4, 27, 12, 0, 0, tzinfo=UTC)
     duration = timedelta(0)
     angles = calculate_clock_hands_angles(dt, duration, display_tz=UTC)
-    assert angles.second == 0.0
-    assert angles.minute == 0.0
-    assert angles.hour == 0.0
+    assert angles.second == pytest.approx(0.0)
+    assert angles.minute == pytest.approx(0.0)
+    assert angles.hour == pytest.approx(0.0)
 
 
 def test_noon_clock_hands_angles_from_milliseconds() -> None:
