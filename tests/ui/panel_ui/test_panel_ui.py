@@ -77,7 +77,7 @@ def _make_layout(
 
 
 def test_on_click_success(monkeypatch: pytest.MonkeyPatch) -> None:
-    async def fake_fetch_time() -> str:
+    async def fake_fetch_time() -> str:  # noqa: RUF029
         return "2026-01-25T12:00:00Z"
 
     col = _make_layout(monkeypatch, fake_fetch_time)
@@ -97,7 +97,7 @@ def test_on_click_success(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_on_click_error(monkeypatch: pytest.MonkeyPatch) -> None:
-    async def fake_fetch_time() -> str:
+    async def fake_fetch_time() -> str:  # noqa: RUF029
         raise RuntimeError("boom")
 
     col = _make_layout(monkeypatch, fake_fetch_time)
@@ -117,7 +117,7 @@ def test_on_click_sets_clock_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
 
     received: list[datetime] = []
 
-    async def fake_fetch_time() -> str:
+    async def fake_fetch_time() -> str:  # noqa: RUF029
         return "2026-01-25T12:00:00+00:00"
 
     original_init = time_panel.ClockWidget.__init__
@@ -146,7 +146,7 @@ def test_on_click_sets_clock_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_layout_structure(monkeypatch: pytest.MonkeyPatch) -> None:
     """Column has the expected four items in the right order."""
 
-    async def fake_fetch_time() -> str:
+    async def fake_fetch_time() -> str:  # noqa: RUF029
         return "2026-01-25T12:00:00Z"
 
     col = _make_layout(monkeypatch, fake_fetch_time)
