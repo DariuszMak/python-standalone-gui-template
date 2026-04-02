@@ -1,6 +1,6 @@
 import logging
 import os
-import subprocess
+import subprocess  # noqa: S404
 from enum import StrEnum
 
 logger = logging.getLogger(__name__)

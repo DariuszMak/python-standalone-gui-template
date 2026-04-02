@@ -1,7 +1,7 @@
 import logging
 import platform
 import shutil
-import subprocess
+import subprocess  # noqa: S404
 from pathlib import Path
 
 from src import STATIC_CATALGUE_NAME
