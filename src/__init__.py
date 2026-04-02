@@ -1,1 +1,1 @@
-STATIC_CATALGUE_NAME = "static"
+STATIC_CATALOGUE_NAME = "static"

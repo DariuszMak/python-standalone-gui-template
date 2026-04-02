@@ -9,16 +9,16 @@ from fastapi import FastAPI, Request, Response
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from src import STATIC_CATALGUE_NAME
+from src import STATIC_CATALOGUE_NAME
 from src.config.config import Config
 
 
 def create_app() -> FastAPI:
 
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
-        static_dir = Path(sys._MEIPASS) / STATIC_CATALGUE_NAME
+        static_dir = Path(sys._MEIPASS) / STATIC_CATALOGUE_NAME
     else:
-        static_dir = Path(__file__).parent / STATIC_CATALGUE_NAME
+        static_dir = Path(__file__).parent / STATIC_CATALOGUE_NAME
 
     app = FastAPI()
 
