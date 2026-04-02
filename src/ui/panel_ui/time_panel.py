@@ -230,25 +230,25 @@ async def fetch_time() -> str:
 
 
 def create_layout() -> pn.Column:
-    _clock = ClockWidget(size=300)
+    clock = ClockWidget(size=300)
 
-    _time_display: pn.pane.Markdown = pn.pane.Markdown(  # type: ignore
+    time_display: pn.pane.Markdown = pn.pane.Markdown(  # type: ignore
         "No data", sizing_mode="stretch_width"
     )
 
-    _button: pn.widgets.Button = pn.widgets.Button(  # type: ignore
+    button: pn.widgets.Button = pn.widgets.Button(  # type: ignore
         name="Fetch time from API", button_type="primary"
     )
 
     async def _fetch() -> None:
         try:
-            _time_display.object = "Loading..."
+            time_display.object = "Loading..."
             dt_str = await fetch_time()
             dt = datetime.fromisoformat(dt_str)
-            _clock.set_current_datetime(dt)
-            _time_display.object = f"Server time: `{dt_str}`"
+            clock.set_current_datetime(dt)
+            time_display.object = f"Server time: `{dt_str}`"
         except Exception as exc:
-            _time_display.object = f"Error: `{exc}`"
+            time_display.object = f"Error: `{exc}`"
 
     def on_click(_: object) -> None:
         pn.state.execute(_fetch)
@@ -256,13 +256,13 @@ def create_layout() -> pn.Column:
     def _on_load() -> None:
         pn.state.execute(_fetch)
 
-    _button.on_click(on_click)
+    button.on_click(on_click)
     pn.state.onload(_on_load)
 
     return pn.Column(
         "# Server Time",
-        _clock.panel(),
-        _button,
-        _time_display,
+        clock.panel(),
+        button,
+        time_display,
         width=400,
     )

@@ -86,14 +86,14 @@ def test_on_click_success(monkeypatch: pytest.MonkeyPatch) -> None:
     # col[1] = ClockWidget pane  (pn.pane.Bokeh)
     # col[2] = Fetch button
     # col[3] = Markdown time display
-    _button = cast("pn.widgets.Button", col[2])
-    _time_display = cast("pn.pane.Markdown", col[3])
+    button = cast("pn.widgets.Button", col[2])
+    time_display = cast("pn.pane.Markdown", col[3])
 
-    assert _time_display.object == "No data"
+    assert time_display.object == "No data"
 
-    _button.clicks += 1
+    button.clicks += 1
 
-    assert _time_display.object == "Server time: `2026-01-25T12:00:00Z`"
+    assert time_display.object == "Server time: `2026-01-25T12:00:00Z`"
 
 
 def test_on_click_error(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -102,13 +102,13 @@ def test_on_click_error(monkeypatch: pytest.MonkeyPatch) -> None:
 
     col = _make_layout(monkeypatch, fake_fetch_time)
 
-    _button = cast("pn.widgets.Button", col[2])
-    _time_display = cast("pn.pane.Markdown", col[3])
+    button = cast("pn.widgets.Button", col[2])
+    time_display = cast("pn.pane.Markdown", col[3])
 
-    _button.clicks += 1
+    button.clicks += 1
 
-    assert "Error:" in _time_display.object
-    assert "boom" in _time_display.object
+    assert "Error:" in time_display.object
+    assert "boom" in time_display.object
 
 
 def test_on_click_sets_clock_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -135,9 +135,9 @@ def test_on_click_sets_clock_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(time_panel.ClockWidget, "__init__", patched_init)
 
     col = _make_layout(monkeypatch, fake_fetch_time)
-    _button = cast("pn.widgets.Button", col[2])
+    button = cast("pn.widgets.Button", col[2])
 
-    _button.clicks += 1
+    button.clicks += 1
 
     assert len(received) == 1
     assert received[0] == datetime(2026, 1, 25, 12, 0, 0, tzinfo=UTC)
