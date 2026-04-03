@@ -1,5 +1,6 @@
 import asyncio
 from collections.abc import Callable, Coroutine
+from datetime import UTC, datetime
 from typing import cast
 from unittest.mock import MagicMock, patch
 
@@ -105,8 +106,6 @@ def test_on_click_error(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_on_click_sets_clock_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
-    from datetime import UTC, datetime
-
     received: list[datetime] = []
 
     async def fake_fetch_time() -> str:  # noqa: RUF029
