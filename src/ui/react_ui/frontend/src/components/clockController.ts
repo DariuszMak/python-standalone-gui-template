@@ -27,6 +27,7 @@ export class ClockController {
       hour: sh.update(this._clockHands.hour, target.hour),
     };
   }
+
   reset(newStartTime: Date = new Date(0)): void {
     this._startTime = newStartTime;
     this._clockHands = { second: 0, minute: 0, hour: 0 };

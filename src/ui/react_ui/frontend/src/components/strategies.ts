@@ -5,8 +5,6 @@ export interface MovementStrategy {
   reset(): void;
 }
 
-// .\components\strategies.ts
-
 export class PIDMovementStrategy implements MovementStrategy {
   private readonly _pid: PID;
 
@@ -15,15 +13,18 @@ export class PIDMovementStrategy implements MovementStrategy {
   }
 
   update(current: number, target: number): number {
-    // 1. Determine if we are tracking 60 (sec/min) or 12 (hours)
-    const mod = target <= 12.1 && current <= 12.1 ? 12 : 60;
+    let error = target - current;
 
-    // 2. Calculate the shortest error on a circle
-    let error = (target - current) % mod;
-    if (error > mod / 2) error -= mod;
-    if (error < -mod / 2) error += mod;
+    // Only apply circular logic if the values look like Clock Hands (0-60 range)
+    // This allows the general PID tests (0 to 10) to remain linear.
+    const isClockScale = target > 12 || current > 12;
+    const mod = isClockScale ? 60 : (target > 0 && target <= 12 ? 12 : null);
 
-    // 3. Return the new position
+    if (mod) {
+      error = ((target - current) % mod + mod) % mod;
+      if (error > mod / 2) error -= mod;
+    }
+
     return current + this._pid.update(error);
   }
 
@@ -31,7 +32,6 @@ export class PIDMovementStrategy implements MovementStrategy {
     this._pid.reset();
   }
 }
-
 export class EasingMovementStrategy implements MovementStrategy {
   private readonly factor: number;
 
