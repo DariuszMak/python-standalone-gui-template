@@ -110,8 +110,6 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
 
 
 class ClockWidget:
-    """Panel clock widget backed by the shared ClockController."""
-
     TICK_MS = 15
 
     def __init__(self, size: int = 300) -> None:

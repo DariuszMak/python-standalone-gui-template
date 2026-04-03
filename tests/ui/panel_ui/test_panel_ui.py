@@ -1,4 +1,5 @@
 import asyncio
+import re
 from collections.abc import Callable, Coroutine
 from datetime import UTC, datetime
 from typing import cast
@@ -9,6 +10,7 @@ import pytest
 import respx
 from httpx import HTTPStatusError, Response
 
+import src.ui.panel_ui.time_panel as module
 from src.ui.panel_ui import time_panel
 from src.ui.panel_ui.time_panel import ClockWidget, fetch_time
 from src.ui.shared.controller.clock_controller import ClockController
@@ -207,8 +209,6 @@ def test_clock_widget_time_text_uses_format_datetime(monkeypatch: pytest.MonkeyP
     displayed = widget._sources["time_text"].data["text"][0]
     expected = format_datetime(widget._current_datetime())
 
-    import re
-
     assert re.match(r"\d{2}:\d{2}:\d{2}\.\d{3}", displayed), f"Unexpected format: {displayed}"
     assert displayed[:8] == expected[:8]
 
@@ -228,7 +228,5 @@ def test_clock_widget_current_datetime_advances(monkeypatch: pytest.MonkeyPatch)
 
 
 def test_no_inline_pid_classes(monkeypatch: pytest.MonkeyPatch) -> None:
-    import src.ui.panel_ui.time_panel as module
-
     assert not hasattr(module, "PID"), "time_panel should not define its own PID class"
     assert not hasattr(module, "PIDMovementStrategy"), "time_panel should not define its own PIDMovementStrategy"
