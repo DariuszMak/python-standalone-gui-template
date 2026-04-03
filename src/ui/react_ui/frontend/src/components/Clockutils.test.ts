@@ -273,7 +273,11 @@ describe("clockHandsInRadians", () => {
   it("large unbounded values produce same radian as their wrapped equivalent", () => {
     // 3723 seconds = 62 min 3 s; display second = 3723 % 60 = 3
     const large = clockHandsInRadians({ second: 3723, minute: 3723 / 60, hour: 3723 / 3600 });
-    const small = clockHandsInRadians({ second: 3, minute: (3723 / 60) % 60, hour: (3723 / 3600) % 12 });
+    const small = clockHandsInRadians({
+      second: 3,
+      minute: (3723 / 60) % 60,
+      hour: (3723 / 3600) % 12,
+    });
     expect(large.second).toBeCloseTo(small.second, 8);
     expect(large.minute).toBeCloseTo(small.minute, 8);
     expect(large.hour).toBeCloseTo(small.hour, 8);
