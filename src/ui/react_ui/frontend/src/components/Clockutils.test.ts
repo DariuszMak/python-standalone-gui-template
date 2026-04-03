@@ -2,11 +2,7 @@ import { describe, it, expect } from "vitest";
 
 // Import from canonical modules directly (mirrors Python test imports from shared/)
 import { PID } from "./pid";
-import {
-  PIDMovementStrategy,
-  EasingMovementStrategy,
-  TickMovementStrategy,
-} from "./strategies";
+import { PIDMovementStrategy, EasingMovementStrategy, TickMovementStrategy } from "./strategies";
 import {
   calculateHandAngles,
   clockHandsInRadians,

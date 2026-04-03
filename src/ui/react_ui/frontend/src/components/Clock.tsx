@@ -2,7 +2,8 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { ClockController } from "./clockController";
 import { polarToCartesian, formatTime, clockHandsInRadians } from "./clockHelpers";
 
-const BACKEND_URL = (import.meta.env.VITE_BACKEND_URL as string | undefined) ?? "http://localhost:8000";
+const BACKEND_URL =
+  (import.meta.env.VITE_BACKEND_URL as string | undefined) ?? "http://localhost:8000";
 
 export function Clock() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
