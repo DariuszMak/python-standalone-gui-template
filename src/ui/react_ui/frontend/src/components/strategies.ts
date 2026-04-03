@@ -13,18 +13,10 @@ export class PIDMovementStrategy implements MovementStrategy {
   }
 
   update(current: number, target: number): number {
-    let error = target - current;
-
-    // Only apply circular logic if the values look like Clock Hands (0-60 range)
-    // This allows the general PID tests (0 to 10) to remain linear.
-    const isClockScale = target > 12 || current > 12;
-    const mod = isClockScale ? 60 : target > 0 && target <= 12 ? 12 : null;
-
-    if (mod) {
-      error = (((target - current) % mod) + mod) % mod;
-      if (error > mod / 2) error -= mod;
-    }
-
+    // Treat everything as a linear progression. 
+    // This allows the PID to track the ever-increasing 'totalSeconds'
+    // without getting confused by modular arithmetic.
+    const error = target - current;
     return current + this._pid.update(error);
   }
 

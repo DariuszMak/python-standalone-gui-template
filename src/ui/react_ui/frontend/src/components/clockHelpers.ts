@@ -5,12 +5,11 @@ export interface ClockHands {
 }
 
 export function calculateHandAngles(startDt: Date, elapsedSeconds: number): ClockHands {
-  // Use UTC methods to match your Vitest 'utcDate' helper
   const h = startDt.getUTCHours() % 12;
   const m = startDt.getUTCMinutes();
   const s = startDt.getUTCSeconds();
   const ms = startDt.getUTCMilliseconds();
-
+  
   const startTotalSeconds = h * 3600 + m * 60 + s + ms / 1000;
   const totalSeconds = startTotalSeconds + elapsedSeconds;
 
@@ -23,9 +22,9 @@ export function calculateHandAngles(startDt: Date, elapsedSeconds: number): Cloc
 
 export function clockHandsInRadians(hands: ClockHands): ClockHands {
   return {
-    second: (((hands.second % 60) + 60) % 60) * (Math.PI / 30),
-    minute: (((hands.minute % 60) + 60) % 60) * (Math.PI / 30),
-    hour: (((hands.hour % 12) + 12) % 12) * (Math.PI / 6),
+    second: ((hands.second % 60 + 60) % 60) * (Math.PI / 30),
+    minute: ((hands.minute % 60 + 60) % 60) * (Math.PI / 30),
+    hour: ((hands.hour % 12 + 12) % 12) * (Math.PI / 6),
   };
 }
 
