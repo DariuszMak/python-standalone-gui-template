@@ -5,7 +5,7 @@ import pytest
 from PySide6.QtCore import QPointF
 
 from src.ui.pyside_ui.clock_widget.model.data_types import ClockHands
-from src.ui.pyside_ui.clock_widget.view.helpers import (
+from src.ui.shared.helpers import (
     calculate_clock_hands_angles,
     convert_clock_pid_to_cartesian,
     format_datetime,

@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from PySide6.QtCore import QPointF, QRect, QRectF
 from PySide6.QtGui import QColor, QFont, QPaintDevice, QPainter, QPalette, QPen
 
-from src.ui.pyside_ui.clock_widget.view.helpers import format_datetime, polar_to_cartesian
+from src.ui.shared.helpers import format_datetime, polar_to_cartesian
 
 if TYPE_CHECKING:
     from datetime import datetime
