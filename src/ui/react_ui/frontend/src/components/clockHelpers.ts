@@ -22,12 +22,11 @@ export function calculateHandAngles(startDt: Date, elapsedSeconds: number): Cloc
 
 export function clockHandsInRadians(hands: ClockHands): ClockHands {
   return {
-    second: (((hands.second % 60) + 60) % 60) * (Math.PI / 30),
-    minute: (((hands.minute % 60) + 60) % 60) * (Math.PI / 30),
-    hour: (((hands.hour % 12) + 12) % 12) * (Math.PI / 6),
+    second: ((hands.second % 60 + 60) % 60) * (Math.PI / 30),
+    minute: ((hands.minute % 60 + 60) % 60) * (Math.PI / 30),
+    hour: ((hands.hour % 12 + 12) % 12) * (Math.PI / 6),
   };
 }
-
 export function polarToCartesian(
   cx: number,
   cy: number,

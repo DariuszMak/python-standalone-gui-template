@@ -21,10 +21,14 @@ export class ClockController {
     const target = calculateHandAngles(this._startTime, elapsedSeconds);
     const [ss, sm, sh] = this._strategies;
 
+    const nextSecond = ss.update(this._clockHands.second, target.second);
+    const nextMinute = sm.update(this._clockHands.minute, target.minute);
+    const nextHour = sh.update(this._clockHands.hour, target.hour);
+
     this._clockHands = {
-      second: ss.update(this._clockHands.second, target.second),
-      minute: sm.update(this._clockHands.minute, target.minute),
-      hour: sh.update(this._clockHands.hour, target.hour),
+      second: Math.max(this._clockHands.second, nextSecond),
+      minute: Math.max(this._clockHands.minute, nextMinute),
+      hour: Math.max(this._clockHands.hour, nextHour),
     };
   }
 

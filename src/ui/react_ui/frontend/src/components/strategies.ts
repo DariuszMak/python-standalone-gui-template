@@ -5,6 +5,8 @@ export interface MovementStrategy {
   reset(): void;
 }
 
+// .\components\strategies.ts
+
 export class PIDMovementStrategy implements MovementStrategy {
   private readonly _pid: PID;
 
@@ -13,9 +15,7 @@ export class PIDMovementStrategy implements MovementStrategy {
   }
 
   update(current: number, target: number): number {
-    // Treat everything as a linear progression.
-    // This allows the PID to track the ever-increasing 'totalSeconds'
-    // without getting confused by modular arithmetic.
+    // No modulo here. We track the raw, growing 'totalSeconds'.
     const error = target - current;
     return current + this._pid.update(error);
   }
