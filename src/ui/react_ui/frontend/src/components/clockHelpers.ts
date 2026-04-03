@@ -11,40 +11,52 @@ export interface ClockHands {
 }
 
 /**
- * Compute display-unit hand positions from a Date using local time fields.
+ * Compute UNBOUNDED cumulative hand positions from a start anchor and an
+ * elapsed duration in seconds.
  *
- * Returns values that naturally wrap within their display cycle:
- *   second ∈ [0, 60)   — seconds elapsed in the current minute (+ms fraction)
- *   minute ∈ [0, 60)   — minutes elapsed in the current hour   (+seconds fraction)
- *   hour   ∈ [0, 12)   — hours elapsed in the current 12-h period (+minutes fraction)
+ * Values grow without bound — they are NOT wrapped to [0, 60) / [0, 12).
+ * This is intentional: the PID controller tracks a monotonically increasing
+ * target so it never sees a discontinuous wrap (e.g. second 59 → 0) that
+ * would drive a hand backwards.
  *
- * Mirrors the visual intent of calculate_clock_hands_angles in helpers.py when
- * called with duration = 0 (i.e. displaying the current moment, not an elapsed span).
+ *   second = totalSeconds          (e.g. 3723.0  after 1 h 2 m 3 s)
+ *   minute = totalSeconds / 60     (e.g.   62.05)
+ *   hour   = totalSeconds / 3600   (e.g.    1.034…)
+ *
+ * Mirrors calculate_clock_hands_angles(start_dt, duration) in helpers.py.
+ *
+ * For rendering, pass the result through clockHandsInRadians() which applies
+ * modulo before the trig conversion.
  */
-export function calculateHandAngles(dt: Date): ClockHands {
-  const h = dt.getHours() % 12;
-  const m = dt.getMinutes();
-  const s = dt.getSeconds();
-  const ms = dt.getMilliseconds();
+export function calculateHandAngles(startDt: Date, elapsedSeconds: number): ClockHands {
+  // Express the start instant as local seconds within the current 12-hour
+  // period so the display reflects local time (matches Python display_tz).
+  const h = startDt.getHours() % 12;
+  const m = startDt.getMinutes();
+  const s = startDt.getSeconds();
+  const ms = startDt.getMilliseconds();
+  const startTotalSeconds = h * 3600 + m * 60 + s + ms / 1000;
 
-  const totalSeconds = h * 3600 + m * 60 + s + ms / 1000;
+  const totalSeconds = startTotalSeconds + elapsedSeconds;
 
   return {
-    second: totalSeconds % 60,
-    minute: (totalSeconds / 60) % 60,
-    hour: (totalSeconds / 3600) % 12,
+    second: totalSeconds,
+    minute: totalSeconds / 60,
+    hour: totalSeconds / 3600,
   };
 }
 
 /**
- * Convert clock hand display-units to radians.
- * Mirrors clock_hands_in_radians() in src/ui/shared/model/helpers.py
+ * Convert unbounded hand totals to radians, applying modulo so the canvas
+ * angle stays within one revolution.
+ *
+ * Mirrors clock_hands_in_radians() in src/ui/shared/model/helpers.py.
  */
 export function clockHandsInRadians(hands: ClockHands): ClockHands {
   return {
-    second: (hands.second / 60) * 2 * Math.PI,
-    minute: (hands.minute / 60) * 2 * Math.PI,
-    hour: (hands.hour / 12) * 2 * Math.PI,
+    second: ((hands.second % 60) / 60) * 2 * Math.PI,
+    minute: ((hands.minute % 60) / 60) * 2 * Math.PI,
+    hour: ((hands.hour % 12) / 12) * 2 * Math.PI,
   };
 }
 

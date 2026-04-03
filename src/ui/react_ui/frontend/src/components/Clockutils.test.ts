@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 
-// Import from canonical modules directly (mirrors Python test imports from shared/)
 import { PID } from "./pid";
 import { PIDMovementStrategy, EasingMovementStrategy, TickMovementStrategy } from "./strategies";
 import {
@@ -12,7 +11,7 @@ import {
 } from "./clockHelpers";
 import { ClockController } from "./clockController";
 
-// Also verify that clockUtils re-exports everything (backwards compatibility)
+// Re-export barrel
 import {
   PID as PIDFromUtils,
   PIDMovementStrategy as PIDStrategyFromUtils,
@@ -22,9 +21,29 @@ import {
   ClockController as ControllerFromUtils,
 } from "./clockUtils";
 
-function localDate(h: number, m: number, s: number, ms = 0): Date {
-  const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s, ms);
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/** Build a Date at an absolute UTC instant so tests are timezone-independent. */
+function utcDate(h: number, m: number, s: number, ms = 0): Date {
+  return new Date(Date.UTC(2025, 0, 1, h, m, s, ms));
+}
+
+/**
+ * Simulate `ticks` controller updates advancing the clock by `stepMs` each.
+ * Returns the controller so the caller can inspect _clockHands.
+ */
+function runTicks(
+  controller: ClockController,
+  startDate: Date,
+  ticks: number,
+  stepMs: number,
+): ClockController {
+  for (let i = 1; i <= ticks; i++) {
+    controller.update(new Date(startDate.getTime() + i * stepMs));
+  }
+  return controller;
 }
 
 // ---------------------------------------------------------------------------
@@ -39,8 +58,7 @@ describe("PID", () => {
   it("second update uses accumulated integral and previous error", () => {
     const pid = new PID(1.0, 0.1, 0.5);
     pid.update(1.0);
-    const out = pid.update(0.5);
-    expect(out).toBeCloseTo(0.4);
+    expect(pid.update(0.5)).toBeCloseTo(0.4);
   });
 
   it("reset zeroes internal state", () => {
@@ -75,8 +93,7 @@ describe("PIDMovementStrategy", () => {
     const s = new PIDMovementStrategy(0.1, 0, 0);
     const v1 = s.update(0, 10);
     expect(v1).toBeGreaterThan(0);
-    const v2 = s.update(v1, 10);
-    expect(v2).toBeGreaterThan(v1);
+    expect(s.update(v1, 10)).toBeGreaterThan(v1);
   });
 
   it("reset causes same output as first call", () => {
@@ -111,7 +128,7 @@ describe("EasingMovementStrategy", () => {
 
   it("reset is a no-op (stateless)", () => {
     const s = new EasingMovementStrategy(0.5);
-    s.reset(); // must not throw
+    s.reset();
     expect(s.update(0, 10)).toBeCloseTo(5);
   });
 });
@@ -125,78 +142,80 @@ describe("TickMovementStrategy", () => {
 });
 
 // ---------------------------------------------------------------------------
-// calculateHandAngles
+// calculateHandAngles — unbounded totals
 // ---------------------------------------------------------------------------
 describe("calculateHandAngles", () => {
-  it("midnight gives all zeros", () => {
-    const h = calculateHandAngles(localDate(0, 0, 0));
+  it("elapsed 0 at midnight gives all zeros", () => {
+    const h = calculateHandAngles(utcDate(0, 0, 0), 0);
     expect(h.second).toBeCloseTo(0);
     expect(h.minute).toBeCloseTo(0);
     expect(h.hour).toBeCloseTo(0);
   });
 
-  it("noon gives all zeros (12-hour wrap)", () => {
-    const h = calculateHandAngles(localDate(12, 0, 0));
+  it("elapsed 0 at noon gives all zeros (12-hour wrap in start)", () => {
+    const h = calculateHandAngles(utcDate(12, 0, 0), 0);
     expect(h.second).toBeCloseTo(0);
     expect(h.minute).toBeCloseTo(0);
     expect(h.hour).toBeCloseTo(0);
   });
 
-  it("half past three", () => {
-    const h = calculateHandAngles(localDate(3, 30, 0));
-    expect(h.second).toBeCloseTo(0);
-    expect(h.minute).toBeCloseTo(30);
-    expect(h.hour).toBeCloseTo(3.5);
+  it("elapsed 0 at half past three", () => {
+    const h = calculateHandAngles(utcDate(3, 30, 0), 0);
+    expect(h.second).toBeCloseTo(3 * 3600 + 30 * 60);
+    expect(h.minute).toBeCloseTo((3 * 3600 + 30 * 60) / 60);
+    expect(h.hour).toBeCloseTo((3 * 3600 + 30 * 60) / 3600);
   });
 
-  it("23:59:59 maximum hand positions", () => {
-    const dt = localDate(23, 59, 59);
-    const h = calculateHandAngles(dt);
-    const localH = dt.getHours() % 12;
-    const total = localH * 3600 + dt.getMinutes() * 60 + dt.getSeconds();
-    expect(h.second).toBeCloseTo(total % 60, 4);
-    expect(h.minute).toBeCloseTo((total / 60) % 60, 4);
-    expect(h.hour).toBeCloseTo((total / 3600) % 12, 4);
+  it("elapsed 0 at 23:59:59 gives near-maximum totals", () => {
+    const h = calculateHandAngles(utcDate(23, 59, 59), 0);
+    // 11 h 59 m 59 s in the 12-hour period
+    const total = 11 * 3600 + 59 * 60 + 59;
+    expect(h.second).toBeCloseTo(total, 3);
+    expect(h.minute).toBeCloseTo(total / 60, 5);
+    expect(h.hour).toBeCloseTo(total / 3600, 5);
   });
 
-  it("milliseconds contribute to smoothness", () => {
-    const dt0 = localDate(0, 0, 30, 0);
-    const dt500 = localDate(0, 0, 30, 500);
-    expect(calculateHandAngles(dt500).second).toBeGreaterThan(calculateHandAngles(dt0).second);
+  it("milliseconds in start contribute fractional seconds", () => {
+    const h0 = calculateHandAngles(utcDate(0, 0, 30, 0), 0);
+    const h500 = calculateHandAngles(utcDate(0, 0, 30, 500), 0);
+    expect(h500.second).toBeGreaterThan(h0.second);
   });
 
-  it("second hand equals total-seconds mod 60", () => {
-    const dt = localDate(1, 2, 3);
-    const localH = dt.getHours() % 12;
-    const total = localH * 3600 + dt.getMinutes() * 60 + dt.getSeconds();
-    expect(calculateHandAngles(dt).second).toBeCloseTo(total % 60);
+  it("elapsed seconds accumulate without wrapping — mirrors Python test_noon_clock_hands_angles_from_milliseconds", () => {
+    // Start at midnight, advance 12 hours worth of elapsed time
+    const h = calculateHandAngles(utcDate(0, 0, 0), 12 * 3600);
+    expect(h.second).toBeCloseTo(43200);
+    expect(h.minute).toBeCloseTo(720);
+    expect(h.hour).toBeCloseTo(12);
   });
 
-  it("minute hand equals total-seconds/60 mod 60", () => {
-    const dt = localDate(2, 45, 10);
-    const localH = dt.getHours() % 12;
-    const total = localH * 3600 + dt.getMinutes() * 60 + dt.getSeconds();
-    expect(calculateHandAngles(dt).minute).toBeCloseTo((total / 60) % 60, 5);
+  it("elapsed seconds accumulate past one full day — mirrors Python test_maximum_clock_hands_angles_from_milliseconds", () => {
+    const totalMs = 23 * 3600 * 1000 + 59 * 60 * 1000 + 59 * 1000 + 999;
+    const h = calculateHandAngles(utcDate(0, 0, 0), totalMs / 1000);
+    expect(h.second).toBeCloseTo(totalMs / 1000, 2);
+    expect(h.minute).toBeCloseTo(totalMs / 1000 / 60, 4);
+    expect(h.hour).toBeCloseTo(totalMs / 1000 / 3600, 5);
   });
 
-  it("hour hand equals total-seconds/3600 mod 12", () => {
-    const dt = localDate(7, 15, 0);
-    const localH = dt.getHours() % 12;
-    const total = localH * 3600 + dt.getMinutes() * 60 + dt.getSeconds();
-    expect(calculateHandAngles(dt).hour).toBeCloseTo((total / 3600) % 12, 5);
+  it("elapsed seconds accumulate past one month — mirrors Python test_circled_clock_hands_angles_after_month", () => {
+    const totalMs = 37 * 24 * 3600 * 1000 + 65 * 60 * 1000 + 61 * 1000 + 2;
+    const h = calculateHandAngles(utcDate(0, 0, 0), totalMs / 1000);
+    expect(h.second).toBeCloseTo(totalMs / 1000, 1);
+    expect(h.minute).toBeCloseTo(totalMs / 1000 / 60, 3);
+    expect(h.hour).toBeCloseTo(totalMs / 1000 / 3600, 4);
   });
 
-  it("PM hour wraps correctly: 15:30 same as 3:30", () => {
-    const am = localDate(3, 30, 0);
-    const pm = localDate(15, 30, 0);
-    expect(calculateHandAngles(pm).hour).toBeCloseTo(calculateHandAngles(am).hour, 5);
-    expect(calculateHandAngles(pm).minute).toBeCloseTo(calculateHandAngles(am).minute, 5);
+  it("PM hour (15:30) produces same result as AM (3:30) with elapsed=0", () => {
+    const am = calculateHandAngles(utcDate(3, 30, 0), 0);
+    const pm = calculateHandAngles(utcDate(15, 30, 0), 0);
+    expect(pm.second).toBeCloseTo(am.second, 5);
+    expect(pm.minute).toBeCloseTo(am.minute, 5);
+    expect(pm.hour).toBeCloseTo(am.hour, 5);
   });
 
   it("re-exported from clockUtils produces identical results", () => {
-    const dt = localDate(9, 15, 30, 250);
-    const a = calculateHandAngles(dt);
-    const b = calcFromUtils(dt);
+    const a = calculateHandAngles(utcDate(9, 15, 30, 250), 120);
+    const b = calcFromUtils(utcDate(9, 15, 30, 250), 120);
     expect(a.second).toBeCloseTo(b.second);
     expect(a.minute).toBeCloseTo(b.minute);
     expect(a.hour).toBeCloseTo(b.hour);
@@ -204,7 +223,7 @@ describe("calculateHandAngles", () => {
 });
 
 // ---------------------------------------------------------------------------
-// clockHandsInRadians
+// clockHandsInRadians — modulo applied before trig conversion
 // ---------------------------------------------------------------------------
 describe("clockHandsInRadians", () => {
   it("zero hands give zero radians", () => {
@@ -215,41 +234,49 @@ describe("clockHandsInRadians", () => {
   });
 
   it("30 seconds → π radians (half circle)", () => {
-    const r = clockHandsInRadians({ second: 30, minute: 0, hour: 0 });
-    expect(r.second).toBeCloseTo(Math.PI);
+    expect(clockHandsInRadians({ second: 30, minute: 0, hour: 0 }).second).toBeCloseTo(Math.PI);
   });
 
   it("30 minutes → π radians (half circle)", () => {
-    const r = clockHandsInRadians({ second: 0, minute: 30, hour: 0 });
-    expect(r.minute).toBeCloseTo(Math.PI);
+    expect(clockHandsInRadians({ second: 0, minute: 30, hour: 0 }).minute).toBeCloseTo(Math.PI);
   });
 
   it("6 hours → π radians (half circle)", () => {
-    const r = clockHandsInRadians({ second: 0, minute: 0, hour: 6 });
-    expect(r.hour).toBeCloseTo(Math.PI);
+    expect(clockHandsInRadians({ second: 0, minute: 0, hour: 6 }).hour).toBeCloseTo(Math.PI);
   });
 
   it("15 seconds → π/2 radians (quarter circle)", () => {
-    const r = clockHandsInRadians({ second: 15, minute: 0, hour: 0 });
-    expect(r.second).toBeCloseTo(Math.PI / 2);
+    expect(clockHandsInRadians({ second: 15, minute: 0, hour: 0 }).second).toBeCloseTo(Math.PI / 2);
   });
 
-  it("full second circle (60 s) → 2π", () => {
-    const r = clockHandsInRadians({ second: 60, minute: 0, hour: 0 });
-    expect(r.second).toBeCloseTo(2 * Math.PI);
+  it("unbounded 60 seconds wraps to 0 radians (full revolution)", () => {
+    // 60 s total ≡ 0 s display → 0 rad
+    expect(clockHandsInRadians({ second: 60, minute: 0, hour: 0 }).second).toBeCloseTo(0);
   });
 
-  it("full hour circle (12 h) → 2π", () => {
-    const r = clockHandsInRadians({ second: 0, minute: 0, hour: 12 });
-    expect(r.hour).toBeCloseTo(2 * Math.PI);
+  it("unbounded 90 seconds wraps to π/2 radians (same as 30 s display)", () => {
+    expect(clockHandsInRadians({ second: 90, minute: 0, hour: 0 }).second).toBeCloseTo(Math.PI / 2);
   });
 
-  it("mirrors Python clock_hands_in_radians formula", () => {
+  it("unbounded 12 hours wraps to 0 radians (full revolution)", () => {
+    expect(clockHandsInRadians({ second: 0, minute: 0, hour: 12 }).hour).toBeCloseTo(0);
+  });
+
+  it("mirrors Python clock_hands_in_radians formula for non-wrapped values", () => {
     const hands: ClockHands = { second: 15, minute: 30, hour: 6 };
     const r = clockHandsInRadians(hands);
     expect(r.second).toBeCloseTo((15 / 60) * 2 * Math.PI);
     expect(r.minute).toBeCloseTo((30 / 60) * 2 * Math.PI);
     expect(r.hour).toBeCloseTo((6 / 12) * 2 * Math.PI);
+  });
+
+  it("large unbounded values produce same radian as their wrapped equivalent", () => {
+    // 3723 seconds = 62 min 3 s; display second = 3723 % 60 = 3
+    const large = clockHandsInRadians({ second: 3723, minute: 3723 / 60, hour: 3723 / 3600 });
+    const small = clockHandsInRadians({ second: 3, minute: (3723 / 60) % 60, hour: (3723 / 3600) % 12 });
+    expect(large.second).toBeCloseTo(small.second, 8);
+    expect(large.minute).toBeCloseTo(small.minute, 8);
+    expect(large.hour).toBeCloseTo(small.hour, 8);
   });
 });
 
@@ -300,7 +327,7 @@ describe("polarToCartesian", () => {
 // ---------------------------------------------------------------------------
 describe("formatTime", () => {
   it("formats HH:MM:SS.mmm using local time fields", () => {
-    const dt = localDate(3, 4, 5, 678);
+    const dt = new Date(2025, 0, 1, 3, 4, 5, 678);
     const result = formatTime(dt);
     const hh = String(dt.getHours()).padStart(2, "0");
     const mm = String(dt.getMinutes()).padStart(2, "0");
@@ -309,19 +336,19 @@ describe("formatTime", () => {
   });
 
   it("pads single-digit fields with zeros", () => {
-    const dt = localDate(1, 2, 3, 4);
+    const dt = new Date(2025, 0, 1, 1, 2, 3, 4);
     const result = formatTime(dt);
     expect(result).toMatch(/^\d{2}:\d{2}:\d{2}\.\d{3}$/);
     expect(result.endsWith(".004")).toBe(true);
   });
 
   it("milliseconds are floored, not rounded", () => {
-    const dt = localDate(0, 0, 0, 999);
+    const dt = new Date(2025, 0, 1, 0, 0, 0, 999);
     expect(formatTime(dt).endsWith(".999")).toBe(true);
   });
 
   it("re-exported from clockUtils produces identical result", () => {
-    const dt = localDate(8, 30, 15, 123);
+    const dt = new Date(2025, 0, 1, 8, 30, 15, 123);
     expect(formatFromUtils(dt)).toBe(formatTime(dt));
   });
 });
@@ -336,46 +363,93 @@ describe("ClockController", () => {
   });
 
   it("update advances hands from zero toward target", () => {
-    const c = new ClockController();
-    c.update(localDate(3, 30, 45));
-    const { second, minute, hour } = c._clockHands;
-    expect(second).toBeGreaterThan(0);
-    expect(minute).toBeGreaterThan(0);
-    expect(hour).toBeGreaterThan(0);
+    const start = utcDate(3, 30, 45);
+    const c = new ClockController(start);
+    c.update(new Date(start.getTime() + 1000)); // 1 second later
+    expect(c._clockHands.second).toBeGreaterThan(0);
+    expect(c._clockHands.minute).toBeGreaterThan(0);
+    expect(c._clockHands.hour).toBeGreaterThan(0);
   });
 
-  it("repeated updates converge hands toward target", () => {
-    const c = new ClockController();
-    const target = calculateHandAngles(localDate(6, 0, 0));
-    let prev = { ...c._clockHands };
+  it("repeated updates bring hands monotonically closer to target (eventually)", () => {
+    // PID with integral can overshoot transiently, so we only assert that
+    // after enough ticks the hand is within a reasonable band of the target,
+    // not that every single step reduces the error.
+    const start = utcDate(6, 0, 0);
+    const c = new ClockController(start);
+    // Advance 10 minutes in 15 ms steps — 40 000 ticks
+    runTicks(c, start, 40_000, 15);
 
-    for (let i = 0; i < 50; i++) {
-      c.update(localDate(6, 0, 0));
-      const curr = c._clockHands;
-      // Hour hand must be getting closer (or equal) each tick
-      expect(Math.abs(target.hour - curr.hour)).toBeLessThanOrEqual(
-        Math.abs(target.hour - prev.hour) + 1e-9,
-      );
-      prev = { ...curr };
+    const target = calculateHandAngles(start, 10 * 60);
+    // After 40 000 ticks the error must be well under 1 display-unit
+    expect(Math.abs(target.second - c._clockHands.second)).toBeLessThan(1);
+    expect(Math.abs(target.minute - c._clockHands.minute)).toBeLessThan(1);
+    expect(Math.abs(target.hour - c._clockHands.hour)).toBeLessThan(1);
+  });
+
+  it("second hand never moves backwards across the 59→0 boundary", () => {
+    // Anchor at 00:00:50 so the second hand crosses 59→0 during the run
+    const start = utcDate(0, 0, 50);
+    const c = new ClockController(start);
+    let prevSecond = 0;
+
+    // Advance 30 seconds (past the 59→0 boundary) in 15 ms steps
+    for (let i = 1; i <= 2000; i++) {
+      c.update(new Date(start.getTime() + i * 15));
+      // The PID hand (unbounded) must never decrease
+      expect(c._clockHands.second).toBeGreaterThanOrEqual(prevSecond - 1e-9);
+      prevSecond = c._clockHands.second;
     }
   });
 
-  it("reset zeroes all hands", () => {
-    const c = new ClockController();
-    c.update(localDate(12, 30, 45));
-    c.reset();
+  it("minute hand never moves backwards across the 59→0 boundary", () => {
+    const start = utcDate(0, 59, 0);
+    const c = new ClockController(start);
+    let prev = 0;
+
+    // Advance 3 minutes in 15 ms steps
+    for (let i = 1; i <= 12_000; i++) {
+      c.update(new Date(start.getTime() + i * 15));
+      expect(c._clockHands.minute).toBeGreaterThanOrEqual(prev - 1e-9);
+      prev = c._clockHands.minute;
+    }
+  });
+
+  it("hour hand never moves backwards across the 11→0 boundary", () => {
+    const start = utcDate(11, 55, 0);
+    const c = new ClockController(start);
+    let prev = 0;
+
+    // Advance 15 minutes (crosses noon/midnight boundary) in 15 ms steps
+    for (let i = 1; i <= 60_000; i++) {
+      c.update(new Date(start.getTime() + i * 15));
+      expect(c._clockHands.hour).toBeGreaterThanOrEqual(prev - 1e-9);
+      prev = c._clockHands.hour;
+    }
+  });
+
+  it("reset zeroes all hands and accepts a new start anchor", () => {
+    const start = utcDate(3, 0, 0);
+    const c = new ClockController(start);
+    runTicks(c, start, 100, 15);
+    expect(c._clockHands.second).toBeGreaterThan(0);
+
+    const newStart = utcDate(9, 0, 0);
+    c.reset(newStart);
     expect(c._clockHands).toEqual({ second: 0, minute: 0, hour: 0 });
   });
 
   it("after reset, same first update gives same result as a fresh controller", () => {
-    const c1 = new ClockController();
-    const c2 = new ClockController();
-    const dt = localDate(9, 15, 0);
+    const start = utcDate(9, 15, 0);
+    const tick = new Date(start.getTime() + 15);
 
-    c1.update(dt);
-    c2.update(localDate(3, 0, 0)); // different first call
-    c2.reset();
-    c2.update(dt);
+    const c1 = new ClockController(start);
+    c1.update(tick);
+
+    const c2 = new ClockController(utcDate(3, 0, 0));
+    c2.update(new Date(utcDate(3, 0, 0).getTime() + 15));
+    c2.reset(start);
+    c2.update(tick);
 
     expect(c1._clockHands.second).toBeCloseTo(c2._clockHands.second, 10);
     expect(c1._clockHands.minute).toBeCloseTo(c2._clockHands.minute, 10);
@@ -383,23 +457,25 @@ describe("ClockController", () => {
   });
 
   it("re-exported from clockUtils is the same class", () => {
-    const c = new ControllerFromUtils();
-    c.update(localDate(1, 2, 3));
+    const start = utcDate(1, 2, 3);
+    const c = new ControllerFromUtils(start);
+    c.update(new Date(start.getTime() + 1000));
     expect(c._clockHands.second).toBeGreaterThan(0);
   });
 
-  it("clockHandsInRadians applied to controller output stays within [0, 2π]", () => {
-    const c = new ClockController();
-    for (let h = 0; h < 12; h++) {
-      c.reset();
-      for (let i = 0; i < 20; i++) {
-        c.update(localDate(h, h * 4, h * 3));
-      }
-      const r = clockHandsInRadians(c._clockHands);
-      // Values should be non-negative (hands can only move forward from 0)
-      expect(r.second).toBeGreaterThanOrEqual(0);
-      expect(r.minute).toBeGreaterThanOrEqual(0);
-      expect(r.hour).toBeGreaterThanOrEqual(0);
+  it("clockHandsInRadians on controller output always stays within [0, 2π)", () => {
+    const start = utcDate(11, 55, 0);
+    const c = new ClockController(start);
+    // Run past the hour boundary
+    for (let i = 1; i <= 60_000; i++) {
+      c.update(new Date(start.getTime() + i * 15));
     }
+    const r = clockHandsInRadians(c._clockHands);
+    expect(r.second).toBeGreaterThanOrEqual(0);
+    expect(r.second).toBeLessThan(2 * Math.PI);
+    expect(r.minute).toBeGreaterThanOrEqual(0);
+    expect(r.minute).toBeLessThan(2 * Math.PI);
+    expect(r.hour).toBeGreaterThanOrEqual(0);
+    expect(r.hour).toBeLessThan(2 * Math.PI);
   });
 });

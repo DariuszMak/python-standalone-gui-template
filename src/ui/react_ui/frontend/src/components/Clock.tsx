@@ -2,15 +2,14 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { ClockController } from "./clockController";
 import { polarToCartesian, formatTime, clockHandsInRadians } from "./clockHelpers";
 
-const BACKEND_URL =
-  (import.meta.env.VITE_BACKEND_URL as string | undefined) ?? "http://localhost:8000";
+const BACKEND_URL = (import.meta.env.VITE_BACKEND_URL as string | undefined) ?? "http://localhost:8000";
 
 export function Clock() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
   const serverAnchorRef = useRef(new Date(0));
   const wallAnchorRef = useRef(performance.now());
-  const controllerRef = useRef(new ClockController());
+  const controllerRef = useRef(new ClockController(new Date(0)));
 
   const [datetime, setDatetime] = useState<string | null>(null);
   const [status, setStatus] = useState<"loading" | "ok" | "error">("loading");
@@ -21,10 +20,13 @@ export function Clock() {
       const res = await fetch(`${BACKEND_URL}/time`);
       if (!res.ok) throw new Error(`HTTP ${String(res.status)}`);
       const data = (await res.json()) as { datetime: string };
+      const serverDate = new Date(data.datetime);
       setDatetime(data.datetime);
-      serverAnchorRef.current = new Date(data.datetime);
+      serverAnchorRef.current = serverDate;
       wallAnchorRef.current = performance.now();
-      controllerRef.current.reset();
+      // Pass the server time as the new start anchor so the controller
+      // computes unbounded totals from the correct local-time origin.
+      controllerRef.current.reset(serverDate);
       setStatus("ok");
     } catch {
       setStatus("error");
@@ -48,6 +50,7 @@ export function Clock() {
 
       const controller = controllerRef.current;
       controller.update(now);
+      // clockHandsInRadians applies modulo before trig — hands never jump
       const radians = clockHandsInRadians(controller._clockHands);
 
       const dpr = window.devicePixelRatio || 1;
@@ -102,7 +105,6 @@ export function Clock() {
         ctx.fillText(String(label), tx, ty);
       }
 
-      // Draw hands using shared radian values
       const [hx, hy] = polarToCartesian(cx, cy, radius * 0.5, radians.hour);
       ctx.strokeStyle = isDark ? "#ffffff" : "#222";
       ctx.lineWidth = 6;
@@ -133,7 +135,6 @@ export function Clock() {
       ctx.arc(cx, cy, 4, 0, Math.PI * 2);
       ctx.fill();
 
-      // Use shared formatTime for consistent HH:MM:SS.mmm display
       const timeStr = formatTime(now);
       const tfSize = Math.max(10, Math.floor(radius * 0.12));
       ctx.font = `${String(tfSize)}px "Consolas", monospace`;
