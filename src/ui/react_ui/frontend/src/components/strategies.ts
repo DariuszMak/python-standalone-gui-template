@@ -35,7 +35,9 @@ export class EasingMovementStrategy implements MovementStrategy {
     return current + (target - current) * this.factor;
   }
 
-  reset(): void {return;}
+  reset(): void {
+    return;
+  }
 }
 
 export class TickMovementStrategy implements MovementStrategy {
@@ -43,5 +45,7 @@ export class TickMovementStrategy implements MovementStrategy {
     return target;
   }
 
-  reset(): void {return;}
+  reset(): void {
+    return;
+  }
 }
