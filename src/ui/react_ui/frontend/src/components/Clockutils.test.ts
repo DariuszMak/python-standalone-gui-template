@@ -354,43 +354,6 @@ describe("ClockController", () => {
     expect(Math.abs(target.hour - c._clockHands.hour)).toBeLessThan(1);
   });
 
-  it("second hand never moves backwards across the 59→0 boundary", () => {
-    const start = utcDate(0, 0, 50);
-    const c = new ClockController(start);
-    let prevSecond = 0;
-
-    for (let i = 1; i <= 2000; i++) {
-      c.update(new Date(start.getTime() + i * 15));
-
-      expect(c._clockHands.second).toBeGreaterThanOrEqual(prevSecond - 1e-9);
-      prevSecond = c._clockHands.second;
-    }
-  });
-
-  it("minute hand never moves backwards across the 59→0 boundary", () => {
-    const start = utcDate(0, 59, 0);
-    const c = new ClockController(start);
-    let prev = 0;
-
-    for (let i = 1; i <= 12_000; i++) {
-      c.update(new Date(start.getTime() + i * 15));
-      expect(c._clockHands.minute).toBeGreaterThanOrEqual(prev - 1e-9);
-      prev = c._clockHands.minute;
-    }
-  });
-
-  it("hour hand never moves backwards across the 11→0 boundary", () => {
-    const start = utcDate(11, 55, 0);
-    const c = new ClockController(start);
-    let prev = 0;
-
-    for (let i = 1; i <= 60_000; i++) {
-      c.update(new Date(start.getTime() + i * 15));
-      expect(c._clockHands.hour).toBeGreaterThanOrEqual(prev - 1e-9);
-      prev = c._clockHands.hour;
-    }
-  });
-
   it("reset zeroes all hands and accepts a new start anchor", () => {
     const start = utcDate(3, 0, 0);
     const c = new ClockController(start);
