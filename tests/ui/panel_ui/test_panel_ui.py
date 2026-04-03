@@ -136,7 +136,7 @@ def test_on_click_sets_clock_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_layout_structure(monkeypatch: pytest.MonkeyPatch) -> None:
-    
+
     async def fake_fetch_time() -> str:  # noqa: RUF029
         return "2026-01-25T12:00:00Z"
 
