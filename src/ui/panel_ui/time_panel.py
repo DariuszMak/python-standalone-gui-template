@@ -11,6 +11,9 @@ from bokeh.models import ColumnDataSource, Range1d
 from bokeh.plotting import figure
 
 from src.config.config import Config
+from src.ui.shared.controller.clock_controller import ClockController
+from src.ui.shared.helpers import calculate_clock_hands_angles, format_datetime
+from src.ui.shared.model.helpers import clock_hands_in_radians
 
 if TYPE_CHECKING:
     from panel.io.callbacks import PeriodicCallback
@@ -18,53 +21,12 @@ if TYPE_CHECKING:
 pn.extension()
 
 
-class PID:
-    def __init__(self, kp: float = 0.0, ki: float = 0.0, kd: float = 0.0) -> None:
-        self._kp = float(kp)
-        self._ki = float(ki)
-        self._kd = float(kd)
-        self._prev_error = 0.0
-        self._integral = 0.0
-
-    def update(self, error: float) -> float:
-        self._integral += error
-        derivative = error - self._prev_error
-        self._prev_error = error
-        return self._kp * error + self._ki * self._integral + self._kd * derivative
-
-    def reset(self) -> None:
-        self._prev_error = 0.0
-        self._integral = 0.0
-
-
-class PIDMovementStrategy:
-    def __init__(self, kp: float, ki: float, kd: float) -> None:
-        self._pid = PID(kp=kp, ki=ki, kd=kd)
-
-    def update(self, current: float, target: float) -> float:
-        error = target - current
-        return current + self._pid.update(error)
-
-    def reset(self) -> None:
-        self._pid.reset()
-
-
-def calculate_clock_hands_angles(now_dt: datetime) -> tuple[float, float, float]:
-    local = now_dt.astimezone()
-    midnight = datetime.combine(local.date(), datetime.min.time(), tzinfo=local.tzinfo)
-    start_s = (local - midnight).total_seconds()
+def _hand_endpoint(
+    cx: float, cy: float, radius: float, angle_rad: float
+) -> tuple[float, float]:
     return (
-        start_s % 60.0,
-        (start_s / 60.0) % 60.0,
-        (start_s / 3600.0) % 12.0,
-    )
-
-
-def hand_endpoint(cx: float, cy: float, radius: float, value: float, max_value: float) -> tuple[float, float]:
-    angle = (value / max_value) * 2.0 * math.pi
-    return (
-        cx + math.sin(angle) * radius,
-        cy + math.cos(angle) * radius,
+        cx + math.sin(angle_rad) * radius,
+        cy + math.cos(angle_rad) * radius,
     )
 
 
@@ -150,21 +112,15 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
 
 
 class ClockWidget:
+    """Panel clock widget backed by the shared ClockController."""
+
     TICK_MS = 15
 
     def __init__(self, size: int = 300) -> None:
         self._server_anchor: datetime = datetime.now(UTC)
         self._wall_anchor_mono: float = time.monotonic()
 
-        self._second = 0.0
-        self._minute = 0.0
-        self._hour = 0.0
-
-        self._strategies = (
-            PIDMovementStrategy(0.15, 0.005, 0.005),
-            PIDMovementStrategy(0.08, 0.004, 0.004),
-            PIDMovementStrategy(0.08, 0.002, 0.002),
-        )
+        self._controller = ClockController(self._server_anchor)
 
         self._fig, self._sources = _build_clock_figure(size)
         self._pane: pn.pane.Bokeh = pn.pane.Bokeh(self._fig, sizing_mode="fixed")  # type: ignore
@@ -177,7 +133,7 @@ class ClockWidget:
     def set_current_datetime(self, dt: datetime) -> None:
         self._server_anchor = dt
         self._wall_anchor_mono = time.monotonic()
-        self._reset()
+        self._controller.reset(dt)
 
     def stop(self) -> None:
         if self._cb is not None:
@@ -187,37 +143,29 @@ class ClockWidget:
         elapsed = time.monotonic() - self._wall_anchor_mono
         return self._server_anchor + timedelta(seconds=elapsed)
 
-    def _reset(self) -> None:
-        self._second = 0.0
-        self._minute = 0.0
-        self._hour = 0.0
-        for s in self._strategies:
-            s.reset()
-
     def _tick(self) -> None:
         now = self._current_datetime()
-        tgt_sec, tgt_min, tgt_hr = calculate_clock_hands_angles(now)
+        self._controller.update(now)
 
-        self._second = self._strategies[0].update(self._second, tgt_sec)
-        self._minute = self._strategies[1].update(self._minute, tgt_min)
-        self._hour = self._strategies[2].update(self._hour, tgt_hr)
+        # Convert ClockHands (in display units) to radians via shared helper
+        sec_rad, min_rad, hour_rad = clock_hands_in_radians(self._controller._clock_hands)
 
         cx, cy, r = 0.0, 0.0, 1.0
 
-        ex_h, ey_h = hand_endpoint(cx, cy, r * 0.5, self._hour, 12.0)
-        ex_m, ey_m = hand_endpoint(cx, cy, r * 0.7, self._minute, 60.0)
-        ex_s, ey_s = hand_endpoint(cx, cy, r * 0.9, self._second, 60.0)
+        ex_h, ey_h = _hand_endpoint(cx, cy, r * 0.5, hour_rad)
+        ex_m, ey_m = _hand_endpoint(cx, cy, r * 0.7, min_rad)
+        ex_s, ey_s = _hand_endpoint(cx, cy, r * 0.9, sec_rad)
 
         self._sources["hour"].data = {"x": [cx, ex_h], "y": [cy, ey_h]}
         self._sources["minute"].data = {"x": [cx, ex_m], "y": [cy, ey_m]}
         self._sources["second"].data = {"x": [cx, ex_s], "y": [cy, ey_s]}
 
-        def pad(n: int) -> str:
-            return str(n).zfill(2)
-
-        ms = str(now.microsecond // 1000).zfill(3)
-        ts = f"{pad(now.hour)}:{pad(now.minute)}:{pad(now.second)}.{ms}"
-        self._sources["time_text"].data = {"x": [0.0], "y": [-0.55], "text": [ts]}
+        # Use shared format_datetime for consistent formatting
+        self._sources["time_text"].data = {
+            "x": [0.0],
+            "y": [-0.55],
+            "text": [format_datetime(now)],
+        }
 
 
 async def fetch_time() -> str:

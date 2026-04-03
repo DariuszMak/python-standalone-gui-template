@@ -1,6 +1,6 @@
 import asyncio
 from collections.abc import Callable, Coroutine
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from typing import cast
 from unittest.mock import MagicMock, patch
 
@@ -10,7 +10,10 @@ import respx
 from httpx import HTTPStatusError, Response
 
 from src.ui.panel_ui import time_panel
-from src.ui.panel_ui.time_panel import fetch_time
+from src.ui.panel_ui.time_panel import ClockWidget, fetch_time
+from src.ui.shared.controller.clock_controller import ClockController
+from src.ui.shared.helpers import format_datetime
+from src.ui.shared.model.data_types import ClockHands
 
 
 @pytest.mark.asyncio
@@ -65,7 +68,6 @@ def _make_layout(
     monkeypatch.setattr(pn.state, "execute", immediate_execute)
     monkeypatch.setattr(pn.state, "onload", lambda _: None)
 
-    # Suppress the periodic callback so no Bokeh server is required
     with patch.object(pn.state, "add_periodic_callback", return_value=MagicMock()):
         return time_panel.create_layout()
 
@@ -76,10 +78,6 @@ def test_on_click_success(monkeypatch: pytest.MonkeyPatch) -> None:
 
     col = _make_layout(monkeypatch, fake_fetch_time)
 
-    # col[0] = "# Server Time" heading
-    # col[1] = ClockWidget pane  (pn.pane.Bokeh)
-    # col[2] = Fetch button
-    # col[3] = Markdown time display
     button = cast("pn.widgets.Button", col[2])
     time_display = cast("pn.pane.Markdown", col[3])
 
@@ -135,7 +133,6 @@ def test_on_click_sets_clock_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_layout_structure(monkeypatch: pytest.MonkeyPatch) -> None:
-
     async def fake_fetch_time() -> str:  # noqa: RUF029
         return "2026-01-25T12:00:00Z"
 
@@ -145,3 +142,117 @@ def test_layout_structure(monkeypatch: pytest.MonkeyPatch) -> None:
     assert isinstance(col[1], pn.pane.Bokeh)
     assert isinstance(col[2], pn.widgets.Button)
     assert isinstance(col[3], pn.pane.Markdown)
+
+
+# ---------------------------------------------------------------------------
+# Tests for shared-code integration
+# ---------------------------------------------------------------------------
+
+
+def _make_clock_widget(monkeypatch: pytest.MonkeyPatch) -> ClockWidget:
+    """Construct a ClockWidget with the periodic callback suppressed."""
+    with patch.object(pn.state, "add_periodic_callback", return_value=MagicMock()):
+        return ClockWidget(size=300)
+
+
+def test_clock_widget_uses_shared_clock_controller(monkeypatch: pytest.MonkeyPatch) -> None:
+    """ClockWidget must delegate hand state to a shared ClockController."""
+    widget = _make_clock_widget(monkeypatch)
+    assert isinstance(widget._controller, ClockController)
+
+
+def test_clock_widget_set_current_datetime_resets_controller(monkeypatch: pytest.MonkeyPatch) -> None:
+    """set_current_datetime should reset the controller and update the anchor."""
+    widget = _make_clock_widget(monkeypatch)
+
+    new_dt = datetime(2026, 1, 25, 12, 0, 0, tzinfo=UTC)
+    widget.set_current_datetime(new_dt)
+
+    assert widget._server_anchor == new_dt
+    # After reset the controller hands should be zeroed
+    assert widget._controller._clock_hands == ClockHands(0.0, 0.0, 0.0)
+
+
+def test_clock_widget_tick_updates_controller(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Calling _tick should cause the controller hands to advance from zero."""
+    widget = _make_clock_widget(monkeypatch)
+
+    fixed_dt = datetime(2026, 1, 25, 12, 30, 45, tzinfo=UTC)
+    widget.set_current_datetime(fixed_dt)
+
+    # Manually advance the monotonic anchor so _current_datetime() returns something ahead
+    widget._wall_anchor_mono -= 1.0  # simulate 1 second elapsed
+
+    widget._tick()
+
+    hands = widget._controller._clock_hands
+    # At least the second hand should have moved from 0
+    assert hands.second != 0.0 or hands.minute != 0.0 or hands.hour != 0.0
+
+
+def test_clock_widget_tick_updates_bokeh_sources(monkeypatch: pytest.MonkeyPatch) -> None:
+    """After _tick the Bokeh ColumnDataSources must contain non-trivial coords."""
+    widget = _make_clock_widget(monkeypatch)
+
+    fixed_dt = datetime(2026, 1, 25, 3, 0, 0, tzinfo=UTC)
+    widget.set_current_datetime(fixed_dt)
+
+    # Advance time by 60 seconds so hands are clearly non-zero
+    widget._wall_anchor_mono -= 60.0
+
+    widget._tick()
+
+    for key in ("hour", "minute", "second"):
+        xs = widget._sources[key].data["x"]
+        ys = widget._sources[key].data["y"]
+        # Each source must have two points (origin + tip)
+        assert len(xs) == 2
+        assert len(ys) == 2
+        # The tip must differ from the origin (0, 0)
+        assert not (xs[1] == 0.0 and ys[1] == 0.0), f"{key} hand tip is still at origin"
+
+
+def test_clock_widget_time_text_uses_format_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The time text source must match what shared format_datetime produces."""
+    widget = _make_clock_widget(monkeypatch)
+
+    fixed_dt = datetime(2026, 1, 25, 8, 5, 3, 123000, tzinfo=UTC)
+    widget.set_current_datetime(fixed_dt)
+
+    # No elapsed time — _current_datetime() should return approximately fixed_dt
+    widget._tick()
+
+    displayed = widget._sources["time_text"].data["text"][0]
+    expected = format_datetime(widget._current_datetime())
+
+    # Both must follow HH:MM:SS.mmm format
+    import re
+    assert re.match(r"\d{2}:\d{2}:\d{2}\.\d{3}", displayed), f"Unexpected format: {displayed}"
+    # The displayed hour/minute/second portion must match
+    assert displayed[:8] == expected[:8]
+
+
+def test_clock_widget_current_datetime_advances(monkeypatch: pytest.MonkeyPatch) -> None:
+    """_current_datetime must reflect elapsed wall time since set_current_datetime."""
+    widget = _make_clock_widget(monkeypatch)
+
+    base = datetime(2026, 6, 1, 10, 0, 0, tzinfo=UTC)
+    widget.set_current_datetime(base)
+
+    # Simulate 5 seconds passing
+    widget._wall_anchor_mono -= 5.0
+
+    computed = widget._current_datetime()
+    delta = (computed - base).total_seconds()
+
+    assert abs(delta - 5.0) < 0.1
+
+
+def test_no_inline_pid_classes(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The panel time_panel module must NOT define its own PID or PIDMovementStrategy."""
+    import src.ui.panel_ui.time_panel as module
+
+    assert not hasattr(module, "PID"), "time_panel should not define its own PID class"
+    assert not hasattr(module, "PIDMovementStrategy"), (
+        "time_panel should not define its own PIDMovementStrategy"
+    )
