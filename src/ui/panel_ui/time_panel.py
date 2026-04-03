@@ -145,7 +145,6 @@ class ClockWidget:
         now = self._current_datetime()
         self._controller.update(now)
 
-        # Convert ClockHands (in display units) to radians via shared helper
         sec_rad, min_rad, hour_rad = clock_hands_in_radians(self._controller._clock_hands)
 
         cx, cy, r = 0.0, 0.0, 1.0
@@ -158,7 +157,6 @@ class ClockWidget:
         self._sources["minute"].data = {"x": [cx, ex_m], "y": [cy, ey_m]}
         self._sources["second"].data = {"x": [cx, ex_s], "y": [cy, ey_s]}
 
-        # Use shared format_datetime for consistent formatting
         self._sources["time_text"].data = {
             "x": [0.0],
             "y": [-0.55],

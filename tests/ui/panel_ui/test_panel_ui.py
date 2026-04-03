@@ -144,11 +144,6 @@ def test_layout_structure(monkeypatch: pytest.MonkeyPatch) -> None:
     assert isinstance(col[3], pn.pane.Markdown)
 
 
-# ---------------------------------------------------------------------------
-# Tests for shared-code integration
-# ---------------------------------------------------------------------------
-
-
 def _make_clock_widget(monkeypatch: pytest.MonkeyPatch) -> ClockWidget:
     """Construct a ClockWidget with the periodic callback suppressed."""
     with patch.object(pn.state, "add_periodic_callback", return_value=MagicMock()):
@@ -169,7 +164,6 @@ def test_clock_widget_set_current_datetime_resets_controller(monkeypatch: pytest
     widget.set_current_datetime(new_dt)
 
     assert widget._server_anchor == new_dt
-    # After reset the controller hands should be zeroed
     assert widget._controller._clock_hands == ClockHands(0.0, 0.0, 0.0)
 
 
@@ -180,13 +174,11 @@ def test_clock_widget_tick_updates_controller(monkeypatch: pytest.MonkeyPatch) -
     fixed_dt = datetime(2026, 1, 25, 12, 30, 45, tzinfo=UTC)
     widget.set_current_datetime(fixed_dt)
 
-    # Manually advance the monotonic anchor so _current_datetime() returns something ahead
-    widget._wall_anchor_mono -= 1.0  # simulate 1 second elapsed
+    widget._wall_anchor_mono -= 1.0
 
     widget._tick()
 
     hands = widget._controller._clock_hands
-    # At least the second hand should have moved from 0
     assert hands.second != pytest.approx(0.0) or hands.minute != pytest.approx(0.0) or hands.hour != pytest.approx(0.0)
 
 
@@ -197,7 +189,6 @@ def test_clock_widget_tick_updates_bokeh_sources(monkeypatch: pytest.MonkeyPatch
     fixed_dt = datetime(2026, 1, 25, 3, 0, 0, tzinfo=UTC)
     widget.set_current_datetime(fixed_dt)
 
-    # Advance time by 60 seconds so hands are clearly non-zero
     widget._wall_anchor_mono -= 60.0
 
     widget._tick()
@@ -205,10 +196,8 @@ def test_clock_widget_tick_updates_bokeh_sources(monkeypatch: pytest.MonkeyPatch
     for key in ("hour", "minute", "second"):
         xs = widget._sources[key].data["x"]
         ys = widget._sources[key].data["y"]
-        # Each source must have two points (origin + tip)
         assert len(xs) == 2
         assert len(ys) == 2
-        # The tip must differ from the origin (0, 0)
         assert not (xs[1] == pytest.approx(0.0) and ys[1] == pytest.approx(0.0)), f"{key} hand tip is still at origin"
 
 
@@ -219,17 +208,14 @@ def test_clock_widget_time_text_uses_format_datetime(monkeypatch: pytest.MonkeyP
     fixed_dt = datetime(2026, 1, 25, 8, 5, 3, 123000, tzinfo=UTC)
     widget.set_current_datetime(fixed_dt)
 
-    # No elapsed time — _current_datetime() should return approximately fixed_dt
     widget._tick()
 
     displayed = widget._sources["time_text"].data["text"][0]
     expected = format_datetime(widget._current_datetime())
 
-    # Both must follow HH:MM:SS.mmm format
     import re
 
     assert re.match(r"\d{2}:\d{2}:\d{2}\.\d{3}", displayed), f"Unexpected format: {displayed}"
-    # The displayed hour/minute/second portion must match
     assert displayed[:8] == expected[:8]
 
 
@@ -240,7 +226,6 @@ def test_clock_widget_current_datetime_advances(monkeypatch: pytest.MonkeyPatch)
     base = datetime(2026, 6, 1, 10, 0, 0, tzinfo=UTC)
     widget.set_current_datetime(base)
 
-    # Simulate 5 seconds passing
     widget._wall_anchor_mono -= 5.0
 
     computed = widget._current_datetime()
