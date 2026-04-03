@@ -1,6 +1,6 @@
 import asyncio
 from collections.abc import Callable, Coroutine
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from typing import cast
 from unittest.mock import MagicMock, patch
 
@@ -227,6 +227,7 @@ def test_clock_widget_time_text_uses_format_datetime(monkeypatch: pytest.MonkeyP
 
     # Both must follow HH:MM:SS.mmm format
     import re
+
     assert re.match(r"\d{2}:\d{2}:\d{2}\.\d{3}", displayed), f"Unexpected format: {displayed}"
     # The displayed hour/minute/second portion must match
     assert displayed[:8] == expected[:8]
@@ -253,6 +254,4 @@ def test_no_inline_pid_classes(monkeypatch: pytest.MonkeyPatch) -> None:
     import src.ui.panel_ui.time_panel as module
 
     assert not hasattr(module, "PID"), "time_panel should not define its own PID class"
-    assert not hasattr(module, "PIDMovementStrategy"), (
-        "time_panel should not define its own PIDMovementStrategy"
-    )
+    assert not hasattr(module, "PIDMovementStrategy"), "time_panel should not define its own PIDMovementStrategy"

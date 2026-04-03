@@ -12,7 +12,7 @@ from bokeh.plotting import figure
 
 from src.config.config import Config
 from src.ui.shared.controller.clock_controller import ClockController
-from src.ui.shared.helpers import calculate_clock_hands_angles, format_datetime
+from src.ui.shared.helpers import format_datetime
 from src.ui.shared.model.helpers import clock_hands_in_radians
 
 if TYPE_CHECKING:
@@ -21,9 +21,7 @@ if TYPE_CHECKING:
 pn.extension()
 
 
-def _hand_endpoint(
-    cx: float, cy: float, radius: float, angle_rad: float
-) -> tuple[float, float]:
+def _hand_endpoint(cx: float, cy: float, radius: float, angle_rad: float) -> tuple[float, float]:
     return (
         cx + math.sin(angle_rad) * radius,
         cy + math.cos(angle_rad) * radius,
