@@ -16,17 +16,16 @@ export class ClockController {
     ];
   }
 
-update(now: Date): void {
-  const elapsedSeconds = (now.getTime() - this._startTime.getTime()) / 1000;
-  const target = calculateHandAngles(this._startTime, elapsedSeconds);
-  const [ss, sm, sh] = this._strategies;
+  update(now: Date): void {
+    const elapsedSeconds = (now.getTime() - this._startTime.getTime()) / 1000;
+    const target = calculateHandAngles(this._startTime, elapsedSeconds);
+    const [ss, sm, sh] = this._strategies;
 
-  this._clockHands = {
-    second: ss.update(this._clockHands.second, target.second),
-    minute: sm.update(this._clockHands.minute, target.minute),
-    hour: sh.update(this._clockHands.hour, target.hour),
-  };
-
+    this._clockHands = {
+      second: ss.update(this._clockHands.second, target.second),
+      minute: sm.update(this._clockHands.minute, target.minute),
+      hour: sh.update(this._clockHands.hour, target.hour),
+    };
   }
   reset(newStartTime: Date = new Date(0)): void {
     this._startTime = newStartTime;

@@ -10,7 +10,7 @@ export function calculateHandAngles(startDt: Date, elapsedSeconds: number): Cloc
   const m = startDt.getUTCMinutes();
   const s = startDt.getUTCSeconds();
   const ms = startDt.getUTCMilliseconds();
-  
+
   const startTotalSeconds = h * 3600 + m * 60 + s + ms / 1000;
   const totalSeconds = startTotalSeconds + elapsedSeconds;
 
