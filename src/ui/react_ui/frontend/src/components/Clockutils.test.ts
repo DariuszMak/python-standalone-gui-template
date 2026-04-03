@@ -230,8 +230,8 @@ describe("clockHandsInRadians", () => {
     expect(clockHandsInRadians({ second: 60, minute: 0, hour: 0 }).second).toBeCloseTo(0);
   });
 
-  it("unbounded 90 seconds wraps to π/2 radians (same as 30 s display)", () => {
-    expect(clockHandsInRadians({ second: 90, minute: 0, hour: 0 }).second).toBeCloseTo(Math.PI / 2);
+  it("unbounded 90 seconds wraps to π radians", () => {
+    expect(clockHandsInRadians({ second: 90, minute: 0, hour: 0 }).second).toBeCloseTo(Math.PI);
   });
 
   it("unbounded 12 hours wraps to 0 radians (full revolution)", () => {
