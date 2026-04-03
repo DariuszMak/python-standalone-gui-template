@@ -1,17 +1,15 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { makePIDStrategy, calculateHandAngles, polarToCartesian, formatTime } from "./clockUtils";
+import { ClockController } from "./clockController";
+import { polarToCartesian, formatTime, clockHandsInRadians } from "./clockHelpers";
+
+const BACKEND_URL = (import.meta.env.VITE_BACKEND_URL as string | undefined) ?? "http://localhost:8000";
 
 export function Clock() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
   const serverAnchorRef = useRef(new Date(0));
   const wallAnchorRef = useRef(performance.now());
-  const handsRef = useRef({ second: 0, minute: 0, hour: 0 });
-  const strategiesRef = useRef([
-    makePIDStrategy(0.15, 0.005, 0.005),
-    makePIDStrategy(0.08, 0.004, 0.004),
-    makePIDStrategy(0.08, 0.002, 0.002),
-  ]);
+  const controllerRef = useRef(new ClockController());
 
   const [datetime, setDatetime] = useState<string | null>(null);
   const [status, setStatus] = useState<"loading" | "ok" | "error">("loading");
@@ -19,16 +17,13 @@ export function Clock() {
   const fetchTime = useCallback(async () => {
     setStatus("loading");
     try {
-      const res = await fetch("http://localhost:8000/time");
+      const res = await fetch(`${BACKEND_URL}/time`);
       if (!res.ok) throw new Error(`HTTP ${String(res.status)}`);
       const data = (await res.json()) as { datetime: string };
       setDatetime(data.datetime);
       serverAnchorRef.current = new Date(data.datetime);
       wallAnchorRef.current = performance.now();
-      handsRef.current = { second: 0, minute: 0, hour: 0 };
-      strategiesRef.current.forEach((s) => {
-        s.reset();
-      });
+      controllerRef.current.reset();
       setStatus("ok");
     } catch {
       setStatus("error");
@@ -50,13 +45,9 @@ export function Clock() {
       const elapsed = (performance.now() - wallAnchorRef.current) / 1000;
       const now = new Date(serverAnchorRef.current.getTime() + elapsed * 1000);
 
-      const target = calculateHandAngles(now);
-      const [ss, sm, sh] = strategiesRef.current;
-      handsRef.current = {
-        second: ss.update(handsRef.current.second, target.second),
-        minute: sm.update(handsRef.current.minute, target.minute),
-        hour: sh.update(handsRef.current.hour, target.hour),
-      };
+      const controller = controllerRef.current;
+      controller.update(now);
+      const radians = clockHandsInRadians(controller._clockHands);
 
       const dpr = window.devicePixelRatio || 1;
       const size = canvas.clientWidth;
@@ -110,13 +101,8 @@ export function Clock() {
         ctx.fillText(String(label), tx, ty);
       }
 
-      const h = handsRef.current;
-
-      const hourAngle = (h.hour / 12) * Math.PI * 2;
-      const minuteAngle = (h.minute / 60) * Math.PI * 2;
-      const secondAngle = (h.second / 60) * Math.PI * 2;
-
-      const [hx, hy] = polarToCartesian(cx, cy, radius * 0.5, hourAngle);
+      // Draw hands using shared radian values
+      const [hx, hy] = polarToCartesian(cx, cy, radius * 0.5, radians.hour);
       ctx.strokeStyle = isDark ? "#ffffff" : "#222";
       ctx.lineWidth = 6;
       ctx.lineCap = "round";
@@ -125,7 +111,7 @@ export function Clock() {
       ctx.lineTo(hx, hy);
       ctx.stroke();
 
-      const [mx, my] = polarToCartesian(cx, cy, radius * 0.7, minuteAngle);
+      const [mx, my] = polarToCartesian(cx, cy, radius * 0.7, radians.minute);
       ctx.strokeStyle = isDark ? "#cccccc" : "#444";
       ctx.lineWidth = 4;
       ctx.beginPath();
@@ -133,7 +119,7 @@ export function Clock() {
       ctx.lineTo(mx, my);
       ctx.stroke();
 
-      const [sx, sy] = polarToCartesian(cx, cy, radius * 0.88, secondAngle);
+      const [sx, sy] = polarToCartesian(cx, cy, radius * 0.88, radians.second);
       ctx.strokeStyle = "#ff3333";
       ctx.lineWidth = 1.5;
       ctx.beginPath();
@@ -146,6 +132,7 @@ export function Clock() {
       ctx.arc(cx, cy, 4, 0, Math.PI * 2);
       ctx.fill();
 
+      // Use shared formatTime for consistent HH:MM:SS.mmm display
       const timeStr = formatTime(now);
       const tfSize = Math.max(10, Math.floor(radius * 0.12));
       ctx.font = `${String(tfSize)}px "Consolas", monospace`;
