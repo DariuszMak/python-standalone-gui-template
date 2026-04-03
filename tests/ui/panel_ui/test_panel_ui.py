@@ -187,7 +187,7 @@ def test_clock_widget_tick_updates_controller(monkeypatch: pytest.MonkeyPatch) -
 
     hands = widget._controller._clock_hands
     # At least the second hand should have moved from 0
-    assert hands.second != 0.0 or hands.minute != 0.0 or hands.hour != 0.0
+    assert hands.second != pytest.approx(0.0) or hands.minute != pytest.approx(0.0) or hands.hour != pytest.approx(0.0)
 
 
 def test_clock_widget_tick_updates_bokeh_sources(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -209,7 +209,7 @@ def test_clock_widget_tick_updates_bokeh_sources(monkeypatch: pytest.MonkeyPatch
         assert len(xs) == 2
         assert len(ys) == 2
         # The tip must differ from the origin (0, 0)
-        assert not (xs[1] == 0.0 and ys[1] == 0.0), f"{key} hand tip is still at origin"
+        assert not (xs[1] == pytest.approx(0.0) and ys[1] == pytest.approx(0.0)), f"{key} hand tip is still at origin"
 
 
 def test_clock_widget_time_text_uses_format_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
