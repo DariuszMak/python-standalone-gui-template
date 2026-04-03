@@ -145,19 +145,16 @@ def test_layout_structure(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def _make_clock_widget(monkeypatch: pytest.MonkeyPatch) -> ClockWidget:
-    """Construct a ClockWidget with the periodic callback suppressed."""
     with patch.object(pn.state, "add_periodic_callback", return_value=MagicMock()):
         return ClockWidget(size=300)
 
 
 def test_clock_widget_uses_shared_clock_controller(monkeypatch: pytest.MonkeyPatch) -> None:
-    """ClockWidget must delegate hand state to a shared ClockController."""
     widget = _make_clock_widget(monkeypatch)
     assert isinstance(widget._controller, ClockController)
 
 
 def test_clock_widget_set_current_datetime_resets_controller(monkeypatch: pytest.MonkeyPatch) -> None:
-    """set_current_datetime should reset the controller and update the anchor."""
     widget = _make_clock_widget(monkeypatch)
 
     new_dt = datetime(2026, 1, 25, 12, 0, 0, tzinfo=UTC)
@@ -168,7 +165,6 @@ def test_clock_widget_set_current_datetime_resets_controller(monkeypatch: pytest
 
 
 def test_clock_widget_tick_updates_controller(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Calling _tick should cause the controller hands to advance from zero."""
     widget = _make_clock_widget(monkeypatch)
 
     fixed_dt = datetime(2026, 1, 25, 12, 30, 45, tzinfo=UTC)
@@ -183,7 +179,6 @@ def test_clock_widget_tick_updates_controller(monkeypatch: pytest.MonkeyPatch) -
 
 
 def test_clock_widget_tick_updates_bokeh_sources(monkeypatch: pytest.MonkeyPatch) -> None:
-    """After _tick the Bokeh ColumnDataSources must contain non-trivial coords."""
     widget = _make_clock_widget(monkeypatch)
 
     fixed_dt = datetime(2026, 1, 25, 3, 0, 0, tzinfo=UTC)
@@ -202,7 +197,6 @@ def test_clock_widget_tick_updates_bokeh_sources(monkeypatch: pytest.MonkeyPatch
 
 
 def test_clock_widget_time_text_uses_format_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
-    """The time text source must match what shared format_datetime produces."""
     widget = _make_clock_widget(monkeypatch)
 
     fixed_dt = datetime(2026, 1, 25, 8, 5, 3, 123000, tzinfo=UTC)
@@ -220,7 +214,6 @@ def test_clock_widget_time_text_uses_format_datetime(monkeypatch: pytest.MonkeyP
 
 
 def test_clock_widget_current_datetime_advances(monkeypatch: pytest.MonkeyPatch) -> None:
-    """_current_datetime must reflect elapsed wall time since set_current_datetime."""
     widget = _make_clock_widget(monkeypatch)
 
     base = datetime(2026, 6, 1, 10, 0, 0, tzinfo=UTC)
@@ -235,7 +228,6 @@ def test_clock_widget_current_datetime_advances(monkeypatch: pytest.MonkeyPatch)
 
 
 def test_no_inline_pid_classes(monkeypatch: pytest.MonkeyPatch) -> None:
-    """The panel time_panel module must NOT define its own PID or PIDMovementStrategy."""
     import src.ui.panel_ui.time_panel as module
 
     assert not hasattr(module, "PID"), "time_panel should not define its own PID class"
