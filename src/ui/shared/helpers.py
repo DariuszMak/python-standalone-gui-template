@@ -5,8 +5,8 @@ from datetime import datetime, time, timedelta, timezone
 
 from PySide6.QtCore import QPointF
 
-from src.ui.pyside_ui.clock_widget.model.data_types import ClockHands, HandsPosition
-from src.ui.pyside_ui.clock_widget.model.helpers import clock_hands_in_radians
+from src.ui.shared.model.data_types import ClockHands, HandsPosition
+from src.ui.shared.model.helpers import clock_hands_in_radians
 
 
 def polar_to_cartesian(center: QPointF, length: float, angle_radians: float) -> QPointF:

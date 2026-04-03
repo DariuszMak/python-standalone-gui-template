@@ -3,10 +3,10 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from src.ui.pyside_ui.clock_widget.controller.update_logic import update_clock_hands
-from src.ui.pyside_ui.clock_widget.model.data_types import ClockHands
-from src.ui.pyside_ui.clock_widget.model.strategies.pid_strategy import PIDMovementStrategy
+from src.ui.shared.controller.update_logic import update_clock_hands
 from src.ui.shared.helpers import calculate_clock_hands_angles
+from src.ui.shared.model.data_types import ClockHands
+from src.ui.shared.model.strategies.pid_strategy import PIDMovementStrategy
 
 if TYPE_CHECKING:
     from datetime import datetime

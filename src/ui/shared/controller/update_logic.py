@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from src.ui.pyside_ui.clock_widget.model.data_types import ClockHands
+from src.ui.shared.model.data_types import ClockHands
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from src.ui.pyside_ui.clock_widget.model.strategies.movement_strategy import MovementStrategy
+    from src.ui.shared.model.strategies.movement_strategy import MovementStrategy
 
 
 def update_clock_hands(

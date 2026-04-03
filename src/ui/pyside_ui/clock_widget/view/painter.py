@@ -12,7 +12,7 @@ from src.ui.shared.helpers import format_datetime, polar_to_cartesian
 if TYPE_CHECKING:
     from datetime import datetime
 
-    from src.ui.pyside_ui.clock_widget.model.data_types import HandsPosition
+    from src.ui.shared.model.data_types import HandsPosition
 
 
 class Painter:

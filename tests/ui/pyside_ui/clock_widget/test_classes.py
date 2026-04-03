@@ -2,8 +2,8 @@ import math
 
 import pytest
 
-from src.ui.pyside_ui.clock_widget.model.data_types import ClockHands
-from src.ui.pyside_ui.clock_widget.model.pid import PID
+from src.ui.shared.model.data_types import ClockHands
+from src.ui.shared.model.pid import PID
 
 
 def approx_eq(a: float, b: float, epsilon: float = 1e-10) -> bool:

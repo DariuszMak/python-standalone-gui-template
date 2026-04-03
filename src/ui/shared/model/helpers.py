@@ -1,6 +1,6 @@
 import math
 
-from src.ui.pyside_ui.clock_widget.model.data_types import ClockHands
+from src.ui.shared.model.data_types import ClockHands
 
 
 def clock_hands_in_radians(hands: ClockHands) -> tuple[float, float, float]:
