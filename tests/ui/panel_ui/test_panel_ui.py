@@ -56,13 +56,6 @@ def _make_layout(
     monkeypatch: pytest.MonkeyPatch,
     fake_fetch: Callable[[], Coroutine[None, None, str]],
 ) -> pn.Column:
-    """
-    Build a create_layout() Column with:
-      - periodic callbacks suppressed (no live Bokeh server needed)
-      - fetch_time replaced by fake_fetch
-      - pn.state.execute runs the coroutine immediately and synchronously
-      - pn.state.onload is a no-op
-    """
 
     def immediate_execute(fn: Callable[[], Coroutine[None, None, None]]) -> None:
         asyncio.run(fn())
@@ -112,7 +105,6 @@ def test_on_click_error(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_on_click_sets_clock_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
-    """set_current_datetime is called with the parsed datetime on a successful fetch."""
     from datetime import UTC, datetime
 
     received: list[datetime] = []
@@ -144,8 +136,7 @@ def test_on_click_sets_clock_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_layout_structure(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Column has the expected four items in the right order."""
-
+    
     async def fake_fetch_time() -> str:  # noqa: RUF029
         return "2026-01-25T12:00:00Z"
 

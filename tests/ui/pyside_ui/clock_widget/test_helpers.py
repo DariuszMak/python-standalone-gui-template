@@ -146,7 +146,6 @@ def test_clock_hands_angles_from_epoch_to_recent_date() -> None:
 
 
 def test_timezone_utc_plus1_shows_local_hour() -> None:
-    """UTC 14:30 in UTC+1 should display as 15:30 (hour angle ≈ 3.5)."""
     tz_plus1 = timezone(timedelta(hours=1))
 
     local_dt = datetime(2025, 4, 27, 15, 30, 0, tzinfo=tz_plus1)
@@ -159,7 +158,6 @@ def test_timezone_utc_plus1_shows_local_hour() -> None:
 
 
 def test_timezone_utc_and_local_same_instant_differ_by_offset() -> None:
-    """The same instant expressed in UTC vs UTC+1 should differ by exactly 1 h."""
     tz_plus1 = timezone(timedelta(hours=1))
     utc_dt = datetime(2025, 4, 27, 14, 30, 0, tzinfo=UTC)
     local_dt = utc_dt.astimezone(tz_plus1)
@@ -175,7 +173,6 @@ def test_timezone_utc_and_local_same_instant_differ_by_offset() -> None:
 
 
 def test_timezone_utc_minus5_shows_local_hour() -> None:
-    """UTC 20:00 in UTC-5 should display as 15:00 (hour angle = 3.0)."""
     tz_minus5 = timezone(timedelta(hours=-5))
     local_dt = datetime(2025, 4, 27, 15, 0, 0, tzinfo=tz_minus5)
 
@@ -187,7 +184,6 @@ def test_timezone_utc_minus5_shows_local_hour() -> None:
 
 
 def test_timezone_utc_offset_does_not_bleed_into_elapsed() -> None:
-    """Elapsed time should be unaffected by timezone; only the start offset shifts."""
     tz_plus2 = timezone(timedelta(hours=2))
 
     start_local = datetime(2025, 4, 27, 0, 0, 0, tzinfo=tz_plus2)
@@ -202,7 +198,6 @@ def test_timezone_utc_offset_does_not_bleed_into_elapsed() -> None:
 
 
 def test_timezone_noon_in_utc_plus1_is_not_midnight() -> None:
-    """Ensure UTC 11:00 (= noon in UTC+1) does NOT produce zero angles (old bug)."""
     tz_plus1 = timezone(timedelta(hours=1))
     utc_dt = datetime(2025, 4, 27, 11, 0, 0, tzinfo=UTC)
 
@@ -214,10 +209,6 @@ def test_timezone_noon_in_utc_plus1_is_not_midnight() -> None:
 
 
 def test_timezone_old_bug_utc_shows_wrong_hour_on_utc_plus1() -> None:
-    """Regression: before the fix, UTC 14:30 on a UTC+1 machine showed 14:30
-    instead of 15:30, i.e. exactly 1 hour behind.  Passing display_tz=UTC
-    should still show 14:30 (the old broken behaviour), while display_tz=UTC+1
-    shows the correct 15:30."""
     tz_plus1 = timezone(timedelta(hours=1))
     utc_dt = datetime(2025, 4, 27, 14, 30, 0, tzinfo=UTC)
 
