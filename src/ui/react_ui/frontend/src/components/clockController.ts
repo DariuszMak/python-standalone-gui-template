@@ -18,17 +18,18 @@ export class ClockController {
 
   update(now: Date): void {
     const elapsedSeconds = (now.getTime() - this._startTime.getTime()) / 1000;
+    
     const target = calculateHandAngles(this._startTime, elapsedSeconds);
     const [ss, sm, sh] = this._strategies;
 
-    const nextSecond = ss.update(this._clockHands.second, target.second);
-    const nextMinute = sm.update(this._clockHands.minute, target.minute);
-    const nextHour = sh.update(this._clockHands.hour, target.hour);
+    const nextS = ss.update(this._clockHands.second, target.second);
+    const nextM = sm.update(this._clockHands.minute, target.minute);
+    const nextH = sh.update(this._clockHands.hour, target.hour);
 
     this._clockHands = {
-      second: Math.max(this._clockHands.second, nextSecond),
-      minute: Math.max(this._clockHands.minute, nextMinute),
-      hour: Math.max(this._clockHands.hour, nextHour),
+      second: nextS,
+      minute: nextM,
+      hour: nextH,
     };
   }
 
