@@ -14,9 +14,9 @@ export class PIDMovementStrategy implements MovementStrategy {
 
   update(current: number, target: number): number {
     const error = target - current;
-    
+
     const adjustment = this._pid.update(error);
-    
+
     return current + adjustment;
   }
 

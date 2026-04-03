@@ -18,7 +18,7 @@ export class ClockController {
 
   update(now: Date): void {
     const elapsedSeconds = (now.getTime() - this._startTime.getTime()) / 1000;
-    
+
     const target = calculateHandAngles(this._startTime, elapsedSeconds);
     const [ss, sm, sh] = this._strategies;
 
