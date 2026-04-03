@@ -25,8 +25,6 @@ export function Clock() {
       setDatetime(data.datetime);
       serverAnchorRef.current = serverDate;
       wallAnchorRef.current = performance.now();
-      // Pass the server time as the new start anchor so the controller
-      // computes unbounded totals from the correct local-time origin.
       controllerRef.current.reset(serverDate);
       setStatus("ok");
     } catch {
@@ -51,7 +49,6 @@ export function Clock() {
 
       const controller = controllerRef.current;
       controller.update(now);
-      // clockHandsInRadians applies modulo before trig — hands never jump
       const radians = clockHandsInRadians(controller._clockHands);
 
       const dpr = window.devicePixelRatio || 1;

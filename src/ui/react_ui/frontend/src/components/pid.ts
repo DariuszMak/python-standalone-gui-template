@@ -1,6 +1,3 @@
-/**
- * PID controller — mirrors src/ui/shared/model/pid.py
- */
 export class PID {
   private readonly kp: number;
   private readonly ki: number;

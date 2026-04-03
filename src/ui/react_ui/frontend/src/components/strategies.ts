@@ -1,12 +1,3 @@
-/**
- * Movement strategies — mirrors src/ui/shared/model/strategies/
- *
- * MovementStrategy      → movement_strategy.py
- * PIDMovementStrategy   → pid_strategy.py
- * EasingMovementStrategy → easing_strategy.py
- * TickMovementStrategy  → tick_strategy.py
- */
-
 import { PID } from "./pid";
 
 export interface MovementStrategy {
@@ -14,9 +5,6 @@ export interface MovementStrategy {
   reset(): void;
 }
 
-/**
- * Mirrors PIDMovementStrategy in pid_strategy.py
- */
 export class PIDMovementStrategy implements MovementStrategy {
   private readonly _pid: PID;
 
@@ -34,9 +22,6 @@ export class PIDMovementStrategy implements MovementStrategy {
   }
 }
 
-/**
- * Mirrors EasingMovementStrategy in easing_strategy.py
- */
 export class EasingMovementStrategy implements MovementStrategy {
   private readonly factor: number;
 
@@ -49,19 +34,16 @@ export class EasingMovementStrategy implements MovementStrategy {
   }
 
   reset(): void {
-    // stateless — nothing to reset
+    
   }
 }
 
-/**
- * Mirrors TickMovementStrategy in tick_strategy.py
- */
 export class TickMovementStrategy implements MovementStrategy {
   update(_current: number, target: number): number {
     return target;
   }
 
   reset(): void {
-    // stateless — nothing to reset
+    
   }
 }
