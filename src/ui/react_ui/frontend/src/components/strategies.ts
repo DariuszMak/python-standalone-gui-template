@@ -13,7 +13,7 @@ export class PIDMovementStrategy implements MovementStrategy {
   }
 
   update(current: number, target: number): number {
-    // Treat everything as a linear progression. 
+    // Treat everything as a linear progression.
     // This allows the PID to track the ever-increasing 'totalSeconds'
     // without getting confused by modular arithmetic.
     const error = target - current;
