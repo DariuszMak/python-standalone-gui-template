@@ -5,12 +5,13 @@ export interface ClockHands {
 }
 
 export function calculateHandAngles(startDt: Date, elapsedSeconds: number): ClockHands {
-  const h = startDt.getHours() % 12;
-  const m = startDt.getMinutes();
-  const s = startDt.getSeconds();
-  const ms = startDt.getMilliseconds();
+  // Use UTC methods to match your Vitest 'utcDate' helper
+  const h = startDt.getUTCHours() % 12;
+  const m = startDt.getUTCMinutes();
+  const s = startDt.getUTCSeconds();
+  const ms = startDt.getUTCMilliseconds();
+  
   const startTotalSeconds = h * 3600 + m * 60 + s + ms / 1000;
-
   const totalSeconds = startTotalSeconds + elapsedSeconds;
 
   return {
@@ -43,11 +44,4 @@ export function formatTime(dt: Date): string {
   const s = String(dt.getSeconds()).padStart(2, "0");
   const ms = String(Math.floor(dt.getMilliseconds())).padStart(3, "0");
   return `${h}:${m}:${s}.${ms}`;
-}
-
-export function getShortestInterval(current: number, target: number, mod: number): number {
-  let delta = (target - current) % mod;
-  if (delta > mod / 2) delta -= mod;
-  if (delta < -mod / 2) delta += mod;
-  return delta;
 }
