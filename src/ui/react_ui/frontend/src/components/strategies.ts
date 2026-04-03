@@ -12,16 +12,14 @@ export class PIDMovementStrategy implements MovementStrategy {
     this._pid = new PID(kp, ki, kd);
   }
 
-  update(current: number, target: number): number {
-    const error = target - current;
-    return current + this._pid.update(error);
+  update(error: number): number {
+    return this._pid.update(error);
   }
 
   reset(): void {
     this._pid.reset();
   }
 }
-
 export class EasingMovementStrategy implements MovementStrategy {
   private readonly factor: number;
 

@@ -44,3 +44,10 @@ export function formatTime(dt: Date): string {
   const ms = String(Math.floor(dt.getMilliseconds())).padStart(3, "0");
   return `${h}:${m}:${s}.${ms}`;
 }
+
+export function getShortestInterval(current: number, target: number, mod: number): number {
+  let delta = (target - current) % mod;
+  if (delta > mod / 2) delta -= mod;
+  if (delta < -mod / 2) delta += mod;
+  return delta;
+}

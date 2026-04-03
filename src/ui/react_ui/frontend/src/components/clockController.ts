@@ -1,4 +1,4 @@
-import { calculateHandAngles, type ClockHands } from "./clockHelpers";
+import { calculateHandAngles, getShortestInterval, type ClockHands } from "./clockHelpers";
 import { PIDMovementStrategy, type MovementStrategy } from "./strategies";
 
 export class ClockController {
@@ -16,17 +16,19 @@ export class ClockController {
     ];
   }
 
+
   update(now: Date): void {
     const elapsedSeconds = (now.getTime() - this._startTime.getTime()) / 1000;
     const target = calculateHandAngles(this._startTime, elapsedSeconds);
     const [ss, sm, sh] = this._strategies;
 
+    // We apply the PID to the "shortest delta" 
+    // This prevents the hands from spinning backwards at the 12 o'clock jump
     this._clockHands = {
-      second: ss.update(this._clockHands.second, target.second),
-      minute: sm.update(this._clockHands.minute, target.minute),
-      hour: sh.update(this._clockHands.hour, target.hour),
+      second: this._clockHands.second + ss.update(getShortestInterval(this._clockHands.second, target.second, 60)),
+      minute: this._clockHands.minute + sm.update(getShortestInterval(this._clockHands.minute, target.minute, 60)),
+      hour: this._clockHands.hour + sh.update(getShortestInterval(this._clockHands.hour, target.hour, 12)),
     };
-  }
 
   reset(newStartTime: Date = new Date(0)): void {
     this._startTime = newStartTime;
