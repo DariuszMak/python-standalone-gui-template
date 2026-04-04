@@ -35,14 +35,7 @@ export class ClockController {
 
   reset(newStartTime: Date = new Date(0)): void {
     this._startTime = newStartTime;
-
-    const initialTarget = calculateHandAngles(newStartTime, 0);
-    this._clockHands = {
-      second: initialTarget.second,
-      minute: initialTarget.minute,
-      hour: initialTarget.hour,
-    };
-
+    this._clockHands = { second: 0, minute: 0, hour: 0 };
     for (const strategy of this._strategies) {
       strategy.reset();
     }
