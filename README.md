@@ -137,7 +137,6 @@ uv sync --dev --no-cache --locked ;
 
 .venv\Scripts\Activate.ps1 ; 
 $env:UV_ENV_FILE = "dev.env"
-$env:PYTHONPATH="." ; 
 
 .\scripts\format_and_lint.ps1 ; 
 .\src\ui\react_ui\frontend\frontend_format_and_lint.ps1 ; 
