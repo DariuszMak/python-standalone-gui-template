@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 import time
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Any
 
 import httpx
