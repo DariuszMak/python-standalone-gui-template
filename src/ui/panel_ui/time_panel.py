@@ -113,7 +113,7 @@ class ClockWidget:
     TICK_MS = 15
 
     def __init__(self, size: int = 300) -> None:
-        self._server_anchor: datetime = datetime.now(UTC)
+        self._server_anchor: datetime = datetime.now().astimezone()
         self._wall_anchor_mono: float = time.monotonic()
 
         self._controller = ClockController(self._server_anchor)
