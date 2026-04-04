@@ -30,7 +30,12 @@ def calculate_clock_hands_angles(
     duration: timedelta,
     display_tz: timezone | None = None,
 ) -> ClockHands:
-    local_dt = start_dt.astimezone(display_tz) if display_tz is not None else start_dt.astimezone()
+    if start_dt.tzinfo is None:
+        local_dt = start_dt
+    elif display_tz is not None:
+        local_dt = start_dt.astimezone(display_tz)
+    else:
+        local_dt = start_dt.astimezone()
 
     midnight = datetime.combine(local_dt.date(), time(0, 0, 0), tzinfo=local_dt.tzinfo)
     start_ms = int((local_dt - midnight).total_seconds() * 1000)
