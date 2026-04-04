@@ -69,8 +69,7 @@ uv lock ;
 ########## STATIC ANALYSIS & TESTS
 
 .venv\Scripts\Activate.ps1 ; 
-
-Get-Content dev.env | ForEach-Object { if ($_ -match '^\s*([^=]+?)\s*=\s*"?([^"]*)"?') { [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], [System.EnvironmentVariableTarget]::Process) } else { Write-Warning "Invalid entry: '$_'" } } ; 
+$env:UV_ENV_FILE = "dev.env"
 
 uv run python src\gui_setup.py ; 
 uv run python src\node_setup.py ; 
@@ -137,6 +136,7 @@ uv python pin 3.11 ;
 uv sync --dev --no-cache --locked ; 
 
 .venv\Scripts\Activate.ps1 ; 
+$env:UV_ENV_FILE = "dev.env"
 $env:PYTHONPATH="." ; 
 
 .\scripts\format_and_lint.ps1 ; 
@@ -191,8 +191,6 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Linux.postman_environment.json ; 
 
 #####
-
-# Get-Content thorough.env | ForEach-Object { if ($_ -match '^\s*([^=]+?)\s*=\s*"?([^"]*)"?') { [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], [System.EnvironmentVariableTarget]::Process) } else { Write-Warning "Invalid entry: '$_'" } } ; 
 
 Start-Process .\releases\windows\GUI_client.exe ; 
 Start-Sleep -Seconds 30 ; 
