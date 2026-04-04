@@ -28,7 +28,7 @@ class ClockWidget(QWidget):
         self._timer: QTimer = QTimer(self)
         self._timer.timeout.connect(self._tick_subject.notify)
         self._timer.start(self._duration)
-        self._server_anchor: datetime = datetime(1970, 1, 1, tzinfo=UTC)
+        self._server_anchor: datetime = datetime.now().astimezone()
         self._wall_anchor_mono: float = time.monotonic()
 
         self._current_datetime: datetime = self._server_anchor
