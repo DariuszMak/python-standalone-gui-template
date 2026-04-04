@@ -69,7 +69,7 @@ uv lock ;
 ########## STATIC ANALYSIS & TESTS
 
 .venv\Scripts\Activate.ps1 ; 
-$env:UV_ENV_FILE = "dev.env" ; 
+$env:UV_ENV_FILE = ".dev.env" ; 
 
 uv run python src\gui_setup.py ; 
 uv run python src\node_setup.py ; 
@@ -136,7 +136,7 @@ uv python pin 3.11 ;
 uv sync --dev --no-cache --locked ; 
 
 .venv\Scripts\Activate.ps1 ; 
-$env:UV_ENV_FILE = "dev.env" ; 
+$env:UV_ENV_FILE = ".dev.env" ; 
 
 .\scripts\format_and_lint.ps1 ; 
 .\src\ui\react_ui\frontend\frontend_format_and_lint.ps1 ; 
