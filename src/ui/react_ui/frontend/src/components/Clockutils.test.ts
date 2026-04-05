@@ -162,14 +162,14 @@ describe("calculateHandAngles", () => {
     expect(h500.second).toBeGreaterThan(h0.second);
   });
 
-  it("elapsed seconds accumulate without wrapping — mirrors Python test_noon_clock_hands_angles_from_milliseconds", () => {
+  it("elapsed seconds accumulate without wrapping", () => {
     const h = calculateHandAngles(localDate(0, 0, 0), 12 * 3600);
     expect(h.second).toBeCloseTo(43200);
     expect(h.minute).toBeCloseTo(720);
     expect(h.hour).toBeCloseTo(12);
   });
 
-  it("elapsed seconds accumulate past one full day — mirrors Python test_maximum_clock_hands_angles_from_milliseconds", () => {
+  it("elapsed seconds accumulate past one full day", () => {
     const totalMs = 23 * 3600 * 1000 + 59 * 60 * 1000 + 59 * 1000 + 999;
     const h = calculateHandAngles(localDate(0, 0, 0), totalMs / 1000);
     expect(h.second).toBeCloseTo(totalMs / 1000, 2);
@@ -177,7 +177,7 @@ describe("calculateHandAngles", () => {
     expect(h.hour).toBeCloseTo(totalMs / 1000 / 3600, 5);
   });
 
-  it("elapsed seconds accumulate past one month — mirrors Python test_circled_clock_hands_angles_after_month", () => {
+  it("elapsed seconds accumulate past one month", () => {
     const totalMs = 37 * 24 * 3600 * 1000 + 65 * 60 * 1000 + 61 * 1000 + 2;
     const h = calculateHandAngles(localDate(0, 0, 0), totalMs / 1000);
     expect(h.second).toBeCloseTo(totalMs / 1000, 1);
@@ -238,7 +238,7 @@ describe("clockHandsInRadians", () => {
     expect(clockHandsInRadians({ second: 0, minute: 0, hour: 12 }).hour).toBeCloseTo(0);
   });
 
-  it("mirrors Python clock_hands_in_radians formula for non-wrapped values", () => {
+  it("formula for non-wrapped values", () => {
     const hands: ClockHands = { second: 15, minute: 30, hour: 6 };
     const r = clockHandsInRadians(hands);
     expect(r.second).toBeCloseTo((15 / 60) * 2 * Math.PI);
