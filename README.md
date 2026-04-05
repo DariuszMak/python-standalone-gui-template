@@ -71,6 +71,7 @@ uv lock ;
 .venv\Scripts\Activate.ps1 ; 
 $env:UV_ENV_FILE = ".dev.env" ; 
 
+rm -r -fo .\src\ui\react_ui\frontend\package-lock.json ; 
 uv run python src\gui_setup.py ; 
 uv run python src\node_setup.py ; 
 
