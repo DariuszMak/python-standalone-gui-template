@@ -240,3 +240,36 @@ def test_convert_clock_pid_to_cartesian() -> None:
     assert hands.second == QPointF(100.0, 100.0 - radius * 0.9)
     assert hands.minute == QPointF(100.0 + radius * 0.7, 100.0)
     assert hands.hour == QPointF(100.0, 100.0 + radius * 0.5)
+
+
+def test_naive_datetime_used_as_local_no_conversion() -> None:
+    naive_dt = datetime(2025, 4, 27, 3, 30, 0)  
+    angles = calculate_clock_hands_angles(naive_dt, timedelta(0))
+    assert angles.second == pytest.approx(0.0)
+    assert angles.minute == pytest.approx(30.0)
+    assert angles.hour == pytest.approx(3.5)
+
+
+def test_naive_datetime_no_display_tz_does_not_shift() -> None:
+    naive_dt = datetime(2025, 4, 27, 6, 0, 0) 
+    angles = calculate_clock_hands_angles(naive_dt, timedelta(0))
+    assert angles.hour == pytest.approx(6.0)
+    assert angles.minute == pytest.approx(0.0)
+    assert angles.second == pytest.approx(0.0)
+
+
+def test_naive_datetime_with_duration() -> None:
+    naive_dt = datetime(2025, 4, 27, 0, 0, 0)  
+    duration = timedelta(hours=3, minutes=30)
+    angles = calculate_clock_hands_angles(naive_dt, duration)
+    assert angles.second == pytest.approx(12600.0)
+    assert angles.minute == pytest.approx(210.0)
+    assert angles.hour == pytest.approx(3.5)
+
+
+def test_aware_datetime_no_display_tz_uses_local_conversion() -> None:
+    utc_dt = datetime(2025, 4, 27, 12, 0, 0, tzinfo=UTC)
+    angles = calculate_clock_hands_angles(utc_dt, timedelta(0), display_tz=None)
+    assert math.isfinite(angles.second)
+    assert math.isfinite(angles.minute)
+    assert math.isfinite(angles.hour)
