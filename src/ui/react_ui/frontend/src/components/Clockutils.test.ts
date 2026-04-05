@@ -20,8 +20,8 @@ import {
   ClockController as ControllerFromUtils,
 } from "./clockUtils";
 
-function utcDate(h: number, m: number, s: number, ms = 0): Date {
-  return new Date(Date.UTC(2025, 0, 1, h, m, s, ms));
+function localDate(h: number, m: number, s: number, ms = 0): Date {
+  return new Date(2025, 0, 1, h, m, s, ms);
 }
 
 function runTicks(
@@ -127,28 +127,28 @@ describe("TickMovementStrategy", () => {
 
 describe("calculateHandAngles", () => {
   it("elapsed 0 at midnight gives all zeros", () => {
-    const h = calculateHandAngles(utcDate(0, 0, 0), 0);
+    const h = calculateHandAngles(localDate(0, 0, 0), 0);
     expect(h.second).toBeCloseTo(0);
     expect(h.minute).toBeCloseTo(0);
     expect(h.hour).toBeCloseTo(0);
   });
 
   it("elapsed 0 at noon gives all zeros (12-hour wrap in start)", () => {
-    const h = calculateHandAngles(utcDate(12, 0, 0), 0);
+    const h = calculateHandAngles(localDate(12, 0, 0), 0);
     expect(h.second).toBeCloseTo(0);
     expect(h.minute).toBeCloseTo(0);
     expect(h.hour).toBeCloseTo(0);
   });
 
   it("elapsed 0 at half past three", () => {
-    const h = calculateHandAngles(utcDate(3, 30, 0), 0);
+    const h = calculateHandAngles(localDate(3, 30, 0), 0);
     expect(h.second).toBeCloseTo(3 * 3600 + 30 * 60);
     expect(h.minute).toBeCloseTo((3 * 3600 + 30 * 60) / 60);
     expect(h.hour).toBeCloseTo((3 * 3600 + 30 * 60) / 3600);
   });
 
   it("elapsed 0 at 23:59:59 gives near-maximum totals", () => {
-    const h = calculateHandAngles(utcDate(23, 59, 59), 0);
+    const h = calculateHandAngles(localDate(23, 59, 59), 0);
 
     const total = 11 * 3600 + 59 * 60 + 59;
     expect(h.second).toBeCloseTo(total, 3);
@@ -157,13 +157,13 @@ describe("calculateHandAngles", () => {
   });
 
   it("milliseconds in start contribute fractional seconds", () => {
-    const h0 = calculateHandAngles(utcDate(0, 0, 30, 0), 0);
-    const h500 = calculateHandAngles(utcDate(0, 0, 30, 500), 0);
+    const h0 = calculateHandAngles(localDate(0, 0, 30, 0), 0);
+    const h500 = calculateHandAngles(localDate(0, 0, 30, 500), 0);
     expect(h500.second).toBeGreaterThan(h0.second);
   });
 
   it("elapsed seconds accumulate without wrapping — mirrors Python test_noon_clock_hands_angles_from_milliseconds", () => {
-    const h = calculateHandAngles(utcDate(0, 0, 0), 12 * 3600);
+    const h = calculateHandAngles(localDate(0, 0, 0), 12 * 3600);
     expect(h.second).toBeCloseTo(43200);
     expect(h.minute).toBeCloseTo(720);
     expect(h.hour).toBeCloseTo(12);
@@ -171,7 +171,7 @@ describe("calculateHandAngles", () => {
 
   it("elapsed seconds accumulate past one full day — mirrors Python test_maximum_clock_hands_angles_from_milliseconds", () => {
     const totalMs = 23 * 3600 * 1000 + 59 * 60 * 1000 + 59 * 1000 + 999;
-    const h = calculateHandAngles(utcDate(0, 0, 0), totalMs / 1000);
+    const h = calculateHandAngles(localDate(0, 0, 0), totalMs / 1000);
     expect(h.second).toBeCloseTo(totalMs / 1000, 2);
     expect(h.minute).toBeCloseTo(totalMs / 1000 / 60, 4);
     expect(h.hour).toBeCloseTo(totalMs / 1000 / 3600, 5);
@@ -179,23 +179,23 @@ describe("calculateHandAngles", () => {
 
   it("elapsed seconds accumulate past one month — mirrors Python test_circled_clock_hands_angles_after_month", () => {
     const totalMs = 37 * 24 * 3600 * 1000 + 65 * 60 * 1000 + 61 * 1000 + 2;
-    const h = calculateHandAngles(utcDate(0, 0, 0), totalMs / 1000);
+    const h = calculateHandAngles(localDate(0, 0, 0), totalMs / 1000);
     expect(h.second).toBeCloseTo(totalMs / 1000, 1);
     expect(h.minute).toBeCloseTo(totalMs / 1000 / 60, 3);
     expect(h.hour).toBeCloseTo(totalMs / 1000 / 3600, 4);
   });
 
   it("PM hour (15:30) produces same result as AM (3:30) with elapsed=0", () => {
-    const am = calculateHandAngles(utcDate(3, 30, 0), 0);
-    const pm = calculateHandAngles(utcDate(15, 30, 0), 0);
+    const am = calculateHandAngles(localDate(3, 30, 0), 0);
+    const pm = calculateHandAngles(localDate(15, 30, 0), 0);
     expect(pm.second).toBeCloseTo(am.second, 5);
     expect(pm.minute).toBeCloseTo(am.minute, 5);
     expect(pm.hour).toBeCloseTo(am.hour, 5);
   });
 
   it("re-exported from clockUtils produces identical results", () => {
-    const a = calculateHandAngles(utcDate(9, 15, 30, 250), 120);
-    const b = calcFromUtils(utcDate(9, 15, 30, 250), 120);
+    const a = calculateHandAngles(localDate(9, 15, 30, 250), 120);
+    const b = calcFromUtils(localDate(9, 15, 30, 250), 120);
     expect(a.second).toBeCloseTo(b.second);
     expect(a.minute).toBeCloseTo(b.minute);
     expect(a.hour).toBeCloseTo(b.hour);
@@ -333,7 +333,7 @@ describe("ClockController", () => {
   });
 
   it("update advances hands from zero toward target", () => {
-    const start = utcDate(3, 30, 45);
+    const start = localDate(3, 30, 45);
     const c = new ClockController(start);
     c.update(new Date(start.getTime() + 1000));
     expect(c._clockHands.second).toBeGreaterThan(0);
@@ -342,7 +342,7 @@ describe("ClockController", () => {
   });
 
   it("repeated updates bring hands monotonically closer to target (eventually)", () => {
-    const start = utcDate(6, 0, 0);
+    const start = localDate(6, 0, 0);
     const c = new ClockController(start);
 
     runTicks(c, start, 40_000, 15);
@@ -355,25 +355,25 @@ describe("ClockController", () => {
   });
 
   it("reset zeroes all hands and accepts a new start anchor", () => {
-    const start = utcDate(3, 0, 0);
+    const start = localDate(3, 0, 0);
     const c = new ClockController(start);
     runTicks(c, start, 100, 15);
     expect(c._clockHands.second).toBeGreaterThan(0);
 
-    const newStart = utcDate(9, 0, 0);
+    const newStart = localDate(9, 0, 0);
     c.reset(newStart);
     expect(c._clockHands).toEqual({ second: 0, minute: 0, hour: 0 });
   });
 
   it("after reset, same first update gives same result as a fresh controller", () => {
-    const start = utcDate(9, 15, 0);
+    const start = localDate(9, 15, 0);
     const tick = new Date(start.getTime() + 15);
 
     const c1 = new ClockController(start);
     c1.update(tick);
 
-    const c2 = new ClockController(utcDate(3, 0, 0));
-    c2.update(new Date(utcDate(3, 0, 0).getTime() + 15));
+    const c2 = new ClockController(localDate(3, 0, 0));
+    c2.update(new Date(localDate(3, 0, 0).getTime() + 15));
     c2.reset(start);
     c2.update(tick);
 
@@ -383,14 +383,14 @@ describe("ClockController", () => {
   });
 
   it("re-exported from clockUtils is the same class", () => {
-    const start = utcDate(1, 2, 3);
+    const start = localDate(1, 2, 3);
     const c = new ControllerFromUtils(start);
     c.update(new Date(start.getTime() + 1000));
     expect(c._clockHands.second).toBeGreaterThan(0);
   });
 
   it("clockHandsInRadians on controller output always stays within [0, 2π)", () => {
-    const start = utcDate(11, 55, 0);
+    const start = localDate(11, 55, 0);
     const c = new ClockController(start);
 
     for (let i = 1; i <= 60_000; i++) {
@@ -403,5 +403,15 @@ describe("ClockController", () => {
     expect(r.minute).toBeLessThan(2 * Math.PI);
     expect(r.hour).toBeGreaterThanOrEqual(0);
     expect(r.hour).toBeLessThan(2 * Math.PI);
+  });
+});
+
+describe("calculateHandAngles — timezone handling", () => {
+  it("uses local time fields, not UTC (regression: hands were 2h behind in UTC+2)", () => {
+    const local14 = new Date(2026, 3, 5, 14, 49, 14, 0);
+    const h = calculateHandAngles(local14, 0);
+    const expectedTotalSeconds = 2 * 3600 + 49 * 60 + 14;
+    expect(h.second).toBeCloseTo(expectedTotalSeconds);
+    expect(h.hour).toBeCloseTo(expectedTotalSeconds / 3600);
   });
 });

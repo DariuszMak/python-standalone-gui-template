@@ -5,10 +5,10 @@ export interface ClockHands {
 }
 
 export function calculateHandAngles(startDt: Date, elapsedSeconds: number): ClockHands {
-  const h = startDt.getUTCHours() % 12;
-  const m = startDt.getUTCMinutes();
-  const s = startDt.getUTCSeconds();
-  const ms = startDt.getUTCMilliseconds();
+  const h = startDt.getHours() % 12;
+  const m = startDt.getMinutes();
+  const s = startDt.getSeconds();
+  const ms = startDt.getMilliseconds();
 
   const startTotalSeconds = h * 3600 + m * 60 + s + ms / 1000;
   const totalSeconds = startTotalSeconds + elapsedSeconds;
