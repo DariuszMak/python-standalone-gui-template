@@ -243,7 +243,7 @@ def test_convert_clock_pid_to_cartesian() -> None:
 
 
 def test_naive_datetime_used_as_local_no_conversion() -> None:
-    naive_dt = datetime(2025, 4, 27, 3, 30, 0)  
+    naive_dt = datetime(2025, 4, 27, 3, 30, 0)  # noqa: DTZ001
     angles = calculate_clock_hands_angles(naive_dt, timedelta(0))
     assert angles.second == pytest.approx(0.0)
     assert angles.minute == pytest.approx(30.0)
@@ -251,7 +251,7 @@ def test_naive_datetime_used_as_local_no_conversion() -> None:
 
 
 def test_naive_datetime_no_display_tz_does_not_shift() -> None:
-    naive_dt = datetime(2025, 4, 27, 6, 0, 0) 
+    naive_dt = datetime(2025, 4, 27, 6, 0, 0)  # noqa: DTZ001
     angles = calculate_clock_hands_angles(naive_dt, timedelta(0))
     assert angles.hour == pytest.approx(6.0)
     assert angles.minute == pytest.approx(0.0)
@@ -259,7 +259,7 @@ def test_naive_datetime_no_display_tz_does_not_shift() -> None:
 
 
 def test_naive_datetime_with_duration() -> None:
-    naive_dt = datetime(2025, 4, 27, 0, 0, 0)  
+    naive_dt = datetime(2025, 4, 27, 0, 0, 0)  # noqa: DTZ001
     duration = timedelta(hours=3, minutes=30)
     angles = calculate_clock_hands_angles(naive_dt, duration)
     assert angles.second == pytest.approx(12600.0)
