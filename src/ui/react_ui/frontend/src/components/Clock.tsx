@@ -11,6 +11,7 @@ export function Clock() {
   const serverAnchorRef = useRef(new Date(0));
   const wallAnchorRef = useRef(performance.now());
   const controllerRef = useRef(new ClockController(new Date(0)));
+  const readyRef = useRef(false);
 
   const [datetime, setDatetime] = useState<string | null>(null);
   const [status, setStatus] = useState<"loading" | "ok" | "error">("loading");
@@ -26,6 +27,7 @@ export function Clock() {
       serverAnchorRef.current = serverDate;
       wallAnchorRef.current = performance.now();
       controllerRef.current.reset(serverDate);
+      readyRef.current = true;
       setStatus("ok");
     } catch {
       setStatus("error");
@@ -41,6 +43,11 @@ export function Clock() {
     if (!canvas) return;
 
     const draw = () => {
+      if (!readyRef.current) {
+        animRef.current = requestAnimationFrame(draw);
+        return;
+      }
+
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
