@@ -10,7 +10,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from src import STATIC_CATALOGUE_NAME
-from src.config.config import Config
+from src.helpers.config.config import Config
 
 
 def create_app(config: Config | None = None) -> FastAPI:

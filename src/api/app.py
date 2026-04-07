@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.routes import router
-from src.config.config import Config
+from src.helpers.config.config import Config
 
 app = FastAPI(
     title="My API",

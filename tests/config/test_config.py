@@ -1,6 +1,6 @@
 import pytest
 
-from src.config.config import Config
+from src.helpers.config.config import Config
 
 
 def test_config_defaults() -> None:

@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QSystemTrayIcon
 
 from src.api.models import ServerTimeResponse
 from src.api.time_client import TimeClient
-from src.config.config import Config
+from src.helpers.config.config import Config
 from src.helpers.style_loader import StyleLoader
 from src.ui.pyside_ui.clock_widget.view.clock_widget import ClockWidget
 from src.ui.pyside_ui.dialog_windows.draggable_main_window import DraggableMainWindow

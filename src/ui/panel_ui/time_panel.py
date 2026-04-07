@@ -10,7 +10,7 @@ import panel as pn
 from bokeh.models import ColumnDataSource, Range1d
 from bokeh.plotting import figure
 
-from src.config.config import Config
+from src.helpers.config.config import Config
 from src.ui.shared.controller.clock_controller import ClockController
 from src.ui.shared.helpers import format_datetime
 from src.ui.shared.model.helpers import clock_hands_in_radians

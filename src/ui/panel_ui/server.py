@@ -2,7 +2,7 @@ import threading
 
 from panel.io.server import serve
 
-from src.config.config import Config
+from src.helpers.config.config import Config
 from src.ui.panel_ui.time_panel import create_layout
 
 
