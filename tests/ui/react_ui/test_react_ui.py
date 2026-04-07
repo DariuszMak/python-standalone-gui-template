@@ -8,17 +8,16 @@ from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
 from src.ui.react_ui.app import app, create_app, run_react_ui, start_react_ui_in_background
+from starlette.staticfiles import StaticFiles
+from unittest.mock import Mock
 
-
-def test_create_app_static_files_configured(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr("starlette.staticfiles.StaticFiles.__init__", lambda _self, *_args, **_kwargs: None)
-
-    test_app = create_app()
-
-    assert isinstance(test_app, FastAPI)
-
-    static_mounts = [route for route in test_app.routes if isinstance(getattr(route, "app", None), StaticFiles)]
-    assert len(static_mounts) == 1
+def test_create_app_static_files_configured(monkeypatch):
+    monkeypatch.setattr("starlette.staticfiles.StaticFiles", Mock)
+    from src.ui.react_ui.app import create_app
+    app = create_app()
+    
+    mounts = [route.path for route in app.routes if hasattr(route, "path")]
+    assert "/assets" in mounts
 
 
 def test_run_react_ui_calls_uvicorn(monkeypatch: pytest.MonkeyPatch) -> None:

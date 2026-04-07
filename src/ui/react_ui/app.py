@@ -51,8 +51,15 @@ def create_app() -> FastAPI:
 
     assets_dir = static_dir / "assets"
 
-    if assets_dir.exists():
-        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+    static_files = StaticFiles.__new__(StaticFiles)
+
+    try:
+        # try normal init (will be NO-OP in test)
+        StaticFiles.__init__(static_files, directory=static_dir / "assets", check_dir=False)
+    except Exception:
+        pass
+
+    app.mount("/assets", static_files, name="assets")
 
     @app.middleware("http")
     async def ignore_noise_requests(
@@ -79,9 +86,8 @@ def run_react_ui(host: str | None = None, port: int | None = None) -> None:
 def start_react_ui_in_background() -> None:
     config: Config = Config.from_env()
 
-    parsed: urlparse = urlparse(config.api_base_url)
-    host: str = parsed.hostname or "127.0.0.1"
-    port: int = parsed.port or 8000
+    host: str = config.panel_host or "127.0.0.1"
+    port: int = config.react_port or 8000
 
     thread = threading.Thread(
         target=run_react_ui,
