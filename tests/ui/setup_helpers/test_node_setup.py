@@ -17,7 +17,7 @@ from src.ui.setup_helpers.node_setup import (
 
 
 def test_run_command_success(tmp_path: Path) -> None:
-    with patch("src.helpers.node_setup.subprocess.run") as mock_run:
+    with patch("src.ui.setup_helpers.node_setup.subprocess.run") as mock_run:
         mock_run.return_value = MagicMock(
             returncode=0,
             stdout="success",
@@ -36,7 +36,7 @@ def test_run_command_invalid_cwd() -> None:
 
 
 def test_run_command_failure(tmp_path: Path) -> None:
-    with patch("src.helpers.node_setup.subprocess.run") as mock_run:
+    with patch("src.ui.setup_helpers.node_setup.subprocess.run") as mock_run:
         mock_run.return_value = MagicMock(
             returncode=1,
             stdout="out",
@@ -53,8 +53,8 @@ def test_install_dependencies_skips_when_node_modules_exists(tmp_path: Path) -> 
     node_modules.mkdir(parents=True)
 
     with (
-        patch("src.helpers.node_setup.FRONTEND_DIR", frontend),
-        patch("src.helpers.node_setup.run_command") as mock_run,
+        patch("src.ui.setup_helpers.node_setup.FRONTEND_DIR", frontend),
+        patch("src.ui.setup_helpers.node_setup.run_command") as mock_run,
     ):
         install_dependencies()
         mock_run.assert_not_called()
@@ -65,8 +65,8 @@ def test_install_dependencies_runs_npm_install(tmp_path: Path) -> None:
     frontend.mkdir()
 
     with (
-        patch("src.helpers.node_setup.FRONTEND_DIR", frontend),
-        patch("src.helpers.node_setup.run_command") as mock_run,
+        patch("src.ui.setup_helpers.node_setup.FRONTEND_DIR", frontend),
+        patch("src.ui.setup_helpers.node_setup.run_command") as mock_run,
     ):
         install_dependencies()
         mock_run.assert_called_once_with([NPM_CMD, "install"], cwd=frontend)
@@ -77,8 +77,8 @@ def test_build_frontend_runs_npm_build(tmp_path: Path) -> None:
     frontend.mkdir()
 
     with (
-        patch("src.helpers.node_setup.FRONTEND_DIR", frontend),
-        patch("src.helpers.node_setup.run_command") as mock_run,
+        patch("src.ui.setup_helpers.node_setup.FRONTEND_DIR", frontend),
+        patch("src.ui.setup_helpers.node_setup.run_command") as mock_run,
     ):
         build_frontend()
         mock_run.assert_called_once_with([NPM_CMD, "run", "build"], cwd=frontend)
@@ -99,7 +99,7 @@ def test_copy_dist_to_static_copies_files_and_dirs(tmp_path: Path) -> None:
     nested = assets / "app.js"
     nested.write_text("js")
 
-    with patch("src.helpers.node_setup.DIST_DIR", dist), patch("src.helpers.node_setup.STATIC_DIR", static):
+    with patch("src.ui.setup_helpers.node_setup.DIST_DIR", dist), patch("src.ui.setup_helpers.node_setup.STATIC_DIR", static):
         copy_dist_to_static()
 
     assert (static / "index.html").read_text() == "html"
@@ -121,7 +121,7 @@ def test_copy_dist_to_static_merges_existing_directory(tmp_path: Path) -> None:
     dest_dir.mkdir()
     (dest_dir / "old.js").write_text("old")
 
-    with patch("src.helpers.node_setup.DIST_DIR", dist), patch("src.helpers.node_setup.STATIC_DIR", static):
+    with patch("src.ui.setup_helpers.node_setup.DIST_DIR", dist), patch("src.ui.setup_helpers.node_setup.STATIC_DIR", static):
         copy_dist_to_static()
 
     assert (static / "assets" / "old.js").exists()
@@ -130,9 +130,9 @@ def test_copy_dist_to_static_merges_existing_directory(tmp_path: Path) -> None:
 
 def test_build_react_frontend_calls_all_steps() -> None:
     with (
-        patch("src.helpers.node_setup.install_dependencies") as mock_install,
-        patch("src.helpers.node_setup.build_frontend") as mock_build,
-        patch("src.helpers.node_setup.copy_dist_to_static") as mock_copy,
+        patch("src.ui.setup_helpers.node_setup.install_dependencies") as mock_install,
+        patch("src.ui.setup_helpers.node_setup.build_frontend") as mock_build,
+        patch("src.ui.setup_helpers.node_setup.copy_dist_to_static") as mock_copy,
     ):
         build_react_frontend()
 
