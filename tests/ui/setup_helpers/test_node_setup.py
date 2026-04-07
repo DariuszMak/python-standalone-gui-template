@@ -1,3 +1,4 @@
+import src.ui.setup_helpers.node_setup as module
 import platform
 from importlib import reload
 from pathlib import Path
@@ -143,7 +144,6 @@ def test_build_react_frontend_calls_all_steps() -> None:
 def test_npm_cmd_windows(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(platform, "system", lambda: "Windows")
 
-    import src.ui.helpers.node_setup as module
 
     reload(module)
 
