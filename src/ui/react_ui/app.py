@@ -23,10 +23,7 @@ def create_app(config: Config | None = None) -> FastAPI:
 
     index_html = (static_dir / "index.html").read_text(encoding="utf-8")
 
-    
-    injection = (
-        f'<script>window.__APP_CONFIG__ = {{"apiBaseUrl": "{cfg.api_base_url}"}};</script>'
-    )
+    injection = f'<script>window.__APP_CONFIG__ = {{"apiBaseUrl": "{cfg.api_base_url}"}};</script>'
     patched_html = index_html.replace("</head>", f"{injection}\n</head>", 1)
 
     app = FastAPI()
