@@ -2,7 +2,7 @@ import os
 import sys
 import threading
 
-from src import application
+from src.ui.pyside_ui import application
 from src.api.app import run_api
 from src.helpers import node_setup, pyside_setup
 from src.helpers.logging_setup import logging_setup
