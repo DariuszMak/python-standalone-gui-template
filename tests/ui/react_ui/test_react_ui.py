@@ -7,7 +7,7 @@ import uvicorn
 from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
-from src.ui.react_ui.app import app, create_app, run_react_ui, start_react_ui_in_background
+from src.ui.react_ui.app import create_app, run_react_ui, start_react_ui_in_background
 
 
 def test_create_app_static_files_configured(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -22,7 +22,13 @@ def test_create_app_static_files_configured(monkeypatch: pytest.MonkeyPatch) -> 
 
 
 def test_run_react_ui_calls_uvicorn(monkeypatch: pytest.MonkeyPatch) -> None:
-    called = {}
+    called: dict[str, Any] = {}
+    captured_app: list[FastAPI] = []
+
+    def fake_create_app(config: Any = None) -> FastAPI:  # noqa: ANN401
+        fa = FastAPI()
+        captured_app.append(fa)
+        return fa
 
     def fake_run(app_instance: Any, host: str, port: int, log_level: str) -> None:
         called["app"] = app_instance
@@ -30,11 +36,13 @@ def test_run_react_ui_calls_uvicorn(monkeypatch: pytest.MonkeyPatch) -> None:
         called["port"] = port
         called["log_level"] = log_level
 
+    monkeypatch.setattr("src.ui.react_ui.app.create_app", fake_create_app)
     monkeypatch.setattr(uvicorn, "run", fake_run)
 
     run_react_ui("127.0.0.1", 8080)
 
-    assert called["app"] is app
+    assert len(captured_app) == 1
+    assert called["app"] is captured_app[0]
     assert called["host"] == "127.0.0.1"
     assert called["port"] == 8080
     assert called["log_level"] == "info"
@@ -45,6 +53,7 @@ def test_start_react_ui_in_background(monkeypatch: pytest.MonkeyPatch) -> None:
         panel_host = "localhost"
         react_port = 7777
 
+    dummy_config = DummyConfig()
     started: dict[str, Any] = {}
 
     class DummyThread:
@@ -56,11 +65,11 @@ def test_start_react_ui_in_background(monkeypatch: pytest.MonkeyPatch) -> None:
         def start(self) -> None:
             started["started"] = True
 
-    monkeypatch.setattr("src.ui.react_ui.app.Config.from_env", lambda: DummyConfig())
+    monkeypatch.setattr("src.ui.react_ui.app.Config.from_env", lambda: dummy_config)
     monkeypatch.setattr(threading, "Thread", DummyThread)
 
     start_react_ui_in_background()
 
-    assert started["args"] == ("localhost", 7777)
+    assert started["args"] == ("localhost", 7777, dummy_config)
     assert started["daemon"] is True
     assert started["started"] is True
