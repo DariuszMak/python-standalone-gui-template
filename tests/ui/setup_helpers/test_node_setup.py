@@ -1,4 +1,3 @@
-import src.ui.setup_helpers.node_setup as module
 import platform
 from importlib import reload
 from pathlib import Path
@@ -6,6 +5,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+import src.ui.setup_helpers.node_setup as module
 from src.ui.setup_helpers.node_setup import (
     NPM_CMD,
     build_frontend,
@@ -99,7 +99,10 @@ def test_copy_dist_to_static_copies_files_and_dirs(tmp_path: Path) -> None:
     nested = assets / "app.js"
     nested.write_text("js")
 
-    with patch("src.ui.setup_helpers.node_setup.DIST_DIR", dist), patch("src.ui.setup_helpers.node_setup.STATIC_DIR", static):
+    with (
+        patch("src.ui.setup_helpers.node_setup.DIST_DIR", dist),
+        patch("src.ui.setup_helpers.node_setup.STATIC_DIR", static),
+    ):
         copy_dist_to_static()
 
     assert (static / "index.html").read_text() == "html"
@@ -121,7 +124,10 @@ def test_copy_dist_to_static_merges_existing_directory(tmp_path: Path) -> None:
     dest_dir.mkdir()
     (dest_dir / "old.js").write_text("old")
 
-    with patch("src.ui.setup_helpers.node_setup.DIST_DIR", dist), patch("src.ui.setup_helpers.node_setup.STATIC_DIR", static):
+    with (
+        patch("src.ui.setup_helpers.node_setup.DIST_DIR", dist),
+        patch("src.ui.setup_helpers.node_setup.STATIC_DIR", static),
+    ):
         copy_dist_to_static()
 
     assert (static / "assets" / "old.js").exists()
@@ -143,7 +149,6 @@ def test_build_react_frontend_calls_all_steps() -> None:
 
 def test_npm_cmd_windows(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(platform, "system", lambda: "Windows")
-
 
     reload(module)
 
