@@ -6,12 +6,18 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.135.1",
+    "numpy>=2.4.4",
+    "openmeteo-requests>=1.7.5",
+    "pandas>=3.0.2",
+    "pandas-stubs>=3.0.0.260204",
     "panel>=1.8.5",
     "pyside6>=6.9.1",
     "pytest-asyncio>=1.3.0",
     "pytest-qt>=4.5.0",
     "qasync>=0.28.0",
+    "requests-cache>=1.3.1",
     "respx>=0.22.0",
+    "retry-requests>=2.0.0",
     "uvicorn>=0.35.0",
 ]
 
