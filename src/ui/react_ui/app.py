@@ -1,12 +1,12 @@
 import os
 import sys
 import threading
-from collections.abc import Awaitable, Callable
 from pathlib import Path
+from urllib.parse import urlparse
 
 import uvicorn
 from fastapi import FastAPI, Request, Response
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from src import STATIC_CATALOGUE_NAME
@@ -14,7 +14,6 @@ from src.config.config import Config
 
 
 def create_app() -> FastAPI:
-
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
         static_dir = Path(sys._MEIPASS) / STATIC_CATALOGUE_NAME
     else:
@@ -22,16 +21,33 @@ def create_app() -> FastAPI:
 
     app = FastAPI()
 
+    config = Config.from_env()
+
+    @app.get("/", response_class=HTMLResponse)
+    async def index() -> HTMLResponse:
+        index_file = static_dir / "index.html"
+        html = index_file.read_text(encoding="utf-8")
+
+        injected = f"""
+        <script>
+          window.APP_CONFIG = {{
+            apiBaseUrl: "{config.api_base_url}"
+          }};
+        </script>
+        """
+
+        return HTMLResponse(html.replace("</head>", injected + "</head>"))
+
     @app.get("/favicon.ico", include_in_schema=False)
     async def favicon() -> FileResponse:
         return FileResponse(Path("src/ui/pyside_ui/forms/icons/images/program_icon.ico"))
 
-    app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+    app.mount("/assets", StaticFiles(directory=static_dir / "assets"), name="assets")
 
     @app.middleware("http")
     async def ignore_noise_requests(
         request: Request,
-        call_next: Callable[[Request], Awaitable[Response]],
+        call_next,
     ) -> Response:
         path = request.url.path
         if path.startswith("/.well-known") or path.endswith(".map"):
@@ -52,8 +68,10 @@ def run_react_ui(host: str | None = None, port: int | None = None) -> None:
 
 def start_react_ui_in_background() -> None:
     config: Config = Config.from_env()
-    host: str = config.panel_host or "127.0.0.1"
-    port: int = config.react_port or 8000
+
+    parsed: urlparse = urlparse(config.api_base_url)
+    host: str = parsed.hostname or "127.0.0.1"
+    port: int = parsed.port or 8000
 
     thread = threading.Thread(
         target=run_react_ui,
