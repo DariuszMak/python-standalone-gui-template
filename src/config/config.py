@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.config.env import EnvLoaderMixin
+from src.config.env_loader_mixin import EnvLoaderMixin
 
 
 @dataclass(frozen=True)
