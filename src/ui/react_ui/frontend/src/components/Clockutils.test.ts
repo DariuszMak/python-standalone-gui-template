@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { getApiBaseUrl } from "../config";
 
 import { PID } from "./pid";
 import { PIDMovementStrategy, EasingMovementStrategy, TickMovementStrategy } from "./strategies";
@@ -413,5 +414,20 @@ describe("calculateHandAngles — timezone handling", () => {
     const expectedTotalSeconds = 2 * 3600 + 49 * 60 + 14;
     expect(h.second).toBeCloseTo(expectedTotalSeconds);
     expect(h.hour).toBeCloseTo(expectedTotalSeconds / 3600);
+  });
+});
+
+describe("getApiBaseUrl", () => {
+  afterEach(() => {
+    delete window.__APP_CONFIG__;
+  });
+
+  it("returns __APP_CONFIG__.apiBaseUrl when injected", () => {
+    window.__APP_CONFIG__ = { apiBaseUrl: "http://192.168.1.10:9000" };
+    expect(getApiBaseUrl()).toBe("http://192.168.1.10:9000");
+  });
+
+  it("falls back to VITE_BACKEND_URL env var when no config injected", () => {
+    expect(getApiBaseUrl()).toBe("http://localhost:8000");
   });
 });

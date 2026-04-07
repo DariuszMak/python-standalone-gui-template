@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { ClockController } from "./clockController";
 import { polarToCartesian, formatTime, clockHandsInRadians } from "./clockHelpers";
-
-const BACKEND_URL =
-  (import.meta.env.VITE_BACKEND_URL as string | undefined) ?? "http://localhost:8000";
+import { getApiBaseUrl } from "../config";
 
 export function Clock() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -19,7 +17,7 @@ export function Clock() {
   const fetchTime = useCallback(async () => {
     setStatus("loading");
     try {
-      const res = await fetch(`${BACKEND_URL}/time`);
+      const res = await fetch(`${getApiBaseUrl()}/time`);
       if (!res.ok) throw new Error(`HTTP ${String(res.status)}`);
       const data = (await res.json()) as { datetime: string };
       const serverDate = new Date(data.datetime);

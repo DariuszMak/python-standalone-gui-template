@@ -6,21 +6,35 @@ from pathlib import Path
 
 import uvicorn
 from fastapi import FastAPI, Request, Response
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from src import STATIC_CATALOGUE_NAME
 from src.config.config import Config
 
 
-def create_app() -> FastAPI:
+def create_app(config: Config | None = None) -> FastAPI:
+    cfg = config or Config.from_env()
 
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
         static_dir = Path(sys._MEIPASS) / STATIC_CATALOGUE_NAME
     else:
         static_dir = Path(__file__).parent / STATIC_CATALOGUE_NAME
 
+    index_html = (static_dir / "index.html").read_text(encoding="utf-8")
+
+    
+    injection = (
+        f'<script>window.__APP_CONFIG__ = {{"apiBaseUrl": "{cfg.api_base_url}"}};</script>'
+    )
+    patched_html = index_html.replace("</head>", f"{injection}\n</head>", 1)
+
     app = FastAPI()
+
+    @app.get("/", include_in_schema=False)
+    @app.get("/index.html", include_in_schema=False)
+    async def root() -> HTMLResponse:
+        return HTMLResponse(content=patched_html)
 
     @app.get("/favicon.ico", include_in_schema=False)
     async def favicon() -> FileResponse:
@@ -44,10 +58,11 @@ def create_app() -> FastAPI:
 app = create_app()
 
 
-def run_react_ui(host: str | None = None, port: int | None = None) -> None:
+def run_react_ui(host: str | None = None, port: int | None = None, config: Config | None = None) -> None:
+    cfg = config or Config.from_env()
     host_str: str = str(host or os.getenv("REACT_HOST") or "127.0.0.1")
     port_int: int = port or int(os.getenv("REACT_PORT", "8000"))
-    uvicorn.run(app, host=host_str, port=port_int, log_level="info")
+    uvicorn.run(create_app(cfg), host=host_str, port=port_int, log_level="info")
 
 
 def start_react_ui_in_background() -> None:
@@ -57,7 +72,7 @@ def start_react_ui_in_background() -> None:
 
     thread = threading.Thread(
         target=run_react_ui,
-        args=(host, port),
+        args=(host, port, config),
         daemon=True,
     )
     thread.start()
