@@ -52,11 +52,12 @@ def run_react_ui(host: str | None = None, port: int | None = None) -> None:
 
 def start_react_ui_in_background() -> None:
     config: Config = Config.from_env()
-    api_url: int = config.api_base_url
+    host: str = config.panel_host or "127.0.0.1"
+    port: int = config.react_port or 8000
 
     thread = threading.Thread(
         target=run_react_ui,
-        args=(api_url),
+        args=(host, port),
         daemon=True,
     )
     thread.start()
