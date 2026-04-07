@@ -25,7 +25,7 @@ def test_run_react_ui_calls_uvicorn(monkeypatch: pytest.MonkeyPatch) -> None:
     called: dict[str, Any] = {}
     captured_app: list[FastAPI] = []
 
-    def fake_create_app(config: Any = None) -> FastAPI:  # noqa: ANN401
+    def fake_create_app(config: Any = None) -> FastAPI:
         fa = FastAPI()
         captured_app.append(fa)
         return fa
