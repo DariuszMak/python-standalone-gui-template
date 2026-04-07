@@ -5,10 +5,10 @@ from unittest.mock import patch
 import pytest
 from PySide6.QtCore import QCoreApplication, QSize
 from PySide6.QtWidgets import QApplication
-from src.ui.setup_helpers.pyside_setup import UiExtensions, create_moc
 
 from src.ui.pyside_ui.dialog_windows.main_window import MainWindow
 from src.ui.pyside_ui.settings import MAINWINDOW_HEIGHT, MAINWINDOW_RESIZE_RANGE, MAINWINDOW_WIDTH
+from src.ui.setup_helpers.pyside_setup import UiExtensions, create_moc
 
 
 @pytest.fixture
