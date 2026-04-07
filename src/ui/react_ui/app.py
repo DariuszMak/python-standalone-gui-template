@@ -53,6 +53,7 @@ def create_app() -> FastAPI:
 
     if assets_dir.exists():
         app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
     @app.middleware("http")
     async def ignore_noise_requests(
         request: Request,
