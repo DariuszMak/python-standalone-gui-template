@@ -2,9 +2,10 @@ import os
 import sys
 import threading
 
+from src.ui.helpers import node_setup
 from src.ui.pyside_ui import application
 from src.api.app import run_api
-from src.helpers import node_setup, pyside_setup
+from src.ui.helpers import pyside_setup
 from src.helpers.logging_setup import logging_setup
 from src.ui.panel_ui.server import start_panel_in_background
 from src.ui.react_ui.app import start_react_ui_in_background
