@@ -4,7 +4,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-from src.ui.helpers.node_setup import (
+from src.ui.setup_helpers.node_setup import (
     NPM_CMD,
     build_frontend,
     build_react_frontend,
