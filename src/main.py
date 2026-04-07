@@ -5,13 +5,13 @@ import threading
 from src import application
 from src.api.app import run_api
 from src.helpers import node_setup, pyside_setup
-from src.helpers.logging_setup import setup_logging
+from src.helpers.logging_setup import logging_setup
 from src.ui.panel_ui.server import start_panel_in_background
 from src.ui.react_ui.app import start_react_ui_in_background
 
 TRUE_ENV_VARIABLES_VALUES = "true", "1", "t"
 
-setup_logging()
+logging_setup()
 
 if __name__ == "__main__":
     if not (getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS")):
