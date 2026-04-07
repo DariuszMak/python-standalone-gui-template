@@ -42,6 +42,6 @@ COPY . /app
 
 WORKDIR /app
 
-CMD uv run python src/gui_setup.py \
+CMD uv run python src/pyside_setup.py \
     && uv run python src/node_setup.py \
     && uv run python src/main.py

@@ -71,7 +71,7 @@ uv lock ;
 .venv\Scripts\Activate.ps1 ; 
 $env:UV_ENV_FILE = ".dev.env" ; 
 
-uv run python src\gui_setup.py ; 
+uv run python src\pyside_setup.py ; 
 uv run python src\node_setup.py ; 
 
 .\scripts\format_and_lint.ps1 ; 
