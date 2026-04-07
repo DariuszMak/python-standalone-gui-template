@@ -26,13 +26,20 @@ def create_app() -> FastAPI:
     @app.get("/", response_class=HTMLResponse)
     async def index() -> HTMLResponse:
         index_file = static_dir / "index.html"
+
+        if not index_file.exists():
+            return HTMLResponse(
+                "<html><body><h1>Frontend not built</h1></body></html>",
+                status_code=200,
+            )
+
         html = index_file.read_text(encoding="utf-8")
 
         injected = f"""
         <script>
-          window.APP_CONFIG = {{
+        window.APP_CONFIG = {{
             apiBaseUrl: "{config.api_base_url}"
-          }};
+        }};
         </script>
         """
 
@@ -42,8 +49,10 @@ def create_app() -> FastAPI:
     async def favicon() -> FileResponse:
         return FileResponse(Path("src/ui/pyside_ui/forms/icons/images/program_icon.ico"))
 
-    app.mount("/assets", StaticFiles(directory=static_dir / "assets"), name="assets")
+    assets_dir = static_dir / "assets"
 
+    if assets_dir.exists():
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
     @app.middleware("http")
     async def ignore_noise_requests(
         request: Request,
