@@ -9,5 +9,16 @@
             "envFile": "${workspaceFolder}/.dev.env",
             "args": []
         },
+        {
+            "name": "Debug React (Chrome)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:8002",
+            "webRoot": "${workspaceFolder}/src/ui/react_ui/frontend",
+            "sourceMapPathOverrides": {
+                "webpack:///src/*": "${webRoot}/src/*",
+                "vite:///src/*": "${webRoot}/src/*"
+            }
+        },
     ]
 }
