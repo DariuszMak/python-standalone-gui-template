@@ -51,7 +51,10 @@ def test_install_dependencies_skips_when_node_modules_exists(tmp_path: Path) -> 
     node_modules = frontend / "node_modules"
     node_modules.mkdir(parents=True)
 
-    with patch("src.helpers.node_setup.FRONTEND_DIR", frontend), patch("src.helpers.node_setup.run_command") as mock_run:
+    with (
+        patch("src.helpers.node_setup.FRONTEND_DIR", frontend),
+        patch("src.helpers.node_setup.run_command") as mock_run,
+    ):
         install_dependencies()
         mock_run.assert_not_called()
 
@@ -60,7 +63,10 @@ def test_install_dependencies_runs_npm_install(tmp_path: Path) -> None:
     frontend = tmp_path / "frontend"
     frontend.mkdir()
 
-    with patch("src.helpers.node_setup.FRONTEND_DIR", frontend), patch("src.helpers.node_setup.run_command") as mock_run:
+    with (
+        patch("src.helpers.node_setup.FRONTEND_DIR", frontend),
+        patch("src.helpers.node_setup.run_command") as mock_run,
+    ):
         install_dependencies()
         mock_run.assert_called_once_with([NPM_CMD, "install"], cwd=frontend)
 
@@ -69,7 +75,10 @@ def test_build_frontend_runs_npm_build(tmp_path: Path) -> None:
     frontend = tmp_path / "frontend"
     frontend.mkdir()
 
-    with patch("src.helpers.node_setup.FRONTEND_DIR", frontend), patch("src.helpers.node_setup.run_command") as mock_run:
+    with (
+        patch("src.helpers.node_setup.FRONTEND_DIR", frontend),
+        patch("src.helpers.node_setup.run_command") as mock_run,
+    ):
         build_frontend()
         mock_run.assert_called_once_with([NPM_CMD, "run", "build"], cwd=frontend)
 
