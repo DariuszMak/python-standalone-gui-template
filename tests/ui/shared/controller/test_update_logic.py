@@ -22,7 +22,7 @@ def make_fixed_strategy(value: float) -> MagicMock:
     return strategy
 
 
-def test_returns_clock_hands_instance() -> bool:
+def test_returns_clock_hands_instance() -> None:
     strategies = [make_passthrough_strategy() for _ in range(3)]
     current = ClockHands(0.0, 0.0, 0.0)
     target = ClockHands(10.0, 20.0, 5.0)
