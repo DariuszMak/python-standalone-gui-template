@@ -187,9 +187,7 @@ def create_layout() -> pn.Column:
 
     time_display: pn.pane.Markdown = pn.pane.Markdown("No data", sizing_mode="stretch_width")  # type: ignore
 
-    button: pn.widgets.Button = pn.widgets.Button(
-        name="Fetch time from API", button_type="primary"
-    )
+    button: pn.widgets.Button = pn.widgets.Button(name="Fetch time from API", button_type="primary")
 
     async def _fetch() -> None:
         try:
