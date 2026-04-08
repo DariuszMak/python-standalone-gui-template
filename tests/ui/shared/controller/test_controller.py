@@ -72,7 +72,7 @@ def test_update_with_zero_elapsed_time() -> None:
 
 @patch("src.ui.shared.controller.clock_controller.update_clock_hands")
 @patch("src.ui.shared.controller.clock_controller.calculate_clock_hands_angles")
-def test_update_delegates_to_helpers(mock_calc, mock_update) -> None:
+def test_update_delegates_to_helpers(mock_calc: MagicMock, mock_update: MagicMock) -> None:
     target = ClockHands(10.0, 5.0, 1.0)
     new_hands = ClockHands(9.0, 4.5, 0.9)
     mock_calc.return_value = target
@@ -120,7 +120,7 @@ def test_reset_calls_strategy_reset() -> None:
         strategy.reset.assert_called_once()
 
 
-def test_reset_logs_warning_when_strategy_reset_raises(caplog) -> None:
+def test_reset_logs_warning_when_strategy_reset_raises(caplog: pytest.LogCaptureFixture) -> None:
     controller = ClockController(start_time=make_dt())
 
     failing_strategy = MagicMock()
