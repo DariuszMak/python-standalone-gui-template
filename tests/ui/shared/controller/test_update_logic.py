@@ -80,7 +80,7 @@ def test_raises_value_error_on_strategy_count_mismatch() -> None:
     current = ClockHands(0.0, 0.0, 0.0)
     target = ClockHands(1.0, 2.0, 3.0)
 
-    with pytest.raises(ValueError, match=r"zip\(\) argument"):
+    with pytest.raises(ValueError, match="Expected exactly 3 strategies"):
         update_clock_hands(current, target, strategies)
 
 

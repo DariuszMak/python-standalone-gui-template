@@ -15,6 +15,9 @@ def update_clock_hands(
     target: ClockHands,
     strategies: Iterable[MovementStrategy],
 ) -> ClockHands:
+
+    if len(strategies) != 3:
+        raise ValueError("Expected exactly 3 strategies")
     current_values = (current.second, current.minute, current.hour)
     target_values = (target.second, target.minute, target.hour)
 
