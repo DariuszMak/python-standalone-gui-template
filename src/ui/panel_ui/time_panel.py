@@ -139,7 +139,7 @@ class ClockWidget:
     def stop(self) -> None:
         if self._cb is not None:
             try:
-                self._cb.stop()  # type: ignore
+                self._cb.stop()  # type: ignore[no-untyped-call]
             except Exception:
                 pass
 
