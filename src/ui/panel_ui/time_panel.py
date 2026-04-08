@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import math
 import time
 from datetime import datetime, timedelta
@@ -18,6 +19,7 @@ from src.ui.shared.model.helpers import clock_hands_in_radians
 if TYPE_CHECKING:
     from panel.io.callbacks import PeriodicCallback
 
+logger = logging.getLogger(__name__)
 pn.extension()
 
 
@@ -125,7 +127,7 @@ class ClockWidget:
 
         pn.state.on_session_destroyed(self._on_session_destroyed)
 
-    def _on_session_destroyed(self, session_context: object) -> None:
+    def _on_session_destroyed(self, _session_context: object) -> None:
         self.stop()
 
     def panel(self) -> pn.pane.Bokeh:
@@ -140,8 +142,8 @@ class ClockWidget:
         if self._cb is not None:
             try:
                 self._cb.stop()  # type: ignore[no-untyped-call]
-            except Exception:
-                pass
+            except Exception as exc:
+                logger.debug("Failed to stop periodic callback", exc_info=exc)
 
     def _current_datetime(self) -> datetime:
         elapsed = time.monotonic() - self._wall_anchor_mono
