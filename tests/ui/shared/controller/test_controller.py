@@ -34,7 +34,6 @@ class TestClockControllerUpdate:
 
         controller.update(now)
 
-        # Hands should have moved from their initial zero state
         hands = controller._clock_hands
         assert hands.second != 0.0 or hands.minute != 0.0 or hands.hour != 0.0
 
@@ -52,17 +51,14 @@ class TestClockControllerUpdate:
         controller.update(start + timedelta(seconds=10))
         hands_after_second = controller._clock_hands
 
-        # Hands should progress forward
         assert hands_after_second.second >= hands_after_first.second
 
     def test_update_with_zero_elapsed_time(self):
         start = make_dt(12, 0, 0)
         controller = ClockController(start_time=start)
 
-        # now == start_time → duration is zero
         controller.update(start)
 
-        # PID with zero error from zero start should remain at (or near) zero
         hands = controller._clock_hands
         assert abs(hands.second) < 1.0
         assert abs(hands.minute) < 1.0
@@ -126,7 +122,7 @@ class TestClockControllerReset:
         controller._strategies = (failing_strategy,)
 
         with caplog.at_level(logging.WARNING, logger="src.ui.shared.controller.clock_controller"):
-            controller.reset(make_dt(11, 0, 0))  # should not raise
+            controller.reset(make_dt(11, 0, 0))
 
         assert any("boom" in record.message for record in caplog.records)
 
@@ -139,8 +135,7 @@ class TestClockControllerReset:
         controller.reset(new_start)
         controller.update(new_start + timedelta(seconds=5))
 
-        # After reset the controller should be tracking from new_start
         assert controller._start_time == new_start
-        # Hands should reflect a small elapsed duration, not the prior 5-minute state
+
         hands = controller._clock_hands
         assert abs(hands.second) < 60.0

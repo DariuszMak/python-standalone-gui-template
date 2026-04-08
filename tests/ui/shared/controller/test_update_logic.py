@@ -42,9 +42,9 @@ class TestUpdateClockHands:
 
         update_clock_hands(current, target, strategies)
 
-        strategies[0].update.assert_called_once_with(1.0, 4.0)  # second
-        strategies[1].update.assert_called_once_with(2.0, 5.0)  # minute
-        strategies[2].update.assert_called_once_with(3.0, 6.0)  # hour
+        strategies[0].update.assert_called_once_with(1.0, 4.0)
+        strategies[1].update.assert_called_once_with(2.0, 5.0)
+        strategies[2].update.assert_called_once_with(3.0, 6.0)
 
     def test_result_uses_strategy_output(self):
         strategies = [
@@ -73,7 +73,7 @@ class TestUpdateClockHands:
         assert result.hour == 6.0
 
     def test_raises_value_error_on_strategy_count_mismatch(self):
-        strategies = [make_passthrough_strategy(), make_passthrough_strategy()]  # only 2
+        strategies = [make_passthrough_strategy(), make_passthrough_strategy()]
         current = ClockHands(0.0, 0.0, 0.0)
         target = ClockHands(1.0, 2.0, 3.0)
 
