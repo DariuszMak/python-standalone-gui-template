@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 from PySide6.QtWidgets import QApplication
 from pytestqt.qtbot import QtBot
 
-from src.application import create_app
+from src.app.application import create_app
 
 
 def test_create_app_wires_everything(qtbot: QtBot) -> None:
