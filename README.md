@@ -77,8 +77,8 @@ uv lock ;
 .venv\Scripts\Activate.ps1 ; 
 $env:UV_ENV_FILE = ".dev.env" ; 
 
-uv run python src\pyside_setup.py ; 
-uv run python src\node_setup.py ; 
+uv run python src\setup\pyside_setup.py ; 
+uv run python src\setup\node_setup.py ; 
 
 .\scripts\format_and_lint.ps1 ; 
 .\src\ui\react_ui\frontend\frontend_format_and_lint.ps1 ; 
