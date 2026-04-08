@@ -1,6 +1,4 @@
 import logging
-import os
-from pathlib import Path
 
 import openmeteo_requests
 import pandas as pd
@@ -10,7 +8,7 @@ from retry_requests import retry  # type: ignore
 logger = logging.getLogger(__name__)
 
 
-def gather_data() -> None:
+def gather_data() -> tuple[pd.DataFrame, pd.DataFrame]:
     cache_session = requests_cache.CachedSession(".cache", expire_after=3600)
     retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
     openmeteo = openmeteo_requests.Client(session=retry_session)
@@ -87,8 +85,6 @@ def gather_data() -> None:
 
     hourly_dataframe = pd.DataFrame(data=hourly_data)
 
-    logger.info("hourly_dataframe: %s", hourly_dataframe)
-
     daily = response.Daily()
     daily_sunshine_duration = daily.Variables(0).ValuesAsNumpy()
     daily_uv_index_max = daily.Variables(1).ValuesAsNumpy()
@@ -123,6 +119,4 @@ def gather_data() -> None:
 
     daily_dataframe = pd.DataFrame(data=daily_data)
 
-    logger.info("daily_dataframe: %s", daily_dataframe)
-
-
+    return hourly_dataframe, daily_dataframe
