@@ -148,9 +148,6 @@ class ClockWidget:
         return self._server_anchor + timedelta(seconds=elapsed)
 
     def _tick(self) -> None:
-        if pn.state.curdoc is None:
-            return
-
         now = self._current_datetime()
         self._controller.update(now)
 
