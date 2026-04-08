@@ -185,7 +185,7 @@ Start-Process wsl -ArgumentList @(
      export REACT_PORT=$LINUX_REACT_PORT && \
      ./releases/linux/GUI_client'
 )
-Start-Sleep -Seconds 25 ; 
+Start-Sleep -Seconds 30 ; 
 Start-Process "http://127.0.0.1:8003/openapi.json" ; 
 Start-Process "http://127.0.0.1:8003/redoc" ; 
 Start-Process "http://127.0.0.1:8003/docs" ; 
@@ -198,7 +198,7 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 #####
 
 Start-Process .\releases\windows\GUI_client.exe ; 
-Start-Sleep -Seconds 30 ; 
+Start-Sleep -Seconds 40 ; 
 Start-Process "http://127.0.0.1:8000/openapi.json" ; 
 Start-Process "http://127.0.0.1:8000/redoc" ; 
 Start-Process "http://127.0.0.1:8000/docs" ; 
