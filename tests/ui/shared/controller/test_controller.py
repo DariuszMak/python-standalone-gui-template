@@ -3,6 +3,8 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta, timezone
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 from src.ui.shared.controller.clock_controller import ClockController
 from src.ui.shared.model.data_types import ClockHands
 
@@ -35,7 +37,9 @@ class TestClockControllerUpdate:
         controller.update(now)
 
         hands = controller._clock_hands
-        assert hands.second != 0.0 or hands.minute != 0.0 or hands.hour != 0.0
+        assert (
+            hands.second != pytest.approx(0.0) or hands.minute != pytest.approx(0.0) or hands.hour != pytest.approx(0.0)
+        )
 
     def test_update_called_multiple_times_advances_hands(self):
         start = make_dt(12, 0, 0)

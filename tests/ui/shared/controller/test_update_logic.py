@@ -57,9 +57,9 @@ class TestUpdateClockHands:
 
         result = update_clock_hands(current, target, strategies)
 
-        assert result.second == 11.0
-        assert result.minute == 22.0
-        assert result.hour == 33.0
+        assert result.second == pytest.approx(11.0)
+        assert result.minute == pytest.approx(22.0)
+        assert result.hour == pytest.approx(33.0)
 
     def test_passthrough_strategies_return_target_values(self):
         strategies = [make_passthrough_strategy() for _ in range(3)]
@@ -68,9 +68,9 @@ class TestUpdateClockHands:
 
         result = update_clock_hands(current, target, strategies)
 
-        assert result.second == 15.0
-        assert result.minute == 30.0
-        assert result.hour == 6.0
+        assert result.second == pytest.approx(15.0)
+        assert result.minute == pytest.approx(30.0)
+        assert result.hour == pytest.approx(6.0)
 
     def test_raises_value_error_on_strategy_count_mismatch(self):
         strategies = [make_passthrough_strategy(), make_passthrough_strategy()]
@@ -87,9 +87,9 @@ class TestUpdateClockHands:
 
         result = update_clock_hands(current, target, strategies)
 
-        assert result.second == 0.0
-        assert result.minute == 0.0
-        assert result.hour == 0.0
+        assert result.second == pytest.approx(0.0)
+        assert result.minute == pytest.approx(0.0)
+        assert result.hour == pytest.approx(0.0)
 
     def test_strategies_called_exactly_once_each(self):
         strategies = [MagicMock() for _ in range(3)]
