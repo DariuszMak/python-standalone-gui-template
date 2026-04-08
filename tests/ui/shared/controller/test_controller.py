@@ -13,17 +13,17 @@ def make_dt(hour: int = 12, minute: int = 0, second: int = 0, tz: timezone = UTC
     return datetime(2024, 1, 1, hour, minute, second, tzinfo=tz)
 
 
-def test_initial_clock_hands_are_zero():
+def test_initial_clock_hands_are_zero() -> None:
     controller = ClockController(start_time=make_dt())
     assert controller._clock_hands == ClockHands(0.0, 0.0, 0.0)
 
 
-def test_three_pid_strategies_created():
+def test_three_pid_strategies_created() -> None:
     controller = ClockController(start_time=make_dt())
     assert len(controller._strategies) == 3
 
 
-def test_start_time_stored():
+def test_start_time_stored() -> None:
     start = make_dt(10, 30, 0)
     controller = ClockController(start_time=start)
     assert controller._start_time == start
@@ -71,7 +71,7 @@ def test_update_with_zero_elapsed_time() -> None:
 
 @patch("src.ui.shared.controller.clock_controller.update_clock_hands")
 @patch("src.ui.shared.controller.clock_controller.calculate_clock_hands_angles")
-def test_update_delegates_to_helpers(mock_calc, mock_update):
+def test_update_delegates_to_helpers(mock_calc, mock_update) -> None:
     target = ClockHands(10.0, 5.0, 1.0)
     new_hands = ClockHands(9.0, 4.5, 0.9)
     mock_calc.return_value = target
@@ -108,7 +108,7 @@ def test_reset_zeroes_clock_hands() -> None:
     assert controller._clock_hands == ClockHands(0.0, 0.0, 0.0)
 
 
-def test_reset_calls_strategy_reset():
+def test_reset_calls_strategy_reset() -> None:
     controller = ClockController(start_time=make_dt())
     mock_strategies = [MagicMock() for _ in range(3)]
     controller._strategies = tuple(mock_strategies)

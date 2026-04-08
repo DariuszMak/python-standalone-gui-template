@@ -8,14 +8,14 @@ from src.ui.shared.controller.update_logic import update_clock_hands
 from src.ui.shared.model.data_types import ClockHands
 
 
-def make_passthrough_strategy(multiplier: float = 1.0):
+def make_passthrough_strategy(multiplier: float = 1.0) -> MagicMock:
     """Returns a mock strategy where update returns target_value * multiplier."""
     strategy = MagicMock()
     strategy.update.side_effect = lambda current, target: target * multiplier
     return strategy
 
 
-def make_fixed_strategy(value: float):
+def make_fixed_strategy(value: float) -> MagicMock:
     """Returns a mock strategy that always returns a fixed value."""
     strategy = MagicMock()
     strategy.update.return_value = value
