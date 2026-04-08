@@ -2,7 +2,7 @@ import os
 import sys
 import threading
 
-from src import application, gui_setup, node_setup
+from src import application, node_setup, pyside_setup
 from src.api.app import run_api
 from src.helpers.logging_setup import logging_setup
 from src.ui.panel_ui.server import start_panel_in_background
@@ -14,7 +14,7 @@ logging_setup()
 
 if __name__ == "__main__":
     if not (getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS")):
-        gui_setup.create_mocs()
+        pyside_setup.create_mocs()
         node_setup.build_react_frontend()
 
     if os.getenv("DOCKER_RUNTIME", "False").lower() not in TRUE_ENV_VARIABLES_VALUES:
