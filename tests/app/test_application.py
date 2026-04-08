@@ -11,10 +11,10 @@ def test_create_app_wires_everything(qtbot: QtBot) -> None:
     assert app is not None
 
     with (
-        patch("src.application.QSplashScreen") as mock_splash_cls,
-        patch("src.application.StyleLoader.center_window") as center_window,
-        patch("src.application.MainWindow") as mock_main_window_cls,
-        patch("src.application.QTimer.singleShot") as single_shot,
+        patch("src.app.application.QSplashScreen") as mock_splash_cls,
+        patch("src.app.application.StyleLoader.center_window") as center_window,
+        patch("src.app.application.MainWindow") as mock_main_window_cls,
+        patch("src.app.application.QTimer.singleShot") as single_shot,
     ):
         splash = MagicMock()
         mock_splash_cls.return_value = splash
