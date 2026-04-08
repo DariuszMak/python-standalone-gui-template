@@ -12,38 +12,38 @@ def test_movement_strategy_is_abstract() -> None:
 
 
 def test_easing_strategy_moves_fractionally() -> None:
-    strat = EasingMovementStrategy(factor=0.2)
-    assert strat.update(0.0, 10.0) == pytest.approx(2.0)
-    assert strat.update(5.0, 15.0) == pytest.approx(7.0)
+    strategy = EasingMovementStrategy(factor=0.2)
+    assert strategy.update(0.0, 10.0) == pytest.approx(2.0)
+    assert strategy.update(5.0, 15.0) == pytest.approx(7.0)
 
 
 def test_easing_strategy_factor_1_moves_directly() -> None:
-    strat = EasingMovementStrategy(factor=1.0)
-    assert strat.update(3.0, 10.0) == pytest.approx(10.0)
+    strategy = EasingMovementStrategy(factor=1.0)
+    assert strategy.update(3.0, 10.0) == pytest.approx(10.0)
 
 
 def test_easing_strategy_factor_0_stays_same() -> None:
-    strat = EasingMovementStrategy(factor=0.0)
-    assert strat.update(3.0, 10.0) == pytest.approx(3.0)
+    strategy = EasingMovementStrategy(factor=0.0)
+    assert strategy.update(3.0, 10.0) == pytest.approx(3.0)
 
 
 def test_tick_strategy_snaps_to_target() -> None:
-    strat = TickMovementStrategy()
-    assert strat.update(5.0, 20.0) == pytest.approx(20.0)
-    assert strat.update(-10.0, -3.5) == pytest.approx(-3.5)
+    strategy = TickMovementStrategy()
+    assert strategy.update(5.0, 20.0) == pytest.approx(20.0)
+    assert strategy.update(-10.0, -3.5) == pytest.approx(-3.5)
 
 
 def test_pid_strategy_moves_toward_target() -> None:
-    strat = PIDMovementStrategy(0.1, 0.0, 0.0)
-    v1 = strat.update(0.0, 10.0)
+    strategy = PIDMovementStrategy(0.1, 0.0, 0.0)
+    v1 = strategy.update(0.0, 10.0)
     assert v1 > 0.0
-    v2 = strat.update(v1, 10.0)
+    v2 = strategy.update(v1, 10.0)
     assert v2 > v1
 
 
 def test_pid_strategy_reset() -> None:
-    strat = PIDMovementStrategy(0.1, 0.1, 0.0)
-    v1 = strat.update(0.0, 10.0)
-    strat.reset()
-    v2 = strat.update(0.0, 10.0)
+    strategy = PIDMovementStrategy(0.1, 0.1, 0.0)
+    v1 = strategy.update(0.0, 10.0)
+    strategy.reset()
+    v2 = strategy.update(0.0, 10.0)
     assert v2 == pytest.approx(v1)
