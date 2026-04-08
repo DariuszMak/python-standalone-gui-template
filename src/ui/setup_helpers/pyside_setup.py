@@ -1,7 +1,7 @@
 import logging
-import os
 import subprocess  # noqa: S404
 from enum import StrEnum
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -11,50 +11,75 @@ class UiExtensions(StrEnum):
     QRC = ".qrc"
 
 
-def create_moc(dir_path: str, file_name: str, extension: UiExtensions) -> None:
-    input_file = os.path.join(dir_path, file_name)
-    output_file = None
+def find_project_root(start: Path) -> Path:
+    for parent in start.resolve().parents:
+        if (parent / "pyproject.toml").exists() or (parent / ".git").exists():
+            return parent
+    raise RuntimeError("Project root not found")
+
+
+PROJECT_ROOT = find_project_root(Path(__file__))
+
+
+def create_moc(file_path: Path, extension: UiExtensions) -> None:
+    input_file = file_path
+    output_file: Path | None = None
 
     if extension == UiExtensions.UI:
-        output_file = os.path.join(dir_path, f"moc_{os.path.splitext(file_name)[0]}.py")
+        output_file = file_path.with_name(f"moc_{file_path.stem}.py")
     elif extension == UiExtensions.QRC:
-        output_file = os.path.join(dir_path, f"{os.path.splitext(file_name)[0]}_rc.py")
+        output_file = file_path.with_name(f"{file_path.stem}_rc.py")
 
-    if os.path.isfile(output_file):
-        ui_file_modification_time = os.path.getmtime(input_file)
-        moc_file_modification_time = os.path.getmtime(output_file)
-        if moc_file_modification_time > ui_file_modification_time:
-            logger.info("Skipping mocking of file %s, older than moc file", input_file)
+    if output_file.exists():
+        if output_file.stat().st_mtime > input_file.stat().st_mtime:
+            logger.info("Skipping %s (already up to date)", input_file)
             return
 
     try:
-        logger.info("Remove old moc file: %s", output_file)
-        os.remove(output_file)
-    except OSError:
+        logger.info("Removing old file: %s", output_file)
+        output_file.unlink()
+    except FileNotFoundError:
         pass
 
     if extension == UiExtensions.UI:
-        command = ["pyside6-uic", "--from-imports", input_file, "-o", output_file]
+        command = [
+            "pyside6-uic",
+            "--from-imports",  
+            str(input_file),
+            "-o",
+            str(output_file),
+        ]
     elif extension == UiExtensions.QRC:
-        command = ["pyside6-rcc", input_file, "-o", output_file]
+        command = [
+            "pyside6-rcc",
+            str(input_file),
+            "-o",
+            str(output_file),
+        ]
 
-    logger.info("Mocking file %s...", input_file)
+    logger.info("Generating: %s", input_file)
+
     process = subprocess.run(  # noqa: S603
-        command, capture_output=True, text=True
+        command,
+        capture_output=True,
+        text=True,
     )
 
     if process.returncode != 0:
-        raise Exception(f"Mocking UI file failed! ({file_name}). stdout: {process.stdout}, stderr: {process.stderr}")
+        raise RuntimeError(
+            f"Failed for {input_file}\nstdout:\n{process.stdout}\nstderr:\n{process.stderr}"
+        )
 
 
 def create_mocs() -> None:
-    for root, _dirs, files in os.walk(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))):
-        for file in files:
-            for extension in UiExtensions:
-                if file.endswith(extension):
-                    create_moc(root, file, extension)
-    logger.info("Mocking finished!")
+    for file_path in PROJECT_ROOT.rglob("*"):
+        for extension in UiExtensions:
+            if file_path.suffix == extension:
+                create_moc(file_path, extension)
+
+    logger.info("MOC generation finished!")
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     create_mocs()
