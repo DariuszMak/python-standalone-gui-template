@@ -12,10 +12,10 @@ from bokeh.models import ColumnDataSource, Range1d
 from bokeh.plotting import figure
 
 from src.helpers.config.config import Config
+from src.ui.panel_ui.settings import TICK_MS
 from src.ui.shared.controller.clock_controller import ClockController
 from src.ui.shared.helpers import format_datetime
 from src.ui.shared.model.helpers import clock_hands_in_radians
-from src.ui.panel_ui.settings import TICK_MS
 
 if TYPE_CHECKING:
     from panel.io.callbacks import PeriodicCallback
@@ -122,7 +122,7 @@ class ClockWidget:
         self._fig, self._sources = _build_clock_figure(size)
         self._pane: pn.pane.Bokeh = pn.pane.Bokeh(self._fig, sizing_mode="fixed")  # type: ignore
 
-        self._cb: PeriodicCallback = pn.state.add_periodic_callback(self._tick, period=self.TICK_MS)
+        self._cb: PeriodicCallback = pn.state.add_periodic_callback(self._tick, period=TICK_MS)
 
         pn.state.on_session_destroyed(self._on_session_destroyed)
 

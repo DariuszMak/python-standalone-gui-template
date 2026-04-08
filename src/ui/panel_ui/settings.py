@@ -1,1 +1,1 @@
-TICK_MS = 15
+TICK_MS = 25
