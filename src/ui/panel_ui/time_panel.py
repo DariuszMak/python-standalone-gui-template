@@ -110,7 +110,7 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
 
 
 class ClockWidget:
-    TICK_MS = 15
+    TICK_MS = 50
 
     def __init__(self, size: int = 300) -> None:
         self._server_anchor: datetime = datetime.now().astimezone()
@@ -123,6 +123,11 @@ class ClockWidget:
 
         self._cb: PeriodicCallback = pn.state.add_periodic_callback(self._tick, period=self.TICK_MS)
 
+        pn.state.on_session_destroyed(self._on_session_destroyed)
+
+    def _on_session_destroyed(self, session_context: object) -> None:
+        self.stop()
+
     def panel(self) -> pn.pane.Bokeh:
         return self._pane
 
@@ -133,13 +138,19 @@ class ClockWidget:
 
     def stop(self) -> None:
         if self._cb is not None:
-            self._cb.stop()  # type: ignore[no-untyped-call]
+            try:
+                self._cb.stop()  # type: ignore
+            except Exception:
+                pass
 
     def _current_datetime(self) -> datetime:
         elapsed = time.monotonic() - self._wall_anchor_mono
         return self._server_anchor + timedelta(seconds=elapsed)
 
     def _tick(self) -> None:
+        if pn.state.curdoc is None:
+            return
+
         now = self._current_datetime()
         self._controller.update(now)
 
@@ -174,11 +185,9 @@ async def fetch_time() -> str:
 def create_layout() -> pn.Column:
     clock = ClockWidget(size=300)
 
-    time_display: pn.pane.Markdown = pn.pane.Markdown(  # type: ignore
-        "No data", sizing_mode="stretch_width"
-    )
+    time_display: pn.pane.Markdown = pn.pane.Markdown("No data", sizing_mode="stretch_width")  # type: ignore
 
-    button: pn.widgets.Button = pn.widgets.Button(  # type: ignore
+    button: pn.widgets.Button = pn.widgets.Button(
         name="Fetch time from API", button_type="primary"
     )
 
