@@ -29,7 +29,7 @@ class TestClockControllerInit:
 
 
 class TestClockControllerUpdate:
-    def test_update_changes_clock_hands_from_zero(self):
+    def test_update_changes_clock_hands_from_zero(self) -> None:
         start = make_dt(12, 0, 0)
         controller = ClockController(start_time=start)
         now = start + timedelta(seconds=5)
@@ -41,7 +41,7 @@ class TestClockControllerUpdate:
             hands.second != pytest.approx(0.0) or hands.minute != pytest.approx(0.0) or hands.hour != pytest.approx(0.0)
         )
 
-    def test_update_called_multiple_times_advances_hands(self):
+    def test_update_called_multiple_times_advances_hands(self) -> None:
         start = make_dt(12, 0, 0)
         controller = ClockController(start_time=start)
 
@@ -57,7 +57,7 @@ class TestClockControllerUpdate:
 
         assert hands_after_second.second >= hands_after_first.second
 
-    def test_update_with_zero_elapsed_time(self):
+    def test_update_with_zero_elapsed_time(self) -> None:
         start = make_dt(12, 0, 0)
         controller = ClockController(start_time=start)
 
@@ -88,7 +88,7 @@ class TestClockControllerUpdate:
 
 
 class TestClockControllerReset:
-    def test_reset_updates_start_time(self):
+    def test_reset_updates_start_time(self) -> None:
         original_start = make_dt(8, 0, 0)
         controller = ClockController(start_time=original_start)
 
@@ -97,7 +97,7 @@ class TestClockControllerReset:
 
         assert controller._start_time == new_start
 
-    def test_reset_zeroes_clock_hands(self):
+    def test_reset_zeroes_clock_hands(self) -> None:
         start = make_dt()
         controller = ClockController(start_time=start)
         controller.update(start + timedelta(seconds=30))
@@ -116,7 +116,7 @@ class TestClockControllerReset:
         for strategy in mock_strategies:
             strategy.reset.assert_called_once()
 
-    def test_reset_logs_warning_when_strategy_reset_raises(self, caplog):
+    def test_reset_logs_warning_when_strategy_reset_raises(self, caplog) -> None:
         import logging
 
         controller = ClockController(start_time=make_dt())
@@ -130,7 +130,7 @@ class TestClockControllerReset:
 
         assert any("boom" in record.message for record in caplog.records)
 
-    def test_after_reset_update_uses_new_start_time(self):
+    def test_after_reset_update_uses_new_start_time(self) -> None:
         start = make_dt(12, 0, 0)
         controller = ClockController(start_time=start)
         controller.update(start + timedelta(minutes=5))

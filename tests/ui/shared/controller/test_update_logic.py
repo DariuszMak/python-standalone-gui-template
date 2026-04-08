@@ -23,7 +23,7 @@ def make_fixed_strategy(value: float):
 
 
 class TestUpdateClockHands:
-    def test_returns_clock_hands_instance(self):
+    def test_returns_clock_hands_instance(self) -> bool:
         strategies = [make_passthrough_strategy() for _ in range(3)]
         current = ClockHands(0.0, 0.0, 0.0)
         target = ClockHands(10.0, 20.0, 5.0)
@@ -32,7 +32,7 @@ class TestUpdateClockHands:
 
         assert isinstance(result, ClockHands)
 
-    def test_each_strategy_receives_correct_current_and_target(self):
+    def test_each_strategy_receives_correct_current_and_target(self) -> None:
         strategies = [MagicMock() for _ in range(3)]
         for s in strategies:
             s.update.return_value = 0.0
@@ -46,7 +46,7 @@ class TestUpdateClockHands:
         strategies[1].update.assert_called_once_with(2.0, 5.0)
         strategies[2].update.assert_called_once_with(3.0, 6.0)
 
-    def test_result_uses_strategy_output(self):
+    def test_result_uses_strategy_output(self) -> None:
         strategies = [
             make_fixed_strategy(11.0),
             make_fixed_strategy(22.0),
@@ -61,7 +61,7 @@ class TestUpdateClockHands:
         assert result.minute == pytest.approx(22.0)
         assert result.hour == pytest.approx(33.0)
 
-    def test_passthrough_strategies_return_target_values(self):
+    def test_passthrough_strategies_return_target_values(self) -> None:
         strategies = [make_passthrough_strategy() for _ in range(3)]
         current = ClockHands(0.0, 0.0, 0.0)
         target = ClockHands(15.0, 30.0, 6.0)
@@ -72,7 +72,7 @@ class TestUpdateClockHands:
         assert result.minute == pytest.approx(30.0)
         assert result.hour == pytest.approx(6.0)
 
-    def test_raises_value_error_on_strategy_count_mismatch(self):
+    def test_raises_value_error_on_strategy_count_mismatch(self) -> None:
         strategies = [make_passthrough_strategy(), make_passthrough_strategy()]
         current = ClockHands(0.0, 0.0, 0.0)
         target = ClockHands(1.0, 2.0, 3.0)
@@ -80,7 +80,7 @@ class TestUpdateClockHands:
         with pytest.raises(ValueError):
             update_clock_hands(current, target, strategies)
 
-    def test_zero_current_and_target(self):
+    def test_zero_current_and_target(self) -> None:
         strategies = [make_passthrough_strategy() for _ in range(3)]
         current = ClockHands(0.0, 0.0, 0.0)
         target = ClockHands(0.0, 0.0, 0.0)
@@ -91,7 +91,7 @@ class TestUpdateClockHands:
         assert result.minute == pytest.approx(0.0)
         assert result.hour == pytest.approx(0.0)
 
-    def test_strategies_called_exactly_once_each(self):
+    def test_strategies_called_exactly_once_each(self) -> None:
         strategies = [MagicMock() for _ in range(3)]
         for s in strategies:
             s.update.return_value = 0.0
