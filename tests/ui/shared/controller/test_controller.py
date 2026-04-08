@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from datetime import UTC, datetime, timedelta, timezone
 from unittest.mock import MagicMock, patch
 
@@ -120,8 +121,6 @@ def test_reset_calls_strategy_reset() -> None:
 
 
 def test_reset_logs_warning_when_strategy_reset_raises(caplog) -> None:
-    import logging
-
     controller = ClockController(start_time=make_dt())
 
     failing_strategy = MagicMock()

@@ -11,7 +11,7 @@ from src.ui.shared.model.data_types import ClockHands
 def make_passthrough_strategy(multiplier: float = 1.0) -> MagicMock:
     """Returns a mock strategy where update returns target_value * multiplier."""
     strategy = MagicMock()
-    strategy.update.side_effect = lambda current, target: target * multiplier
+    strategy.update.side_effect = lambda _current, target: target * multiplier
     return strategy
 
 
@@ -80,7 +80,7 @@ def test_raises_value_error_on_strategy_count_mismatch() -> None:
     current = ClockHands(0.0, 0.0, 0.0)
     target = ClockHands(1.0, 2.0, 3.0)
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=r"zip\(\) argument"):
         update_clock_hands(current, target, strategies)
 
 
