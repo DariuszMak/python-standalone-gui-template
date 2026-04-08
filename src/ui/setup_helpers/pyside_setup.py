@@ -48,7 +48,7 @@ def create_moc(dir_path: str, file_name: str, extension: UiExtensions) -> None:
 
 
 def create_mocs() -> None:
-    for root, _dirs, files in os.walk(os.path.dirname(os.path.abspath(__file__))):
+    for root, _dirs, files in os.walk(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))):
         for file in files:
             for extension in UiExtensions:
                 if file.endswith(extension):
