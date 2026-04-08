@@ -39,6 +39,12 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 deactivate ; 
 clear ; 
 
+docker system df ; 
+docker stop $(docker ps -a -q) ; 
+docker rm -f $(docker ps -a -q) ; 
+docker system prune --volumes -a -f ; 
+docker system df ; 
+
 $ports = 8000, 8001, 8002
 
 foreach ($port in $ports) {
@@ -101,6 +107,12 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 deactivate ; 
 clear ; 
 
+docker system df ; 
+docker stop $(docker ps -a -q) ; 
+docker rm -f $(docker ps -a -q) ; 
+docker system prune --volumes -a -f ; 
+docker system df ; 
+
 $ports = 8000, 8001, 8002, 8003, 8004, 8005
 
 foreach ($port in $ports) {
@@ -122,12 +134,6 @@ uv cache clean ;
 
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
-
-docker system df ; 
-docker stop $(docker ps -a -q) ; 
-docker rm -f $(docker ps -a -q) ; 
-docker system prune --volumes -a -f ; 
-docker system df ; 
 
 docker-compose run --build app ; 
 
