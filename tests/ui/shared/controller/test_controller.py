@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta, timezone
 from unittest.mock import MagicMock, patch
-
-import pytest
 
 from src.ui.shared.controller.clock_controller import ClockController
 from src.ui.shared.model.data_types import ClockHands
 
 
-def make_dt(hour: int = 12, minute: int = 0, second: int = 0, tz: timezone = timezone.utc) -> datetime:
+def make_dt(hour: int = 12, minute: int = 0, second: int = 0, tz: timezone = UTC) -> datetime:
     return datetime(2024, 1, 1, hour, minute, second, tzinfo=tz)
 
 
