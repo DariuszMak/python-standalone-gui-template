@@ -15,6 +15,7 @@ from src.helpers.config.config import Config
 from src.ui.shared.controller.clock_controller import ClockController
 from src.ui.shared.helpers import format_datetime
 from src.ui.shared.model.helpers import clock_hands_in_radians
+from src.ui.panel_ui.settings import TICK_MS
 
 if TYPE_CHECKING:
     from panel.io.callbacks import PeriodicCallback
@@ -112,8 +113,6 @@ def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSo
 
 
 class ClockWidget:
-    TICK_MS = 50
-
     def __init__(self, size: int = 300) -> None:
         self._server_anchor: datetime = datetime.now().astimezone()
         self._wall_anchor_mono: float = time.monotonic()
