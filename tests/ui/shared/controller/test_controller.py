@@ -2,12 +2,16 @@ from __future__ import annotations
 
 import logging
 from datetime import UTC, datetime, timedelta, timezone
+from typing import TYPE_CHECKING, cast
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 from src.ui.shared.controller.clock_controller import ClockController
 from src.ui.shared.model.data_types import ClockHands
+
+if TYPE_CHECKING:
+    from src.ui.shared.model.strategies.pid_strategy import PIDMovementStrategy
 
 
 def make_dt(hour: int = 12, minute: int = 0, second: int = 0, tz: timezone = UTC) -> datetime:
@@ -112,7 +116,11 @@ def test_reset_zeroes_clock_hands() -> None:
 def test_reset_calls_strategy_reset() -> None:
     controller = ClockController(start_time=make_dt())
     mock_strategies = [MagicMock() for _ in range(3)]
-    controller._strategies = tuple(mock_strategies)
+
+    controller._strategies = cast(
+        "tuple[PIDMovementStrategy, PIDMovementStrategy, PIDMovementStrategy]",
+        tuple(mock_strategies),
+    )
 
     controller.reset(make_dt(11, 0, 0))
 
@@ -125,7 +133,10 @@ def test_reset_logs_warning_when_strategy_reset_raises(caplog: pytest.LogCapture
 
     failing_strategy = MagicMock()
     failing_strategy.reset.side_effect = RuntimeError("boom")
-    controller._strategies = (failing_strategy,)
+    controller._strategies = cast(
+        "tuple[PIDMovementStrategy, PIDMovementStrategy, PIDMovementStrategy]",
+        (failing_strategy, failing_strategy, failing_strategy),
+    )
 
     with caplog.at_level(logging.WARNING, logger="src.ui.shared.controller.clock_controller"):
         controller.reset(make_dt(11, 0, 0))
