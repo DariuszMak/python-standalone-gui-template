@@ -30,10 +30,9 @@ def create_moc(file_path: Path, extension: UiExtensions) -> None:
     elif extension == UiExtensions.QRC:
         output_file = file_path.with_name(f"{file_path.stem}_rc.py")
 
-    if output_file.exists():
-        if output_file.stat().st_mtime > input_file.stat().st_mtime:
-            logger.info("Skipping %s (already up to date)", input_file)
-            return
+    if output_file.exists() and output_file.stat().st_mtime > input_file.stat().st_mtime:
+        logger.info("Skipping %s (already up to date)", input_file)
+        return
 
     try:
         logger.info("Removing old file: %s", output_file)
@@ -44,7 +43,7 @@ def create_moc(file_path: Path, extension: UiExtensions) -> None:
     if extension == UiExtensions.UI:
         command = [
             "pyside6-uic",
-            "--from-imports",  
+            "--from-imports",
             str(input_file),
             "-o",
             str(output_file),
@@ -66,9 +65,7 @@ def create_moc(file_path: Path, extension: UiExtensions) -> None:
     )
 
     if process.returncode != 0:
-        raise RuntimeError(
-            f"Failed for {input_file}\nstdout:\n{process.stdout}\nstderr:\n{process.stderr}"
-        )
+        raise RuntimeError(f"Failed for {input_file}\nstdout:\n{process.stdout}\nstderr:\n{process.stderr}")
 
 
 def create_mocs() -> None:
