@@ -2,9 +2,9 @@ import logging
 
 import pandas as pd
 
-from weather.client import build_openmeteo_client
-from weather.params import API_URL, build_request_params
-from weather.parsers import parse_daily_dataframe, parse_hourly_dataframe
+from src.app.weather_forecast.client import build_openmeteo_client
+from src.app.weather_forecast.params import API_URL, build_request_params
+from src.app.weather_forecast.parsers import parse_daily_dataframe, parse_hourly_dataframe
 
 logger = logging.getLogger(__name__)
 

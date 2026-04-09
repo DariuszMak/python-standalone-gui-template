@@ -1,39 +1,12 @@
-from src.app.weather_forecast.params import build_request_params
-from src.app.weather_forecast.params import LATITUDE, LONGITUDE, build_request_params
-from src.app.weather_forecast.params import build_request_params
-from src.app.weather_forecast.params import build_request_params
-from src.app.weather_forecast.params import FORECAST_DAYS, build_request_params
-from src.app.weather_forecast.params import build_request_params
-from src.app.weather_forecast.params import TIMEZONE, build_request_params
-from src.app.weather_forecast.client import build_openmeteo_client
-from src.app.weather_forecast.client import build_openmeteo_client
-from src.app.weather_forecast.client import build_openmeteo_client
-from src.app.weather_forecast.parsers import parse_hourly_dataframe
-from src.app.weather_forecast.parsers import parse_hourly_dataframe
-from src.app.weather_forecast.parsers import parse_hourly_dataframe
-from src.app.weather_forecast.parsers import parse_hourly_dataframe
-from src.app.weather_forecast.parsers import parse_hourly_dataframe
-from src.app.weather_forecast.parsers import parse_hourly_dataframe
-from src.app.weather_forecast.parsers import parse_daily_dataframe
-from src.app.weather_forecast.parsers import parse_daily_dataframe
-from src.app.weather_forecast.parsers import parse_daily_dataframe
-from src.app.weather_forecast.parsers import parse_daily_dataframe
-from src.app.weather_forecast.parsers import parse_daily_dataframe
-from src.app.weather_forecast.parsers import parse_daily_dataframe
-from src.app.weather_forecast.parsers import parse_daily_dataframe
-from src.app.weather_forecast.gather import fetch_weather_response
-from src.app.weather_forecast.gather import fetch_weather_response
-from src.app.weather_forecast.gather import gather_data
-from src.app.weather_forecast.gather import gather_data
-from src.app.weather_forecast.gather import gather_data
-from src.app.weather_forecast.gather import gather_data
-
-
 from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pandas as pd
-import pytest
+
+from src.app.weather_forecast.client import build_openmeteo_client
+from src.app.weather_forecast.gather import fetch_weather_response, gather_data
+from src.app.weather_forecast.params import FORECAST_DAYS, LATITUDE, LONGITUDE, TIMEZONE, build_request_params
+from src.app.weather_forecast.parsers import parse_daily_dataframe, parse_hourly_dataframe
 
 # ---------------------------------------------------------------------------
 # Helpers / fixtures
@@ -131,6 +104,7 @@ def _make_daily_mock(n: int = N_DAYS) -> MagicMock:
 # params.py
 # ---------------------------------------------------------------------------
 
+
 class TestBuildRequestParams:
     def test_returns_required_keys(self):
 
@@ -175,27 +149,28 @@ class TestBuildRequestParams:
 # client.py
 # ---------------------------------------------------------------------------
 
+
 class TestBuildOpenMeteoClient:
-    @patch("weather.client.openmeteo_requests.Client")
-    @patch("weather.client.retry")
-    @patch("weather.client.requests_cache.CachedSession")
+    @patch("src.app.weather_forecast.client.openmeteo_requests.Client")
+    @patch("src.app.weather_forecast.client.retry")
+    @patch("src.app.weather_forecast.client.requests_cache.CachedSession")
     def test_returns_client(self, mock_session, mock_retry, mock_client_cls):
 
         client = build_openmeteo_client()
         mock_client_cls.assert_called_once()
         assert client is mock_client_cls.return_value
 
-    @patch("weather.client.openmeteo_requests.Client")
-    @patch("weather.client.retry")
-    @patch("weather.client.requests_cache.CachedSession")
+    @patch("src.app.weather_forecast.client.openmeteo_requests.Client")
+    @patch("src.app.weather_forecast.client.retry")
+    @patch("src.app.weather_forecast.client.requests_cache.CachedSession")
     def test_cache_params_forwarded(self, mock_session, mock_retry, mock_client_cls):
 
         build_openmeteo_client(cache_name="custom", expire_after=999)
         mock_session.assert_called_once_with("custom", expire_after=999)
 
-    @patch("weather.client.openmeteo_requests.Client")
-    @patch("weather.client.retry")
-    @patch("weather.client.requests_cache.CachedSession")
+    @patch("src.app.weather_forecast.client.openmeteo_requests.Client")
+    @patch("src.app.weather_forecast.client.retry")
+    @patch("src.app.weather_forecast.client.requests_cache.CachedSession")
     def test_retry_params_forwarded(self, mock_session, mock_retry, mock_client_cls):
 
         build_openmeteo_client(retries=3, backoff_factor=0.5)
@@ -205,6 +180,7 @@ class TestBuildOpenMeteoClient:
 # ---------------------------------------------------------------------------
 # parsers.py – hourly
 # ---------------------------------------------------------------------------
+
 
 class TestParseHourlyDataframe:
     def test_returns_dataframe(self):
@@ -243,6 +219,7 @@ class TestParseHourlyDataframe:
 # ---------------------------------------------------------------------------
 # parsers.py – daily
 # ---------------------------------------------------------------------------
+
 
 class TestParseDailyDataframe:
     def test_returns_dataframe(self):
@@ -288,6 +265,7 @@ class TestParseDailyDataframe:
 # gather.py
 # ---------------------------------------------------------------------------
 
+
 class TestFetchWeatherResponse:
     def test_returns_first_element(self):
 
@@ -318,9 +296,9 @@ class TestGatherData:
         response.Daily.return_value = _make_daily_mock()
         return response
 
-    @patch("weather.gather.build_openmeteo_client")
-    @patch("weather.gather.build_request_params")
-    @patch("weather.gather.fetch_weather_response")
+    @patch("src.app.weather_forecast.gather.build_openmeteo_client")
+    @patch("src.app.weather_forecast.gather.build_request_params")
+    @patch("src.app.weather_forecast.gather.fetch_weather_response")
     def test_returns_two_dataframes(self, mock_fetch, mock_params, mock_client):
 
         mock_fetch.return_value = self._make_response_mock()
@@ -328,9 +306,9 @@ class TestGatherData:
         assert isinstance(hourly_df, pd.DataFrame)
         assert isinstance(daily_df, pd.DataFrame)
 
-    @patch("weather.gather.build_openmeteo_client")
-    @patch("weather.gather.build_request_params")
-    @patch("weather.gather.fetch_weather_response")
+    @patch("src.app.weather_forecast.gather.build_openmeteo_client")
+    @patch("src.app.weather_forecast.gather.build_request_params")
+    @patch("src.app.weather_forecast.gather.fetch_weather_response")
     def test_hourly_has_expected_columns(self, mock_fetch, mock_params, mock_client):
 
         mock_fetch.return_value = self._make_response_mock()
@@ -338,9 +316,9 @@ class TestGatherData:
         for col in HOURLY_COLUMNS:
             assert col in hourly_df.columns
 
-    @patch("weather.gather.build_openmeteo_client")
-    @patch("weather.gather.build_request_params")
-    @patch("weather.gather.fetch_weather_response")
+    @patch("src.app.weather_forecast.gather.build_openmeteo_client")
+    @patch("src.app.weather_forecast.gather.build_request_params")
+    @patch("src.app.weather_forecast.gather.fetch_weather_response")
     def test_daily_has_expected_columns(self, mock_fetch, mock_params, mock_client):
 
         mock_fetch.return_value = self._make_response_mock()
@@ -348,9 +326,9 @@ class TestGatherData:
         for col in DAILY_COLUMNS:
             assert col in daily_df.columns
 
-    @patch("weather.gather.build_openmeteo_client")
-    @patch("weather.gather.build_request_params")
-    @patch("weather.gather.fetch_weather_response")
+    @patch("src.app.weather_forecast.gather.build_openmeteo_client")
+    @patch("src.app.weather_forecast.gather.build_request_params")
+    @patch("src.app.weather_forecast.gather.fetch_weather_response")
     def test_uses_utc_offset_from_response(self, mock_fetch, mock_params, mock_client):
 
         response = self._make_response_mock()
