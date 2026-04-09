@@ -94,26 +94,26 @@ def _make_daily_mock(n: int = N_DAYS) -> MagicMock:
     return mock
 
 
-def test_returns_required_keys():
+def test_returns_required_keys() -> None:
     params = build_request_params()
     for key in ("latitude", "longitude", "daily", "hourly", "timezone", "forecast_days"):
         assert key in params
 
 
-def test_default_coordinates():
+def test_default_coordinates() -> None:
 
     params = build_request_params()
     assert params["latitude"] == LATITUDE
     assert params["longitude"] == LONGITUDE
 
 
-def test_custom_coordinates():
+def test_custom_coordinates() -> None:
     params = build_request_params(latitude=52.0, longitude=18.0)
     assert params["latitude"] == 52.0
     assert params["longitude"] == 18.0
 
 
-def test_daily_and_hourly_are_lists():
+def test_daily_and_hourly_are_lists() -> None:
     params = build_request_params()
     assert isinstance(params["daily"], list)
     assert isinstance(params["hourly"], list)
@@ -121,22 +121,22 @@ def test_daily_and_hourly_are_lists():
     assert len(params["hourly"]) > 0
 
 
-def test_forecast_days_default():
+def test_forecast_days_default() -> None:
     assert build_request_params()["forecast_days"] == FORECAST_DAYS
 
 
-def test_custom_forecast_days():
+def test_custom_forecast_days() -> None:
     assert build_request_params(forecast_days=7)["forecast_days"] == 7
 
 
-def test_timezone_default():
+def test_timezone_default() -> None:
     assert build_request_params()["timezone"] == TIMEZONE
 
 
 @patch("src.app.weather_forecast.client.openmeteo_requests.Client")
 @patch("src.app.weather_forecast.client.retry")
 @patch("src.app.weather_forecast.client.requests_cache.CachedSession")
-def test_returns_client(mock_session, mock_retry, mock_client_cls):
+def test_returns_client(mock_session, mock_retry, mock_client_cls) -> None:
     client = build_openmeteo_client()
     mock_client_cls.assert_called_once()
     assert client is mock_client_cls.return_value
@@ -145,7 +145,7 @@ def test_returns_client(mock_session, mock_retry, mock_client_cls):
 @patch("src.app.weather_forecast.client.openmeteo_requests.Client")
 @patch("src.app.weather_forecast.client.retry")
 @patch("src.app.weather_forecast.client.requests_cache.CachedSession")
-def test_cache_params_forwarded(mock_session, mock_retry, mock_client_cls):
+def test_cache_params_forwarded(mock_session, mock_retry, mock_client_cls) -> None:
     build_openmeteo_client(cache_name="custom", expire_after=999)
     mock_session.assert_called_once_with("custom", expire_after=999)
 
@@ -153,82 +153,82 @@ def test_cache_params_forwarded(mock_session, mock_retry, mock_client_cls):
 @patch("src.app.weather_forecast.client.openmeteo_requests.Client")
 @patch("src.app.weather_forecast.client.retry")
 @patch("src.app.weather_forecast.client.requests_cache.CachedSession")
-def test_retry_params_forwarded(mock_session, mock_retry, mock_client_cls):
+def test_retry_params_forwarded(mock_session, mock_retry, mock_client_cls) -> None:
     build_openmeteo_client(retries=3, backoff_factor=0.5)
     mock_retry.assert_called_once_with(mock_session.return_value, retries=3, backoff_factor=0.5)
 
 
-def test_returns_hourly_dataframe():
+def test_returns_hourly_dataframe() -> None:
     df = parse_hourly_dataframe(_make_hourly_mock(), UTC_OFFSET)
     assert isinstance(df, pd.DataFrame)
 
 
-def test_has_correct_hourly_columns():
+def test_has_correct_hourly_columns() -> None:
     df = parse_hourly_dataframe(_make_hourly_mock(), UTC_OFFSET)
     assert list(df.columns) == HOURLY_COLUMNS
 
 
-def test_row_count_matches_hours():
+def test_row_count_matches_hours() -> None:
     df = parse_hourly_dataframe(_make_hourly_mock(N_HOURS), UTC_OFFSET)
     assert len(df) == N_HOURS
 
 
-def test_date_column_hourly_is_timezone_aware():
+def test_date_column_hourly_is_timezone_aware() -> None:
     df = parse_hourly_dataframe(_make_hourly_mock(), UTC_OFFSET)
     assert df["date"].dt.tz is not None
 
 
-def test_no_null_hourly_values():
+def test_no_null_hourly_values() -> None:
     df = parse_hourly_dataframe(_make_hourly_mock(), UTC_OFFSET)
     assert not df.isnull().any().any()
 
 
-def test_date_interval_is_one_hour():
+def test_date_interval_is_one_hour() -> None:
     df = parse_hourly_dataframe(_make_hourly_mock(), UTC_OFFSET)
     diffs = df["date"].diff().dropna().unique()
     assert len(diffs) == 1
     assert diffs[0] == pd.Timedelta(hours=1)
 
 
-def test_returns_daily_dataframe():
+def test_returns_daily_dataframe() -> None:
     df = parse_daily_dataframe(_make_daily_mock(), UTC_OFFSET)
     assert isinstance(df, pd.DataFrame)
 
 
-def test_has_correct_daily_columns():
+def test_has_correct_daily_columns() -> None:
     df = parse_daily_dataframe(_make_daily_mock(), UTC_OFFSET)
     assert list(df.columns) == DAILY_COLUMNS
 
 
-def test_row_count_matches_days():
+def test_row_count_matches_days() -> None:
     df = parse_daily_dataframe(_make_daily_mock(N_DAYS), UTC_OFFSET)
     assert len(df) == N_DAYS
 
 
-def test_date_column_daily_is_timezone_aware():
+def test_date_column_daily_is_timezone_aware() -> None:
     df = parse_daily_dataframe(_make_daily_mock(), UTC_OFFSET)
     assert df["date"].dt.tz is not None
 
 
-def test_no_null_daily_values():
+def test_no_null_daily_values() -> None:
     df = parse_daily_dataframe(_make_daily_mock(), UTC_OFFSET)
     assert not df.isnull().any().any()
 
 
-def test_date_interval_is_one_day():
+def test_date_interval_is_one_day() -> None:
     df = parse_daily_dataframe(_make_daily_mock(), UTC_OFFSET)
     diffs = df["date"].diff().dropna().unique()
     assert len(diffs) == 1
     assert diffs[0] == pd.Timedelta(days=1)
 
 
-def test_sunrise_sunset_are_integer():
+def test_sunrise_sunset_are_integer() -> None:
     df = parse_daily_dataframe(_make_daily_mock(), UTC_OFFSET)
     assert pd.api.types.is_integer_dtype(df["sunrise"])
     assert pd.api.types.is_integer_dtype(df["sunset"])
 
 
-def test_returns_first_element():
+def test_returns_first_element() -> None:
     sentinel = object()
     mock_client = MagicMock()
     mock_client.weather_api.return_value = [sentinel]
@@ -236,7 +236,7 @@ def test_returns_first_element():
     assert result is sentinel
 
 
-def test_passes_params_to_api():
+def test_passes_params_to_api() -> None:
     mock_client = MagicMock()
     mock_client.weather_api.return_value = [MagicMock()]
     params = {"foo": "bar"}
@@ -259,7 +259,7 @@ def _make_response_mock() -> MagicMock:
 @patch("src.app.weather_forecast.gather.build_openmeteo_client")
 @patch("src.app.weather_forecast.gather.build_request_params")
 @patch("src.app.weather_forecast.gather.fetch_weather_response")
-def test_returns_two_dataframes(mock_fetch, mock_params, mock_client):
+def test_returns_two_dataframes(mock_fetch, mock_params, mock_client) -> None:
     mock_fetch.return_value = _make_response_mock()
     hourly_df, daily_df = gather_data()
     assert isinstance(hourly_df, pd.DataFrame)
@@ -269,7 +269,7 @@ def test_returns_two_dataframes(mock_fetch, mock_params, mock_client):
 @patch("src.app.weather_forecast.gather.build_openmeteo_client")
 @patch("src.app.weather_forecast.gather.build_request_params")
 @patch("src.app.weather_forecast.gather.fetch_weather_response")
-def test_hourly_has_expected_columns(mock_fetch, mock_params, mock_client):
+def test_hourly_has_expected_columns(mock_fetch, mock_params, mock_client) -> None:
     mock_fetch.return_value = _make_response_mock()
     hourly_df, _ = gather_data()
     for col in HOURLY_COLUMNS:
@@ -279,7 +279,7 @@ def test_hourly_has_expected_columns(mock_fetch, mock_params, mock_client):
 @patch("src.app.weather_forecast.gather.build_openmeteo_client")
 @patch("src.app.weather_forecast.gather.build_request_params")
 @patch("src.app.weather_forecast.gather.fetch_weather_response")
-def test_daily_has_expected_columns(mock_fetch, mock_params, mock_client):
+def test_daily_has_expected_columns(mock_fetch, mock_params, mock_client) -> None:
     mock_fetch.return_value = _make_response_mock()
     _, daily_df = gather_data()
     for col in DAILY_COLUMNS:
@@ -289,7 +289,7 @@ def test_daily_has_expected_columns(mock_fetch, mock_params, mock_client):
 @patch("src.app.weather_forecast.gather.build_openmeteo_client")
 @patch("src.app.weather_forecast.gather.build_request_params")
 @patch("src.app.weather_forecast.gather.fetch_weather_response")
-def test_uses_utc_offset_from_response(mock_fetch, mock_params, mock_client):
+def test_uses_utc_offset_from_response(mock_fetch, mock_params, mock_client) -> None:
     response = _make_response_mock()
     mock_fetch.return_value = response
     gather_data()
