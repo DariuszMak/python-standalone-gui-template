@@ -1,9 +1,33 @@
-"""
-Unit tests for the weather data pipeline.
+from src.app.weather_forecast.params import build_request_params
+from src.app.weather_forecast.params import LATITUDE, LONGITUDE, build_request_params
+from src.app.weather_forecast.params import build_request_params
+from src.app.weather_forecast.params import build_request_params
+from src.app.weather_forecast.params import FORECAST_DAYS, build_request_params
+from src.app.weather_forecast.params import build_request_params
+from src.app.weather_forecast.params import TIMEZONE, build_request_params
+from src.app.weather_forecast.client import build_openmeteo_client
+from src.app.weather_forecast.client import build_openmeteo_client
+from src.app.weather_forecast.client import build_openmeteo_client
+from src.app.weather_forecast.parsers import parse_hourly_dataframe
+from src.app.weather_forecast.parsers import parse_hourly_dataframe
+from src.app.weather_forecast.parsers import parse_hourly_dataframe
+from src.app.weather_forecast.parsers import parse_hourly_dataframe
+from src.app.weather_forecast.parsers import parse_hourly_dataframe
+from src.app.weather_forecast.parsers import parse_hourly_dataframe
+from src.app.weather_forecast.parsers import parse_daily_dataframe
+from src.app.weather_forecast.parsers import parse_daily_dataframe
+from src.app.weather_forecast.parsers import parse_daily_dataframe
+from src.app.weather_forecast.parsers import parse_daily_dataframe
+from src.app.weather_forecast.parsers import parse_daily_dataframe
+from src.app.weather_forecast.parsers import parse_daily_dataframe
+from src.app.weather_forecast.parsers import parse_daily_dataframe
+from src.app.weather_forecast.gather import fetch_weather_response
+from src.app.weather_forecast.gather import fetch_weather_response
+from src.app.weather_forecast.gather import gather_data
+from src.app.weather_forecast.gather import gather_data
+from src.app.weather_forecast.gather import gather_data
+from src.app.weather_forecast.gather import gather_data
 
-All external I/O (API calls, caching, retries) is mocked so the suite runs
-offline and in isolation.
-"""
 
 from unittest.mock import MagicMock, patch
 
@@ -109,28 +133,24 @@ def _make_daily_mock(n: int = N_DAYS) -> MagicMock:
 
 class TestBuildRequestParams:
     def test_returns_required_keys(self):
-        from weather.params import build_request_params
 
         params = build_request_params()
         for key in ("latitude", "longitude", "daily", "hourly", "timezone", "forecast_days"):
             assert key in params
 
     def test_default_coordinates(self):
-        from weather.params import LATITUDE, LONGITUDE, build_request_params
 
         params = build_request_params()
         assert params["latitude"] == LATITUDE
         assert params["longitude"] == LONGITUDE
 
     def test_custom_coordinates(self):
-        from weather.params import build_request_params
 
         params = build_request_params(latitude=52.0, longitude=18.0)
         assert params["latitude"] == 52.0
         assert params["longitude"] == 18.0
 
     def test_daily_and_hourly_are_lists(self):
-        from weather.params import build_request_params
 
         params = build_request_params()
         assert isinstance(params["daily"], list)
@@ -139,17 +159,14 @@ class TestBuildRequestParams:
         assert len(params["hourly"]) > 0
 
     def test_forecast_days_default(self):
-        from weather.params import FORECAST_DAYS, build_request_params
 
         assert build_request_params()["forecast_days"] == FORECAST_DAYS
 
     def test_custom_forecast_days(self):
-        from weather.params import build_request_params
 
         assert build_request_params(forecast_days=7)["forecast_days"] == 7
 
     def test_timezone_default(self):
-        from weather.params import TIMEZONE, build_request_params
 
         assert build_request_params()["timezone"] == TIMEZONE
 
@@ -163,7 +180,6 @@ class TestBuildOpenMeteoClient:
     @patch("weather.client.retry")
     @patch("weather.client.requests_cache.CachedSession")
     def test_returns_client(self, mock_session, mock_retry, mock_client_cls):
-        from weather.client import build_openmeteo_client
 
         client = build_openmeteo_client()
         mock_client_cls.assert_called_once()
@@ -173,7 +189,6 @@ class TestBuildOpenMeteoClient:
     @patch("weather.client.retry")
     @patch("weather.client.requests_cache.CachedSession")
     def test_cache_params_forwarded(self, mock_session, mock_retry, mock_client_cls):
-        from weather.client import build_openmeteo_client
 
         build_openmeteo_client(cache_name="custom", expire_after=999)
         mock_session.assert_called_once_with("custom", expire_after=999)
@@ -182,7 +197,6 @@ class TestBuildOpenMeteoClient:
     @patch("weather.client.retry")
     @patch("weather.client.requests_cache.CachedSession")
     def test_retry_params_forwarded(self, mock_session, mock_retry, mock_client_cls):
-        from weather.client import build_openmeteo_client
 
         build_openmeteo_client(retries=3, backoff_factor=0.5)
         mock_retry.assert_called_once_with(mock_session.return_value, retries=3, backoff_factor=0.5)
@@ -194,37 +208,31 @@ class TestBuildOpenMeteoClient:
 
 class TestParseHourlyDataframe:
     def test_returns_dataframe(self):
-        from weather.parsers import parse_hourly_dataframe
 
         df = parse_hourly_dataframe(_make_hourly_mock(), UTC_OFFSET)
         assert isinstance(df, pd.DataFrame)
 
     def test_has_correct_columns(self):
-        from weather.parsers import parse_hourly_dataframe
 
         df = parse_hourly_dataframe(_make_hourly_mock(), UTC_OFFSET)
         assert list(df.columns) == HOURLY_COLUMNS
 
     def test_row_count_matches_hours(self):
-        from weather.parsers import parse_hourly_dataframe
 
         df = parse_hourly_dataframe(_make_hourly_mock(N_HOURS), UTC_OFFSET)
         assert len(df) == N_HOURS
 
     def test_date_column_is_timezone_aware(self):
-        from weather.parsers import parse_hourly_dataframe
 
         df = parse_hourly_dataframe(_make_hourly_mock(), UTC_OFFSET)
         assert df["date"].dt.tz is not None
 
     def test_no_null_values(self):
-        from weather.parsers import parse_hourly_dataframe
 
         df = parse_hourly_dataframe(_make_hourly_mock(), UTC_OFFSET)
         assert not df.isnull().any().any()
 
     def test_date_interval_is_one_hour(self):
-        from weather.parsers import parse_hourly_dataframe
 
         df = parse_hourly_dataframe(_make_hourly_mock(), UTC_OFFSET)
         diffs = df["date"].diff().dropna().unique()
@@ -238,37 +246,31 @@ class TestParseHourlyDataframe:
 
 class TestParseDailyDataframe:
     def test_returns_dataframe(self):
-        from weather.parsers import parse_daily_dataframe
 
         df = parse_daily_dataframe(_make_daily_mock(), UTC_OFFSET)
         assert isinstance(df, pd.DataFrame)
 
     def test_has_correct_columns(self):
-        from weather.parsers import parse_daily_dataframe
 
         df = parse_daily_dataframe(_make_daily_mock(), UTC_OFFSET)
         assert list(df.columns) == DAILY_COLUMNS
 
     def test_row_count_matches_days(self):
-        from weather.parsers import parse_daily_dataframe
 
         df = parse_daily_dataframe(_make_daily_mock(N_DAYS), UTC_OFFSET)
         assert len(df) == N_DAYS
 
     def test_date_column_is_timezone_aware(self):
-        from weather.parsers import parse_daily_dataframe
 
         df = parse_daily_dataframe(_make_daily_mock(), UTC_OFFSET)
         assert df["date"].dt.tz is not None
 
     def test_no_null_values(self):
-        from weather.parsers import parse_daily_dataframe
 
         df = parse_daily_dataframe(_make_daily_mock(), UTC_OFFSET)
         assert not df.isnull().any().any()
 
     def test_date_interval_is_one_day(self):
-        from weather.parsers import parse_daily_dataframe
 
         df = parse_daily_dataframe(_make_daily_mock(), UTC_OFFSET)
         diffs = df["date"].diff().dropna().unique()
@@ -276,7 +278,6 @@ class TestParseDailyDataframe:
         assert diffs[0] == pd.Timedelta(days=1)
 
     def test_sunrise_sunset_are_integer(self):
-        from weather.parsers import parse_daily_dataframe
 
         df = parse_daily_dataframe(_make_daily_mock(), UTC_OFFSET)
         assert pd.api.types.is_integer_dtype(df["sunrise"])
@@ -289,7 +290,6 @@ class TestParseDailyDataframe:
 
 class TestFetchWeatherResponse:
     def test_returns_first_element(self):
-        from weather.gather import fetch_weather_response
 
         sentinel = object()
         mock_client = MagicMock()
@@ -298,7 +298,6 @@ class TestFetchWeatherResponse:
         assert result is sentinel
 
     def test_passes_params_to_api(self):
-        from weather.gather import fetch_weather_response
 
         mock_client = MagicMock()
         mock_client.weather_api.return_value = [MagicMock()]
@@ -323,7 +322,6 @@ class TestGatherData:
     @patch("weather.gather.build_request_params")
     @patch("weather.gather.fetch_weather_response")
     def test_returns_two_dataframes(self, mock_fetch, mock_params, mock_client):
-        from weather.gather import gather_data
 
         mock_fetch.return_value = self._make_response_mock()
         hourly_df, daily_df = gather_data()
@@ -334,7 +332,6 @@ class TestGatherData:
     @patch("weather.gather.build_request_params")
     @patch("weather.gather.fetch_weather_response")
     def test_hourly_has_expected_columns(self, mock_fetch, mock_params, mock_client):
-        from weather.gather import gather_data
 
         mock_fetch.return_value = self._make_response_mock()
         hourly_df, _ = gather_data()
@@ -345,7 +342,6 @@ class TestGatherData:
     @patch("weather.gather.build_request_params")
     @patch("weather.gather.fetch_weather_response")
     def test_daily_has_expected_columns(self, mock_fetch, mock_params, mock_client):
-        from weather.gather import gather_data
 
         mock_fetch.return_value = self._make_response_mock()
         _, daily_df = gather_data()
@@ -356,7 +352,6 @@ class TestGatherData:
     @patch("weather.gather.build_request_params")
     @patch("weather.gather.fetch_weather_response")
     def test_uses_utc_offset_from_response(self, mock_fetch, mock_params, mock_client):
-        from weather.gather import gather_data
 
         response = self._make_response_mock()
         mock_fetch.return_value = response
