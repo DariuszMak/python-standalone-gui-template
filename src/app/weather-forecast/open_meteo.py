@@ -119,4 +119,7 @@ def gather_data() -> tuple[pd.DataFrame, pd.DataFrame]:
 
     daily_dataframe = pd.DataFrame(data=daily_data)
 
+    logger.info("hourly_dataframe: %s", hourly_dataframe)
+    logger.info("daily_dataframe: %s", daily_dataframe)
+
     return hourly_dataframe, daily_dataframe
