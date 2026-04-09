@@ -8,10 +8,6 @@ from src.app.weather_forecast.gather import fetch_weather_response, gather_data
 from src.app.weather_forecast.params import FORECAST_DAYS, LATITUDE, LONGITUDE, TIMEZONE, build_request_params
 from src.app.weather_forecast.parsers import parse_daily_dataframe, parse_hourly_dataframe
 
-
-
-
-
 HOURLY_COLUMNS = [
     "date",
     "temperature_2m",
@@ -43,7 +39,7 @@ DAILY_COLUMNS = [
 
 N_HOURS = 24
 N_DAYS = 3
-UTC_OFFSET = 3600  
+UTC_OFFSET = 3600
 
 START_TS = int(pd.Timestamp("2024-01-01", tz="UTC").timestamp())
 END_TS_HOURLY = START_TS + N_HOURS * 3600
@@ -78,11 +74,10 @@ def _make_daily_mock(n: int = N_DAYS) -> MagicMock:
     float_arrays = [np.random.rand(n).astype(np.float32) for _ in range(8)]
     int_arrays = [np.random.randint(0, 86400, n, dtype=np.int64) for _ in range(2)]
 
-    
     all_arrays = float_arrays[:4] + int_arrays + float_arrays[4:]
 
     mock = MagicMock()
-    
+
     var_mocks = []
     for idx, arr in enumerate(all_arrays):
         v = MagicMock()
@@ -97,11 +92,6 @@ def _make_daily_mock(n: int = N_DAYS) -> MagicMock:
     mock.TimeEnd.return_value = END_TS_DAILY - UTC_OFFSET
     mock.Interval.return_value = 86400
     return mock
-
-
-
-
-
 
 
 class TestBuildRequestParams:
@@ -144,11 +134,6 @@ class TestBuildRequestParams:
         assert build_request_params()["timezone"] == TIMEZONE
 
 
-
-
-
-
-
 class TestBuildOpenMeteoClient:
     @patch("src.app.weather_forecast.client.openmeteo_requests.Client")
     @patch("src.app.weather_forecast.client.retry")
@@ -174,11 +159,6 @@ class TestBuildOpenMeteoClient:
 
         build_openmeteo_client(retries=3, backoff_factor=0.5)
         mock_retry.assert_called_once_with(mock_session.return_value, retries=3, backoff_factor=0.5)
-
-
-
-
-
 
 
 class TestParseHourlyDataframe:
@@ -213,11 +193,6 @@ class TestParseHourlyDataframe:
         diffs = df["date"].diff().dropna().unique()
         assert len(diffs) == 1
         assert diffs[0] == pd.Timedelta(hours=1)
-
-
-
-
-
 
 
 class TestParseDailyDataframe:
@@ -260,11 +235,6 @@ class TestParseDailyDataframe:
         assert pd.api.types.is_integer_dtype(df["sunset"])
 
 
-
-
-
-
-
 class TestFetchWeatherResponse:
     def test_returns_first_element(self):
 
@@ -282,7 +252,7 @@ class TestFetchWeatherResponse:
         fetch_weather_response(mock_client, params)
         mock_client.weather_api.assert_called_once()
         _, call_kwargs = mock_client.weather_api.call_args
-        
+
         call_args_pos = mock_client.weather_api.call_args[0]
         assert params in call_args_pos or call_kwargs.get("params") == params
 
