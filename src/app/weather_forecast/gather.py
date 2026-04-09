@@ -10,18 +10,11 @@ logger = logging.getLogger(__name__)
 
 
 def fetch_weather_response(client, params: dict):
-    """Fetch a raw API response from Open-Meteo and return the first location result."""
     responses = client.weather_api(API_URL, params=params)
     return responses[0]
 
 
 def gather_data() -> tuple[pd.DataFrame, pd.DataFrame]:
-    """
-    Fetch 16-day hourly and daily weather forecast for the configured location.
-
-    Returns:
-        A (hourly_dataframe, daily_dataframe) tuple.
-    """
     client = build_openmeteo_client()
     params = build_request_params()
     response = fetch_weather_response(client, params)

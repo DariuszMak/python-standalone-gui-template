@@ -8,9 +8,9 @@ from src.app.weather_forecast.gather import fetch_weather_response, gather_data
 from src.app.weather_forecast.params import FORECAST_DAYS, LATITUDE, LONGITUDE, TIMEZONE, build_request_params
 from src.app.weather_forecast.parsers import parse_daily_dataframe, parse_hourly_dataframe
 
-# ---------------------------------------------------------------------------
-# Helpers / fixtures
-# ---------------------------------------------------------------------------
+
+
+
 
 HOURLY_COLUMNS = [
     "date",
@@ -43,7 +43,7 @@ DAILY_COLUMNS = [
 
 N_HOURS = 24
 N_DAYS = 3
-UTC_OFFSET = 3600  # +1 h
+UTC_OFFSET = 3600  
 
 START_TS = int(pd.Timestamp("2024-01-01", tz="UTC").timestamp())
 END_TS_HOURLY = START_TS + N_HOURS * 3600
@@ -51,7 +51,6 @@ END_TS_DAILY = START_TS + N_DAYS * 86400
 
 
 def _make_variables_mock(values_list: list[np.ndarray], *, integer: bool = False) -> MagicMock:
-    """Return a mock whose .Variables(i) calls return per-variable mocks."""
     var_mocks = []
     for arr in values_list:
         v = MagicMock()
@@ -79,11 +78,11 @@ def _make_daily_mock(n: int = N_DAYS) -> MagicMock:
     float_arrays = [np.random.rand(n).astype(np.float32) for _ in range(8)]
     int_arrays = [np.random.randint(0, 86400, n, dtype=np.int64) for _ in range(2)]
 
-    # Variables 0-3 and 6-9 → float; 4-5 → int64
+    
     all_arrays = float_arrays[:4] + int_arrays + float_arrays[4:]
 
     mock = MagicMock()
-    # Build per-variable mocks manually to handle mixed types
+    
     var_mocks = []
     for idx, arr in enumerate(all_arrays):
         v = MagicMock()
@@ -100,9 +99,9 @@ def _make_daily_mock(n: int = N_DAYS) -> MagicMock:
     return mock
 
 
-# ---------------------------------------------------------------------------
-# params.py
-# ---------------------------------------------------------------------------
+
+
+
 
 
 class TestBuildRequestParams:
@@ -145,9 +144,9 @@ class TestBuildRequestParams:
         assert build_request_params()["timezone"] == TIMEZONE
 
 
-# ---------------------------------------------------------------------------
-# client.py
-# ---------------------------------------------------------------------------
+
+
+
 
 
 class TestBuildOpenMeteoClient:
@@ -177,9 +176,9 @@ class TestBuildOpenMeteoClient:
         mock_retry.assert_called_once_with(mock_session.return_value, retries=3, backoff_factor=0.5)
 
 
-# ---------------------------------------------------------------------------
-# parsers.py – hourly
-# ---------------------------------------------------------------------------
+
+
+
 
 
 class TestParseHourlyDataframe:
@@ -216,9 +215,9 @@ class TestParseHourlyDataframe:
         assert diffs[0] == pd.Timedelta(hours=1)
 
 
-# ---------------------------------------------------------------------------
-# parsers.py – daily
-# ---------------------------------------------------------------------------
+
+
+
 
 
 class TestParseDailyDataframe:
@@ -261,9 +260,9 @@ class TestParseDailyDataframe:
         assert pd.api.types.is_integer_dtype(df["sunset"])
 
 
-# ---------------------------------------------------------------------------
-# gather.py
-# ---------------------------------------------------------------------------
+
+
+
 
 
 class TestFetchWeatherResponse:
@@ -283,7 +282,7 @@ class TestFetchWeatherResponse:
         fetch_weather_response(mock_client, params)
         mock_client.weather_api.assert_called_once()
         _, call_kwargs = mock_client.weather_api.call_args
-        # params may be positional or keyword – check both
+        
         call_args_pos = mock_client.weather_api.call_args[0]
         assert params in call_args_pos or call_kwargs.get("params") == params
 

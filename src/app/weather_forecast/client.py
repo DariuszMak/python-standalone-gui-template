@@ -9,7 +9,6 @@ def build_openmeteo_client(
     retries: int = 5,
     backoff_factor: float = 0.2,
 ) -> openmeteo_requests.Client:
-    """Build and return a cached, retry-enabled Open-Meteo API client."""
     cache_session = requests_cache.CachedSession(cache_name, expire_after=expire_after)
     retry_session = retry(cache_session, retries=retries, backoff_factor=backoff_factor)
     return openmeteo_requests.Client(session=retry_session)

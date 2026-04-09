@@ -38,7 +38,6 @@ def build_request_params(
     timezone: str = TIMEZONE,
     forecast_days: int = FORECAST_DAYS,
 ) -> dict:
-    """Build and return the request parameter dict for the Open-Meteo API."""
     return {
         "latitude": latitude,
         "longitude": longitude,

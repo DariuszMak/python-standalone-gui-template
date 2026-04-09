@@ -2,16 +2,6 @@ import pandas as pd
 
 
 def parse_hourly_dataframe(hourly, utc_offset_seconds: int) -> pd.DataFrame:
-    """
-    Parse an Open-Meteo hourly response object into a DataFrame.
-
-    Args:
-        hourly: The hourly variables object from the API response.
-        utc_offset_seconds: UTC offset in seconds from the API response.
-
-    Returns:
-        pd.DataFrame with a timezone-aware 'date' column and one column per variable.
-    """
     date_range = pd.date_range(
         start=pd.to_datetime(hourly.Time() + utc_offset_seconds, unit="s", utc=True),
         end=pd.to_datetime(hourly.TimeEnd() + utc_offset_seconds, unit="s", utc=True),
@@ -36,16 +26,6 @@ def parse_hourly_dataframe(hourly, utc_offset_seconds: int) -> pd.DataFrame:
 
 
 def parse_daily_dataframe(daily, utc_offset_seconds: int) -> pd.DataFrame:
-    """
-    Parse an Open-Meteo daily response object into a DataFrame.
-
-    Args:
-        daily: The daily variables object from the API response.
-        utc_offset_seconds: UTC offset in seconds from the API response.
-
-    Returns:
-        pd.DataFrame with a timezone-aware 'date' column and one column per variable.
-    """
     date_range = pd.date_range(
         start=pd.to_datetime(daily.Time() + utc_offset_seconds, unit="s", utc=True),
         end=pd.to_datetime(daily.TimeEnd() + utc_offset_seconds, unit="s", utc=True),
