@@ -137,7 +137,7 @@ def test_timezone_default() -> None:
 @patch("src.app.weather_forecast.client.openmeteo_requests.Client")
 @patch("src.app.weather_forecast.client.retry")
 @patch("src.app.weather_forecast.client.requests_cache.CachedSession")
-def test_returns_client(mock_session, mock_retry, mock_client_cls) -> None:
+def test_returns_client(mock_session: MagicMock, mock_retry: MagicMock, mock_client_cls: MagicMock) -> None:
     client = build_openmeteo_client()
     mock_client_cls.assert_called_once()
     assert client is mock_client_cls.return_value
@@ -146,7 +146,7 @@ def test_returns_client(mock_session, mock_retry, mock_client_cls) -> None:
 @patch("src.app.weather_forecast.client.openmeteo_requests.Client")
 @patch("src.app.weather_forecast.client.retry")
 @patch("src.app.weather_forecast.client.requests_cache.CachedSession")
-def test_cache_params_forwarded(mock_session, mock_retry, mock_client_cls) -> None:
+def test_cache_params_forwarded(mock_session: MagicMock, mock_retry: MagicMock, mock_client_cls: MagicMock) -> None:
     build_openmeteo_client(cache_name="custom", expire_after=999)
     mock_session.assert_called_once_with("custom", expire_after=999)
 
@@ -154,7 +154,7 @@ def test_cache_params_forwarded(mock_session, mock_retry, mock_client_cls) -> No
 @patch("src.app.weather_forecast.client.openmeteo_requests.Client")
 @patch("src.app.weather_forecast.client.retry")
 @patch("src.app.weather_forecast.client.requests_cache.CachedSession")
-def test_retry_params_forwarded(mock_session, mock_retry, mock_client_cls) -> None:
+def test_retry_params_forwarded(mock_session: MagicMock, mock_retry: MagicMock, mock_client_cls: MagicMock) -> None:
     build_openmeteo_client(retries=3, backoff_factor=0.5)
     mock_retry.assert_called_once_with(mock_session.return_value, retries=3, backoff_factor=0.5)
 
@@ -260,7 +260,7 @@ def _make_response_mock() -> MagicMock:
 @patch("src.app.weather_forecast.gather.build_openmeteo_client")
 @patch("src.app.weather_forecast.gather.build_request_params")
 @patch("src.app.weather_forecast.gather.fetch_weather_response")
-def test_returns_two_dataframes(mock_fetch, mock_params, mock_client) -> None:
+def test_returns_two_dataframes(mock_fetch: MagicMock, mock_params: MagicMock, mock_client: MagicMock) -> None:
     mock_fetch.return_value = _make_response_mock()
     hourly_df, daily_df = gather_data()
     assert isinstance(hourly_df, pd.DataFrame)
@@ -270,7 +270,7 @@ def test_returns_two_dataframes(mock_fetch, mock_params, mock_client) -> None:
 @patch("src.app.weather_forecast.gather.build_openmeteo_client")
 @patch("src.app.weather_forecast.gather.build_request_params")
 @patch("src.app.weather_forecast.gather.fetch_weather_response")
-def test_hourly_has_expected_columns(mock_fetch, mock_params, mock_client) -> None:
+def test_hourly_has_expected_columns(mock_fetch: MagicMock, mock_params: MagicMock, mock_client: MagicMock) -> None:
     mock_fetch.return_value = _make_response_mock()
     hourly_df, _ = gather_data()
     for col in HOURLY_COLUMNS:
@@ -280,7 +280,7 @@ def test_hourly_has_expected_columns(mock_fetch, mock_params, mock_client) -> No
 @patch("src.app.weather_forecast.gather.build_openmeteo_client")
 @patch("src.app.weather_forecast.gather.build_request_params")
 @patch("src.app.weather_forecast.gather.fetch_weather_response")
-def test_daily_has_expected_columns(mock_fetch, mock_params, mock_client) -> None:
+def test_daily_has_expected_columns(mock_fetch: MagicMock, mock_params: MagicMock, mock_client: MagicMock) -> None:
     mock_fetch.return_value = _make_response_mock()
     _, daily_df = gather_data()
     for col in DAILY_COLUMNS:
@@ -290,7 +290,7 @@ def test_daily_has_expected_columns(mock_fetch, mock_params, mock_client) -> Non
 @patch("src.app.weather_forecast.gather.build_openmeteo_client")
 @patch("src.app.weather_forecast.gather.build_request_params")
 @patch("src.app.weather_forecast.gather.fetch_weather_response")
-def test_uses_utc_offset_from_response(mock_fetch, mock_params, mock_client) -> None:
+def test_uses_utc_offset_from_response(mock_fetch: MagicMock, mock_params: MagicMock, mock_client: MagicMock) -> None:
     response = _make_response_mock()
     mock_fetch.return_value = response
     gather_data()
