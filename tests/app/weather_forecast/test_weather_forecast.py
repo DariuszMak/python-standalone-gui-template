@@ -2,6 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from src.app.weather_forecast.client import build_openmeteo_client
 from src.app.weather_forecast.gather import fetch_weather_response, gather_data
@@ -109,8 +110,8 @@ def test_default_coordinates() -> None:
 
 def test_custom_coordinates() -> None:
     params = build_request_params(latitude=52.0, longitude=18.0)
-    assert params["latitude"] == 52.0
-    assert params["longitude"] == 18.0
+    assert params["latitude"] == pytest.approx(52.0)
+    assert params["longitude"] == pytest.approx(18.0)
 
 
 def test_daily_and_hourly_are_lists() -> None:
