@@ -6,8 +6,17 @@ import pytest
 
 from src.app.weather_forecast.client import build_openmeteo_client
 from src.app.weather_forecast.gather import fetch_weather_response, gather_data
-from src.app.weather_forecast.params import FORECAST_DAYS, LATITUDE, LONGITUDE, TIMEZONE, build_request_params
-from src.app.weather_forecast.parsers import parse_daily_dataframe, parse_hourly_dataframe
+from src.app.weather_forecast.params import (
+    FORECAST_DAYS,
+    LATITUDE,
+    LONGITUDE,
+    TIMEZONE,
+    build_request_params,
+)
+from src.app.weather_forecast.parsers import (
+    parse_daily_dataframe,
+    parse_hourly_dataframe,
+)
 
 HOURLY_COLUMNS = [
     "date",
@@ -102,7 +111,6 @@ def test_returns_required_keys() -> None:
 
 
 def test_default_coordinates() -> None:
-
     params = build_request_params()
     assert params["latitude"] == LATITUDE
     assert params["longitude"] == LONGITUDE
@@ -260,7 +268,7 @@ def _make_response_mock() -> MagicMock:
 @patch("src.app.weather_forecast.gather.build_openmeteo_client")
 @patch("src.app.weather_forecast.gather.build_request_params")
 @patch("src.app.weather_forecast.gather.fetch_weather_response")
-def test_returns_two_dataframes(mock_fetch: MagicMock, mock_params: MagicMock, mock_client: MagicMock) -> None:
+def test_returns_two_dataframes(mock_fetch: MagicMock, _mock_params: MagicMock, mock_client: MagicMock) -> None:
     mock_fetch.return_value = _make_response_mock()
     hourly_df, daily_df = gather_data()
     assert isinstance(hourly_df, pd.DataFrame)
@@ -270,7 +278,7 @@ def test_returns_two_dataframes(mock_fetch: MagicMock, mock_params: MagicMock, m
 @patch("src.app.weather_forecast.gather.build_openmeteo_client")
 @patch("src.app.weather_forecast.gather.build_request_params")
 @patch("src.app.weather_forecast.gather.fetch_weather_response")
-def test_hourly_has_expected_columns(mock_fetch: MagicMock, mock_params: MagicMock, mock_client: MagicMock) -> None:
+def test_hourly_has_expected_columns(mock_fetch: MagicMock, _mock_params: MagicMock, mock_client: MagicMock) -> None:
     mock_fetch.return_value = _make_response_mock()
     hourly_df, _ = gather_data()
     for col in HOURLY_COLUMNS:
@@ -280,7 +288,7 @@ def test_hourly_has_expected_columns(mock_fetch: MagicMock, mock_params: MagicMo
 @patch("src.app.weather_forecast.gather.build_openmeteo_client")
 @patch("src.app.weather_forecast.gather.build_request_params")
 @patch("src.app.weather_forecast.gather.fetch_weather_response")
-def test_daily_has_expected_columns(mock_fetch: MagicMock, mock_params: MagicMock, mock_client: MagicMock) -> None:
+def test_daily_has_expected_columns(mock_fetch: MagicMock, _mock_params: MagicMock, mock_client: MagicMock) -> None:
     mock_fetch.return_value = _make_response_mock()
     _, daily_df = gather_data()
     for col in DAILY_COLUMNS:
@@ -290,7 +298,7 @@ def test_daily_has_expected_columns(mock_fetch: MagicMock, mock_params: MagicMoc
 @patch("src.app.weather_forecast.gather.build_openmeteo_client")
 @patch("src.app.weather_forecast.gather.build_request_params")
 @patch("src.app.weather_forecast.gather.fetch_weather_response")
-def test_uses_utc_offset_from_response(mock_fetch: MagicMock, mock_params: MagicMock, mock_client: MagicMock) -> None:
+def test_uses_utc_offset_from_response(mock_fetch: MagicMock, _mock_params: MagicMock, mock_client: MagicMock) -> None:
     response = _make_response_mock()
     mock_fetch.return_value = response
     gather_data()
