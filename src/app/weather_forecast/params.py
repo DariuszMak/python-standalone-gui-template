@@ -37,7 +37,7 @@ def build_request_params(
     longitude: float = LONGITUDE,
     timezone: str = TIMEZONE,
     forecast_days: int = FORECAST_DAYS,
-) -> dict:
+) -> dict[str, object]:
     return {
         "latitude": latitude,
         "longitude": longitude,

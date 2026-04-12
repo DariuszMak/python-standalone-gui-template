@@ -1,7 +1,8 @@
 import pandas as pd
+from openmeteo_sdk.VariablesWithTime import VariablesWithTime  # type: ignore
 
 
-def parse_hourly_dataframe(hourly, utc_offset_seconds: int) -> pd.DataFrame:
+def parse_hourly_dataframe(hourly: VariablesWithTime, utc_offset_seconds: int) -> pd.DataFrame:
     date_range = pd.date_range(
         start=pd.to_datetime(hourly.Time() + utc_offset_seconds, unit="s", utc=True),
         end=pd.to_datetime(hourly.TimeEnd() + utc_offset_seconds, unit="s", utc=True),
@@ -25,7 +26,7 @@ def parse_hourly_dataframe(hourly, utc_offset_seconds: int) -> pd.DataFrame:
     })
 
 
-def parse_daily_dataframe(daily, utc_offset_seconds: int) -> pd.DataFrame:
+def parse_daily_dataframe(daily: VariablesWithTime, utc_offset_seconds: int) -> pd.DataFrame:
     date_range = pd.date_range(
         start=pd.to_datetime(daily.Time() + utc_offset_seconds, unit="s", utc=True),
         end=pd.to_datetime(daily.TimeEnd() + utc_offset_seconds, unit="s", utc=True),

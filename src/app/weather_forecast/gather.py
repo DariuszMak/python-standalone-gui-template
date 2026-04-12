@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 import pandas as pd
 
@@ -9,7 +10,7 @@ from src.app.weather_forecast.parsers import parse_daily_dataframe, parse_hourly
 logger = logging.getLogger(__name__)
 
 
-def fetch_weather_response(client, params: dict):
+def fetch_weather_response(client: Any, params: dict[str, Any]) -> Any:
     responses = client.weather_api(API_URL, params=params)
     return responses[0]
 
