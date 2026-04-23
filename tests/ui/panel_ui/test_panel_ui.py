@@ -10,8 +10,8 @@ import pytest
 import respx
 from httpx import HTTPStatusError, Response
 
-import src.ui.panel_ui.time_panel.time_panel as module
-from src.ui.panel_ui.time_panel import time_panel
+import src.ui.panel_ui.time_panel.layout as module
+from src.ui.panel_ui.time_panel import layout
 from src.ui.panel_ui.time_panel.api import fetch_time
 from src.ui.panel_ui.time_panel.clock_widget import ClockWidget
 from src.ui.shared.controller.clock_controller import ClockController
@@ -67,12 +67,12 @@ def _make_layout(
     def immediate_execute(fn: Callable[[], Coroutine[None, None, None]]) -> None:
         asyncio.run(fn())
 
-    monkeypatch.setattr(time_panel, "fetch_time", fake_fetch)
+    monkeypatch.setattr(layout, "fetch_time", fake_fetch)
     monkeypatch.setattr(pn.state, "execute", immediate_execute)
     monkeypatch.setattr(pn.state, "onload", lambda _: None)
 
     with patch.object(pn.state, "add_periodic_callback", return_value=MagicMock()):
-        return time_panel.create_layout()
+        return layout.create_layout()
 
 
 def test_on_click_success(monkeypatch: pytest.MonkeyPatch) -> None:
