@@ -56,7 +56,7 @@ export function useClockTime(): UseClockTimeResult {
       applyTimeData(data, {
         serverAnchorRef: serverAnchorRef,
         wallAnchorRef: wallAnchorRef,
-        controllerRef: controllerRef as React.MutableRefObject<ClockController>,
+        controllerRef: controllerRef,
         readyRef: readyRef,
       });
       setDatetime(data.datetime);
