@@ -1,6 +1,3 @@
-
-import src.ui.panel_ui.time_panel as module
-from src.ui.panel_ui.time_panel import ClockWidget, fetch_time
 import asyncio
 import re
 from collections.abc import Callable, Coroutine
@@ -13,8 +10,9 @@ import pytest
 import respx
 from httpx import HTTPStatusError, Response
 
+import src.ui.panel_ui.time_panel as module
 from src.ui.panel_ui import time_panel
-
+from src.ui.panel_ui.time_panel import ClockWidget, fetch_time
 from src.ui.shared.controller.clock_controller import ClockController
 from src.ui.shared.helpers import format_datetime
 from src.ui.shared.model.data_types import ClockHands

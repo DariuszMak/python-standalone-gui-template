@@ -1,9 +1,10 @@
 import time
 from datetime import datetime, timedelta
+
 import panel as pn
 
 from src.ui.panel_ui.settings import TICK_MS
-from src.ui.panel_ui.time_panel.clock_figure import build_clock_figure, _hand_endpoint
+from src.ui.panel_ui.time_panel.clock_figure import _hand_endpoint, build_clock_figure
 from src.ui.shared.controller.clock_controller import ClockController
 from src.ui.shared.helpers import format_datetime
 from src.ui.shared.model.helpers import clock_hands_in_radians
@@ -41,14 +42,20 @@ class ClockWidget:
 
         cx, cy, r = 0.0, 0.0, 1.0
 
-        self._sources["hour"].data = {"x": [cx, _hand_endpoint(cx, cy, r * 0.5, hour)[0]],
-                                      "y": [cy, _hand_endpoint(cx, cy, r * 0.5, hour)[1]]}
+        self._sources["hour"].data = {
+            "x": [cx, _hand_endpoint(cx, cy, r * 0.5, hour)[0]],
+            "y": [cy, _hand_endpoint(cx, cy, r * 0.5, hour)[1]],
+        }
 
-        self._sources["minute"].data = {"x": [cx, _hand_endpoint(cx, cy, r * 0.7, min_)[0]],
-                                        "y": [cy, _hand_endpoint(cx, cy, r * 0.7, min_)[1]]}
+        self._sources["minute"].data = {
+            "x": [cx, _hand_endpoint(cx, cy, r * 0.7, min_)[0]],
+            "y": [cy, _hand_endpoint(cx, cy, r * 0.7, min_)[1]],
+        }
 
-        self._sources["second"].data = {"x": [cx, _hand_endpoint(cx, cy, r * 0.9, sec)[0]],
-                                        "y": [cy, _hand_endpoint(cx, cy, r * 0.9, sec)[1]]}
+        self._sources["second"].data = {
+            "x": [cx, _hand_endpoint(cx, cy, r * 0.9, sec)[0]],
+            "y": [cy, _hand_endpoint(cx, cy, r * 0.9, sec)[1]],
+        }
 
         self._sources["time_text"].data = {
             "x": [0.0],

@@ -1,8 +1,9 @@
-import panel as pn
 from datetime import datetime
 
-from src.ui.panel_ui.time_panel.clock_widget import ClockWidget
+import panel as pn
+
 from src.ui.panel_ui.time_panel.api import fetch_time
+from src.ui.panel_ui.time_panel.clock_widget import ClockWidget
 
 
 def create_layout() -> pn.Column:

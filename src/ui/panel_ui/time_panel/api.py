@@ -1,5 +1,6 @@
-import httpx
 from typing import Any
+
+import httpx
 
 from src.helpers.config.config import Config
 
