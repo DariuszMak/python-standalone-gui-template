@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
+import type { RefObject } from "react";
 import { ClockController } from "../clockController";
 import { getApiBaseUrl } from "../../config";
 
 export type ClockStatus = "loading" | "ok" | "error";
 
 export interface ClockTimeRefs {
-  serverAnchorRef: React.RefObject<Date>;
-  wallAnchorRef: React.RefObject<number>;
-  controllerRef: React.RefObject<ClockController>;
-  readyRef: React.RefObject<boolean>;
+  serverAnchorRef: RefObject<Date>;
+  wallAnchorRef: RefObject<number>;
+  controllerRef: RefObject<ClockController>;
+  readyRef: RefObject<boolean>;
 }
 
 export interface UseClockTimeResult extends ClockTimeRefs {
@@ -26,18 +27,19 @@ async function fetchTimeData(): Promise<{ datetime: string }> {
 function applyTimeData(
   data: { datetime: string },
   refs: {
-    serverAnchorRef: React.MutableRefObject<Date>;
-    wallAnchorRef: React.MutableRefObject<number>;
-    controllerRef: React.MutableRefObject<ClockController>;
-    readyRef: React.MutableRefObject<boolean>;
+    serverAnchorRef: RefObject<Date>;
+    wallAnchorRef: RefObject<number>;
+    controllerRef: RefObject<ClockController>;
+    readyRef: RefObject<boolean>;
   },
-): Date {
+): void {
   const serverDate = new Date(data.datetime);
-  refs.serverAnchorRef.current = serverDate;
-  refs.wallAnchorRef.current = performance.now();
-  refs.controllerRef.current.reset(serverDate);
-  refs.readyRef.current = true;
-  return serverDate;
+  
+  
+  (refs.serverAnchorRef as { current: Date }).current = serverDate;
+  (refs.wallAnchorRef as { current: number }).current = performance.now();
+  refs.controllerRef.current?.reset(serverDate);
+  (refs.readyRef as { current: boolean }).current = true;
 }
 
 export function useClockTime(): UseClockTimeResult {
@@ -47,18 +49,18 @@ export function useClockTime(): UseClockTimeResult {
   const readyRef = useRef<boolean>(false);
 
   const [datetime, setDatetime] = useState<string | null>(null);
+  
+  
   const [status, setStatus] = useState<ClockStatus>("loading");
 
-  const loadTime = async () => {
+  
+  
+  
+  const handleReload = async () => {
     setStatus("loading");
     try {
       const data = await fetchTimeData();
-      applyTimeData(data, {
-        serverAnchorRef: serverAnchorRef,
-        wallAnchorRef: wallAnchorRef,
-        controllerRef: controllerRef,
-        readyRef: readyRef,
-      });
+      applyTimeData(data, { serverAnchorRef, wallAnchorRef, controllerRef, readyRef });
       setDatetime(data.datetime);
       setStatus("ok");
     } catch {
@@ -67,13 +69,23 @@ export function useClockTime(): UseClockTimeResult {
   };
 
   useEffect(() => {
-    void loadTime();
+    
+    
+    fetchTimeData()
+      .then((data) => {
+        applyTimeData(data, { serverAnchorRef, wallAnchorRef, controllerRef, readyRef });
+        setDatetime(data.datetime);
+        setStatus("ok");
+      })
+      .catch(() => {
+        setStatus("error");
+      });
   }, []);
 
   return {
     datetime,
     status,
-    handleReload: loadTime,
+    handleReload,
     serverAnchorRef,
     wallAnchorRef,
     controllerRef,
