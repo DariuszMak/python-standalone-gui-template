@@ -4,15 +4,14 @@ import logging
 import math
 import time
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
-import httpx
 import panel as pn
 from bokeh.models import ColumnDataSource, Range1d
 from bokeh.plotting import figure
 
-from src.helpers.config.config import Config
 from src.ui.panel_ui.settings import TICK_MS
+from src.ui.panel_ui.time_panel.api import fetch_time
 from src.ui.shared.controller.clock_controller import ClockController
 from src.ui.shared.helpers import format_datetime
 from src.ui.shared.model.helpers import clock_hands_in_radians
@@ -169,15 +168,6 @@ class ClockWidget:
             "y": [-0.55],
             "text": [format_datetime(now)],
         }
-
-
-async def fetch_time() -> str:
-    config = Config.from_env()
-    async with httpx.AsyncClient(timeout=2.0) as client:
-        resp = await client.get(f"{config.api_base_url}/time")
-        resp.raise_for_status()
-        data: Any = resp.json()
-        return str(data["datetime"])
 
 
 def create_layout() -> pn.Column:
