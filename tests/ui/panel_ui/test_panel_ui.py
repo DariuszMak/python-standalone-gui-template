@@ -24,7 +24,7 @@ async def test_fetch_time_success(monkeypatch: pytest.MonkeyPatch) -> None:
         api_base_url = "http://testserver"
 
     monkeypatch.setattr(
-        "src.ui.panel_ui.time_panel.Config.from_env",
+        "src.helpers.config.config.Config.from_env",
         lambda: DummyConfig(),
     )
 
@@ -47,7 +47,7 @@ async def test_fetch_time_http_error(monkeypatch: pytest.MonkeyPatch) -> None:
         api_base_url = "http://testserver"
 
     monkeypatch.setattr(
-        "src.ui.panel_ui.time_panel.Config.from_env",
+        "src.helpers.config.config.Config.from_env",
         lambda: DummyConfig(),
     )
 
