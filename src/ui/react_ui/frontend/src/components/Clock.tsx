@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ClockController } from "./clockController";
 import { polarToCartesian, formatTime, clockHandsInRadians } from "./clockHelpers";
 import { getApiBaseUrl } from "../config";
@@ -6,35 +6,42 @@ import { getApiBaseUrl } from "../config";
 export function Clock() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef(0);
+
   const serverAnchorRef = useRef(new Date(0));
-  const wallAnchorRef = useRef(performance.now());
+  const wallAnchorRef = useRef(0);
   const controllerRef = useRef(new ClockController(new Date(0)));
   const readyRef = useRef(false);
 
   const [datetime, setDatetime] = useState<string | null>(null);
   const [status, setStatus] = useState<"loading" | "ok" | "error">("loading");
 
-  const fetchTime = useCallback(async () => {
-    setStatus("loading");
-    try {
-      const res = await fetch(`${getApiBaseUrl()}/time`);
-      if (!res.ok) throw new Error(`HTTP ${String(res.status)}`);
-      const data = (await res.json()) as { datetime: string };
-      const serverDate = new Date(data.datetime);
-      setDatetime(data.datetime);
-      serverAnchorRef.current = serverDate;
-      wallAnchorRef.current = performance.now();
-      controllerRef.current.reset(serverDate);
-      readyRef.current = true;
-      setStatus("ok");
-    } catch {
-      setStatus("error");
-    }
-  }, []);
+  const fetchTimeData = async () => {
+    const res = await fetch(`${getApiBaseUrl()}/time`);
+    if (!res.ok) throw new Error(`HTTP ${String(res.status)}`);
+    return (await res.json()) as { datetime: string };
+  };
 
   useEffect(() => {
-    void fetchTime();
-  }, [fetchTime]);
+    const run = async () => {
+      setStatus("loading");
+      try {
+        const data = await fetchTimeData();
+        const serverDate = new Date(data.datetime);
+
+        setDatetime(data.datetime);
+        serverAnchorRef.current = serverDate;
+        wallAnchorRef.current = performance.now();
+        controllerRef.current.reset(serverDate);
+        readyRef.current = true;
+
+        setStatus("ok");
+      } catch {
+        setStatus("error");
+      }
+    };
+
+    void run();
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -58,6 +65,7 @@ export function Clock() {
 
       const dpr = window.devicePixelRatio || 1;
       const size = canvas.clientWidth;
+
       if (canvas.width !== size * dpr || canvas.height !== size * dpr) {
         canvas.width = size * dpr;
         canvas.height = size * dpr;
@@ -86,10 +94,13 @@ export function Clock() {
       for (let i = 0; i < 60; i++) {
         const angle = (i / 60) * Math.PI * 2;
         const isHour = i % 5 === 0;
+
         const outer = polarToCartesian(cx, cy, radius, angle);
         const inner = polarToCartesian(cx, cy, radius - (isHour ? 10 : 5), angle);
+
         ctx.strokeStyle = isDark ? "#888" : "#aaa";
         ctx.lineWidth = isHour ? 2.5 : 1;
+
         ctx.beginPath();
         ctx.moveTo(inner[0], inner[1]);
         ctx.lineTo(outer[0], outer[1]);
@@ -101,6 +112,7 @@ export function Clock() {
       ctx.fillStyle = isDark ? "#ddd" : "#333";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
+
       for (let i = 0; i < 12; i++) {
         const angle = (i / 12) * Math.PI * 2;
         const [tx, ty] = polarToCartesian(cx, cy, radius - fontSize * 1.8, angle);
@@ -150,19 +162,35 @@ export function Clock() {
     };
 
     animRef.current = requestAnimationFrame(draw);
+
     return () => {
       cancelAnimationFrame(animRef.current);
     };
   }, []);
 
-  const handleReload = () => {
-    void fetchTime();
+  const handleReload = async () => {
+    setStatus("loading");
+    try {
+      const data = await fetchTimeData();
+      const serverDate = new Date(data.datetime);
+
+      setDatetime(data.datetime);
+      serverAnchorRef.current = serverDate;
+      wallAnchorRef.current = performance.now();
+      controllerRef.current.reset(serverDate);
+      readyRef.current = true;
+
+      setStatus("ok");
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
       <h1 style={{ margin: 0 }}>Current datetime</h1>
       {datetime && <p style={{ margin: 0 }}>{datetime}</p>}
+
       <canvas
         ref={canvasRef}
         style={{
@@ -172,9 +200,11 @@ export function Clock() {
           display: "block",
         }}
       />
-      <button onClick={handleReload} disabled={status === "loading"}>
+
+      <button onClick={() => void handleReload()} disabled={status === "loading"}>
         {status === "loading" ? "Loading…" : "Reload time"}
       </button>
+
       {status === "error" && <p style={{ color: "red", margin: 0 }}>Failed to load time</p>}
     </div>
   );
