@@ -34,8 +34,7 @@ function applyTimeData(
   },
 ): void {
   const serverDate = new Date(data.datetime);
-  
-  
+
   (refs.serverAnchorRef as { current: Date }).current = serverDate;
   (refs.wallAnchorRef as { current: number }).current = performance.now();
   refs.controllerRef.current?.reset(serverDate);
@@ -49,13 +48,9 @@ export function useClockTime(): UseClockTimeResult {
   const readyRef = useRef<boolean>(false);
 
   const [datetime, setDatetime] = useState<string | null>(null);
-  
-  
+
   const [status, setStatus] = useState<ClockStatus>("loading");
 
-  
-  
-  
   const handleReload = async () => {
     setStatus("loading");
     try {
@@ -69,8 +64,6 @@ export function useClockTime(): UseClockTimeResult {
   };
 
   useEffect(() => {
-    
-    
     fetchTimeData()
       .then((data) => {
         applyTimeData(data, { serverAnchorRef, wallAnchorRef, controllerRef, readyRef });
