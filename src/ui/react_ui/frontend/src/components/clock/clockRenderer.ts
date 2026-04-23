@@ -1,6 +1,6 @@
-import { polarToCartesian, formatTime } from "./clockHelpers";
-import type { ClockHands } from "./clockHelpers";
-import { clockHandsInRadians } from "./clockHelpers";
+import { polarToCartesian, formatTime } from "../clockHelpers";
+import type { ClockHands } from "../clockHelpers";
+import { clockHandsInRadians } from "../clockHelpers";
 
 export interface RenderState {
   hands: ClockHands;

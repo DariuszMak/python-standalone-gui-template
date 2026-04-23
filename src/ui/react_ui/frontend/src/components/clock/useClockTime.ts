@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { ClockController } from "./clockController";
-import { getApiBaseUrl } from "../config";
+import { ClockController } from "../clockController";
+import { getApiBaseUrl } from "../../config";
 
 export type ClockStatus = "loading" | "ok" | "error";
 
@@ -54,10 +54,10 @@ export function useClockTime(): UseClockTimeResult {
     try {
       const data = await fetchTimeData();
       applyTimeData(data, {
-        serverAnchorRef: serverAnchorRef as React.MutableRefObject<Date>,
-        wallAnchorRef: wallAnchorRef as React.MutableRefObject<number>,
+        serverAnchorRef: serverAnchorRef,
+        wallAnchorRef: wallAnchorRef,
         controllerRef: controllerRef as React.MutableRefObject<ClockController>,
-        readyRef: readyRef as React.MutableRefObject<boolean>,
+        readyRef: readyRef,
       });
       setDatetime(data.datetime);
       setStatus("ok");
