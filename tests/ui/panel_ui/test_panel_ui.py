@@ -14,6 +14,7 @@ import src.ui.panel_ui.time_panel as module
 from src.ui.panel_ui import time_panel
 from src.ui.panel_ui.time_panel.api import fetch_time
 from src.ui.panel_ui.time_panel.clock_widget import ClockWidget
+from src.ui.pyside_ui.clock_widget.view.clock_widget import ClockWidget as PySideClockWidget
 from src.ui.shared.controller.clock_controller import ClockController
 from src.ui.shared.helpers import format_datetime
 from src.ui.shared.model.data_types import ClockHands
@@ -25,7 +26,7 @@ async def test_fetch_time_success(monkeypatch: pytest.MonkeyPatch) -> None:
         api_base_url = "http://testserver"
 
     monkeypatch.setattr(
-        "src.ui.panel_ui.time_panel.Config.from_env",
+        "src.helpers.config.config.Config.from_env",
         lambda: DummyConfig(),
     )
 
@@ -48,7 +49,7 @@ async def test_fetch_time_http_error(monkeypatch: pytest.MonkeyPatch) -> None:
         api_base_url = "http://testserver"
 
     monkeypatch.setattr(
-        "src.ui.panel_ui.time_panel.Config.from_env",
+        "src.helpers.config.config.Config.from_env",
         lambda: DummyConfig(),
     )
 
@@ -112,9 +113,9 @@ def test_on_click_sets_clock_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
     async def fake_fetch_time() -> str:  # noqa: RUF029
         return "2026-01-25T12:00:00+00:00"
 
-    original_init = time_panel.ClockWidget.__init__
+    original_init = PySideClockWidget.__init__
 
-    def patched_init(self: time_panel.ClockWidget, size: int = 300) -> None:
+    def patched_init(self: PySideClockWidget, size: int = 300) -> None:
         original_init(self, size)
         original_set = self.set_current_datetime
 
@@ -124,7 +125,7 @@ def test_on_click_sets_clock_datetime(monkeypatch: pytest.MonkeyPatch) -> None:
 
         self.set_current_datetime = capturing_set  # type: ignore[method-assign]
 
-    monkeypatch.setattr(time_panel.ClockWidget, "__init__", patched_init)
+    monkeypatch.setattr(PySideClockWidget, "__init__", patched_init)
 
     col = _make_layout(monkeypatch, fake_fetch_time)
     button = cast("pn.widgets.Button", col[2])
