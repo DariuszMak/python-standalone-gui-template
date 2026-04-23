@@ -9,7 +9,7 @@ import panel as pn
 
 from src.ui.panel_ui.settings import TICK_MS
 from src.ui.panel_ui.time_panel.api import fetch_time
-from src.ui.panel_ui.time_panel.clock_figure import _build_clock_figure, _hand_endpoint
+from src.ui.panel_ui.time_panel.clock_figure import build_clock_figure, hand_endpoint
 from src.ui.shared.controller.clock_controller import ClockController
 from src.ui.shared.helpers import format_datetime
 from src.ui.shared.model.helpers import clock_hands_in_radians
@@ -28,7 +28,7 @@ class ClockWidget:
 
         self._controller = ClockController(self._server_anchor)
 
-        self._fig, self._sources = _build_clock_figure(size)
+        self._fig, self._sources = build_clock_figure(size)
         self._pane: pn.pane.Bokeh = pn.pane.Bokeh(self._fig, sizing_mode="fixed")  # type: ignore
 
         self._cb: PeriodicCallback = pn.state.add_periodic_callback(self._tick, period=TICK_MS)
@@ -65,9 +65,9 @@ class ClockWidget:
 
         cx, cy, r = 0.0, 0.0, 1.0
 
-        ex_h, ey_h = _hand_endpoint(cx, cy, r * 0.5, hour_rad)
-        ex_m, ey_m = _hand_endpoint(cx, cy, r * 0.7, min_rad)
-        ex_s, ey_s = _hand_endpoint(cx, cy, r * 0.9, sec_rad)
+        ex_h, ey_h = hand_endpoint(cx, cy, r * 0.5, hour_rad)
+        ex_m, ey_m = hand_endpoint(cx, cy, r * 0.7, min_rad)
+        ex_s, ey_s = hand_endpoint(cx, cy, r * 0.9, sec_rad)
 
         self._sources["hour"].data = {"x": [cx, ex_h], "y": [cy, ey_h]}
         self._sources["minute"].data = {"x": [cx, ex_m], "y": [cy, ey_m]}

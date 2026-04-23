@@ -6,14 +6,14 @@ from bokeh.models import ColumnDataSource, Range1d
 from bokeh.plotting import figure
 
 
-def _hand_endpoint(cx: float, cy: float, radius: float, angle_rad: float) -> tuple[float, float]:
+def hand_endpoint(cx: float, cy: float, radius: float, angle_rad: float) -> tuple[float, float]:
     return (
         cx + math.sin(angle_rad) * radius,
         cy + math.cos(angle_rad) * radius,
     )
 
 
-def _build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSource]]:
+def build_clock_figure(size: int = 300) -> tuple[figure, dict[str, ColumnDataSource]]:
     cx, cy, r = 0.0, 0.0, 1.0
 
     p = figure(
