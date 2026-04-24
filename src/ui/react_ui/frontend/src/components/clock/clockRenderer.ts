@@ -32,12 +32,7 @@ function resizeCanvas(
   };
 }
 
-function drawFace(
-  ctx: CanvasRenderingContext2D,
-  cx: number,
-  cy: number,
-  radius: number,
-): void {
+function drawFace(ctx: CanvasRenderingContext2D, cx: number, cy: number, radius: number): void {
   const isDark = isDarkMode();
 
   ctx.fillStyle = isDark ? "#1a1a1a" : "#ffffff";
@@ -52,12 +47,7 @@ function drawFace(
   ctx.stroke();
 }
 
-function drawTicks(
-  ctx: CanvasRenderingContext2D,
-  cx: number,
-  cy: number,
-  radius: number,
-): void {
+function drawTicks(ctx: CanvasRenderingContext2D, cx: number, cy: number, radius: number): void {
   const isDark = isDarkMode();
 
   for (let i = 0; i < 60; i++) {
@@ -75,12 +65,7 @@ function drawTicks(
   }
 }
 
-function drawNumbers(
-  ctx: CanvasRenderingContext2D,
-  cx: number,
-  cy: number,
-  radius: number,
-): void {
+function drawNumbers(ctx: CanvasRenderingContext2D, cx: number, cy: number, radius: number): void {
   const isDark = isDarkMode();
   const fontSize = Math.max(8, Math.floor(radius * 0.13));
 
