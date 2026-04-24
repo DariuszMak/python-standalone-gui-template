@@ -3,7 +3,7 @@ import type { RefObject } from "react";
 import { ClockController } from "../clockController";
 import { getApiBaseUrl } from "../../config";
 
-export type ClockStatus = "loading" | "ok" | "error";
+type ClockStatus = "loading" | "ok" | "error";
 
 export interface ClockTimeRefs {
   serverAnchorRef: RefObject<Date>;
@@ -12,7 +12,7 @@ export interface ClockTimeRefs {
   readyRef: RefObject<boolean>;
 }
 
-export interface UseClockTimeResult extends ClockTimeRefs {
+interface UseClockTimeResult extends ClockTimeRefs {
   datetime: string | null;
   status: ClockStatus;
   handleReload: () => Promise<void>;

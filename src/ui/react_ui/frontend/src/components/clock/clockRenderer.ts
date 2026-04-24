@@ -2,7 +2,7 @@ import { polarToCartesian, formatTime } from "../clockHelpers";
 import type { ClockHands } from "../clockHelpers";
 import { clockHandsInRadians } from "../clockHelpers";
 
-export interface RenderState {
+interface RenderState {
   hands: ClockHands;
   now: Date;
 }
@@ -11,7 +11,7 @@ function isDarkMode(): boolean {
   return window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
 
-export function resizeCanvas(
+function resizeCanvas(
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
 ): { size: number; cx: number; cy: number; radius: number } {
@@ -32,7 +32,7 @@ export function resizeCanvas(
   };
 }
 
-export function drawFace(
+function drawFace(
   ctx: CanvasRenderingContext2D,
   cx: number,
   cy: number,
@@ -52,7 +52,7 @@ export function drawFace(
   ctx.stroke();
 }
 
-export function drawTicks(
+function drawTicks(
   ctx: CanvasRenderingContext2D,
   cx: number,
   cy: number,
@@ -75,7 +75,7 @@ export function drawTicks(
   }
 }
 
-export function drawNumbers(
+function drawNumbers(
   ctx: CanvasRenderingContext2D,
   cx: number,
   cy: number,
@@ -97,7 +97,7 @@ export function drawNumbers(
   }
 }
 
-export function drawHands(
+function drawHands(
   ctx: CanvasRenderingContext2D,
   cx: number,
   cy: number,
@@ -138,7 +138,7 @@ export function drawHands(
   ctx.fill();
 }
 
-export function drawTimeLabel(
+function drawTimeLabel(
   ctx: CanvasRenderingContext2D,
   cx: number,
   cy: number,
