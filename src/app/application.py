@@ -41,9 +41,6 @@ def create_app() -> tuple[QCoreApplication, Any, MainWindow]:
 
 
 def run() -> None:
-    app, loop, _ = create_app()
+    _app, loop, _ = create_app()
     with loop:
         sys.exit(loop.run_forever())
-
-    logger.info("Application closed")
-    app.exit(0)
