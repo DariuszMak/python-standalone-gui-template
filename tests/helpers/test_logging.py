@@ -2,7 +2,7 @@ import logging
 
 import pytest
 
-from src.helpers import logging_setup
+from src.helpers.logging_setup import logging_setup
 
 
 @pytest.fixture(autouse=True)
