@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import sys
 from typing import Any
 
@@ -9,6 +10,8 @@ from qasync import QEventLoop  # type: ignore
 
 from src.helpers.style_loader import StyleLoader
 from src.ui.pyside_ui.dialog_windows.main_window import MainWindow
+
+logger = logging.getLogger(__name__)
 
 
 def create_app() -> tuple[QCoreApplication, Any, MainWindow]:
@@ -38,6 +41,9 @@ def create_app() -> tuple[QCoreApplication, Any, MainWindow]:
 
 
 def run() -> None:
-    _app, loop, _ = create_app()
+    app, loop, _ = create_app()
     with loop:
         sys.exit(loop.run_forever())
+
+    logger.info("Application closed")
+    app.exit(0)

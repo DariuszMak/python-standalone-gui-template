@@ -1,6 +1,7 @@
 import os
 import sys
 import threading
+from venv import logger
 
 from src import node_setup, pyside_setup
 from src.api.app import run_api
@@ -14,6 +15,7 @@ TRUE_ENV_VARIABLES_VALUES = "true", "1", "t"
 logging_setup()
 
 if __name__ == "__main__":
+    logger.info("Starting application...")
     if not (getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS")):
         pyside_setup.create_mocs()
         node_setup.build_react_frontend()
