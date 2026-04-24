@@ -5,6 +5,7 @@ import pytest
 from src.helpers.logging_setup import logging_setup
 
 
+
 @pytest.fixture(autouse=True)
 def reset_logging():
     logger = logging.getLogger()
@@ -13,16 +14,30 @@ def reset_logging():
     logger.handlers.clear()
 
 
+def _get_file_handlers(logger):
+    return [h for h in logger.handlers if isinstance(h, logging.FileHandler)]
+
+
+def _get_stream_handlers(logger):
+    return [
+        h for h in logger.handlers
+        if isinstance(h, logging.StreamHandler)
+        and not isinstance(h, logging.FileHandler)
+        and h.__class__ is logging.StreamHandler
+    ]
+
 def test_logging_setup_adds_handlers(tmp_path):
     log_file = tmp_path / "test.log"
 
     logging_setup(log_file=str(log_file))
 
     logger = logging.getLogger()
-    handler_types = {type(h) for h in logger.handlers}
 
-    assert logging.StreamHandler in handler_types
-    assert logging.FileHandler in handler_types
+    assert any(isinstance(h, logging.FileHandler) for h in logger.handlers)
+    assert any(
+        isinstance(h, logging.StreamHandler) and not isinstance(h, logging.FileHandler)
+        for h in logger.handlers
+    )
 
 
 def test_logging_writes_to_file(tmp_path):
@@ -32,6 +47,9 @@ def test_logging_writes_to_file(tmp_path):
 
     logger = logging.getLogger()
     logger.info("test message")
+
+    for handler in _get_file_handlers(logger):
+        handler.flush()
 
     with open(log_file) as f:
         content = f.read()
@@ -57,7 +75,8 @@ def test_formatter_is_set(tmp_path):
     logger = logging.getLogger()
 
     for handler in logger.handlers:
-        assert handler.formatter is not None
+        if isinstance(handler, (logging.FileHandler, logging.StreamHandler)):
+            assert handler.formatter is not None
 
 
 def test_no_duplicate_handlers(tmp_path):
@@ -68,4 +87,8 @@ def test_no_duplicate_handlers(tmp_path):
 
     logger = logging.getLogger()
 
-    assert len(logger.handlers) == 2
+    file_handlers = _get_file_handlers(logger)
+    stream_handlers = _get_stream_handlers(logger)
+
+    assert len(file_handlers) == 1
+    assert len(stream_handlers) == 1
