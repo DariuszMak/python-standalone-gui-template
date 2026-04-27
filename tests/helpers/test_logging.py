@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+import structlog
 
 from src.helpers.logging_setup import logging_setup
 
@@ -38,7 +39,10 @@ def test_logging_setup_adds_handlers(tmp_path: Path) -> None:
     logger = logging.getLogger()
 
     assert any(isinstance(h, logging.FileHandler) for h in logger.handlers)
-    assert any(isinstance(h, logging.StreamHandler) and not isinstance(h, logging.FileHandler) for h in logger.handlers)
+    assert any(
+        isinstance(h, logging.StreamHandler) and not isinstance(h, logging.FileHandler)
+        for h in logger.handlers
+    )
 
 
 def test_logging_writes_to_file(tmp_path: Path) -> None:
@@ -46,16 +50,19 @@ def test_logging_writes_to_file(tmp_path: Path) -> None:
 
     logging_setup(log_file=str(log_file))
 
-    logger = logging.getLogger()
-    logger.info("test message")
+    logger = structlog.get_logger()
+    logger.info("test message", test_key="value")
 
-    for handler in _get_file_handlers(logger):
+    root_logger = logging.getLogger()
+
+    for handler in _get_file_handlers(root_logger):
         handler.flush()
 
     with open(log_file) as f:
         content = f.read()
 
     assert "test message" in content
+    assert "test_key" in content
 
 
 def test_logging_level(tmp_path: Path) -> None:

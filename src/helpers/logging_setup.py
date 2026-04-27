@@ -1,17 +1,26 @@
 import logging
-
 import structlog
 
 
 def logging_setup(level: int = logging.INFO, log_file: str = "app.log") -> None:
-    logging.basicConfig(
-        level=level,
-        format="%(message)s",
-        handlers=[
-            logging.StreamHandler(),
-            logging.FileHandler(log_file),
-        ],
-    )
+    logger = logging.getLogger()
+    logger.setLevel(level)
+
+    # 🔴 IMPORTANT: clear handlers (pytest preconfigures logging)
+    logger.handlers.clear()
+
+    formatter = logging.Formatter("%(message)s")
+
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(level)
+    console_handler.setFormatter(formatter)
+
+    file_handler = logging.FileHandler(log_file)
+    file_handler.setLevel(level)
+    file_handler.setFormatter(formatter)
+
+    logger.addHandler(console_handler)
+    logger.addHandler(file_handler)
 
     structlog.configure(
         processors=[
