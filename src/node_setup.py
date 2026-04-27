@@ -1,4 +1,4 @@
-import logging
+import structlog
 import platform
 import shutil
 import subprocess  # noqa: S404
@@ -6,8 +6,7 @@ from pathlib import Path
 
 from src import STATIC_CATALOGUE_NAME
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+logger = structlog.get_logger(__name__)
 
 REACT_DIR = Path(__file__).parent / "ui" / "react_ui"
 

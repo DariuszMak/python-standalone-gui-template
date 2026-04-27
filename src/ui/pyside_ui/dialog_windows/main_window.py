@@ -1,5 +1,5 @@
 import asyncio
-import logging
+import structlog
 import platform  # fixed: import module, not string
 
 from PySide6.QtCore import QEasingCurve, QEvent, QObject, QPropertyAnimation, Qt, QTimer
@@ -23,7 +23,7 @@ from src.ui.pyside_ui.settings import (
 )
 from src.ui.pyside_ui.tray_manager import TrayManager
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 class MainWindow(DraggableMainWindow):

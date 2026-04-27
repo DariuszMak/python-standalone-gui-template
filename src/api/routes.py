@@ -1,4 +1,4 @@
-import logging
+import structlog
 from datetime import datetime
 from pathlib import Path
 
@@ -6,7 +6,7 @@ import httpx
 from fastapi import APIRouter, Response
 from fastapi.responses import FileResponse
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 router = APIRouter()
 
 TIME_API_URLS = [

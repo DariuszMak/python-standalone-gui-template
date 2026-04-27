@@ -1,9 +1,9 @@
-import logging
-import os
+import structlog
 import subprocess  # noqa: S404
+import os
 from enum import StrEnum
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 class UiExtensions(StrEnum):

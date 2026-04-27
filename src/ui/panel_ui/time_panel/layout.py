@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import logging
+import structlog
 from datetime import datetime
 
 import panel as pn
@@ -8,7 +8,7 @@ import panel as pn
 from src.ui.panel_ui.time_panel.api import fetch_time
 from src.ui.panel_ui.time_panel.clock_widget import ClockWidget
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 pn.extension()
 
 

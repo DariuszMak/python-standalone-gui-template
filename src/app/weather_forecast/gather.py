@@ -1,4 +1,4 @@
-import logging
+import structlog
 from typing import Any
 
 import pandas as pd
@@ -7,7 +7,7 @@ from src.app.weather_forecast.client import build_openmeteo_client
 from src.app.weather_forecast.params import API_URL, build_request_params
 from src.app.weather_forecast.parsers import parse_daily_dataframe, parse_hourly_dataframe
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 def fetch_weather_response(client: Any, params: dict[str, Any]) -> Any:

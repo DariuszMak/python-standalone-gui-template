@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-import logging
+import structlog
+
 from typing import TYPE_CHECKING
 
 from src.ui.shared.controller.update_logic import update_clock_hands
@@ -11,7 +12,7 @@ from src.ui.shared.model.strategies.pid_strategy import PIDMovementStrategy
 if TYPE_CHECKING:
     from datetime import datetime
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 class ClockController:

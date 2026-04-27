@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import logging
+import structlog
 import time
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
@@ -16,7 +16,7 @@ from src.ui.shared.model.helpers import clock_hands_in_radians
 if TYPE_CHECKING:
     from panel.io.callbacks import PeriodicCallback
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 pn.extension()
 
 
