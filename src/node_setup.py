@@ -1,6 +1,6 @@
 import platform
 import shutil
-import subprocess  
+import subprocess
 from pathlib import Path
 
 import structlog
@@ -16,26 +16,22 @@ DIST_DIR: Path = FRONTEND_DIR / "dist"
 NPM_CMD: str = "npm.cmd" if platform.system() == "Windows" else "npm"
 
 
-
 def run_command(command: list[str], cwd: Path | None = None) -> str:
     log = logger.bind(command=" ".join(command), cwd=str(cwd))
     log.info("executing_command")
-    
+
     if not cwd or not Path(cwd).exists():
         log.error("directory_not_found")
         raise NotADirectoryError(f"Directory does not exist: {cwd}")
 
-    process = subprocess.run(command, cwd=cwd, capture_output=True, text=True)  
-    
+    process = subprocess.run(command, cwd=cwd, capture_output=True, text=True)
+
     if process.returncode != 0:
         log.error(
-            "command_failed", 
-            exit_code=process.returncode, 
-            stdout=process.stdout.strip(), 
-            stderr=process.stderr.strip()
+            "command_failed", exit_code=process.returncode, stdout=process.stdout.strip(), stderr=process.stderr.strip()
         )
         raise RuntimeError(f"Command {' '.join(command)} failed")
-        
+
     return process.stdout
 
 
@@ -44,7 +40,7 @@ def install_dependencies() -> None:
     if node_modules.exists():
         logger.info("skip_install", reason="node_modules_exists", path=str(node_modules))
         return
-    
+
     run_command([NPM_CMD, "install"], cwd=FRONTEND_DIR)
 
 
@@ -55,12 +51,11 @@ def build_frontend() -> None:
 def copy_dist_to_static() -> None:
     log = logger.bind(source=str(DIST_DIR), target=str(STATIC_DIR))
     log.info("syncing_dist_to_static")
-    
+
     if not DIST_DIR.exists():
         log.error("dist_missing", detail="Ensure 'npm run build' completed successfully")
         return
 
-    
     for item in DIST_DIR.iterdir():
         dest: Path = STATIC_DIR / item.name
         if item.is_dir():
@@ -75,20 +70,19 @@ def copy_dist_to_static() -> None:
                 shutil.copytree(item, dest)
         else:
             shutil.copy2(item, dest)
-            
+
     log.info("sync_complete")
 
 
 def build_react_frontend() -> None:
     log = logger.bind(pipeline="react_frontend_build")
-    
+
     try:
         install_dependencies()
         build_frontend()
         copy_dist_to_static()
         log.info("build_pipeline_success")
     except Exception as e:
-        
         log.exception("build_pipeline_failed", error_message=str(e))
         sys.exit(1)
 
