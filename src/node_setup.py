@@ -1,6 +1,7 @@
 import platform
 import shutil
 import subprocess  # noqa: S404
+import sys
 from pathlib import Path
 
 import structlog
@@ -24,7 +25,7 @@ def run_command(command: list[str], cwd: Path | None = None) -> str:
         log.error("directory_not_found")
         raise NotADirectoryError(f"Directory does not exist: {cwd}")
 
-    process = subprocess.run(command, cwd=cwd, capture_output=True, text=True)
+    process = subprocess.run(command, cwd=cwd, capture_output=True, text=True)  # noqa: S603
 
     if process.returncode != 0:
         log.error(
