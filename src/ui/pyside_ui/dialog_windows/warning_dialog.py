@@ -1,5 +1,4 @@
 import structlog
-
 from PySide6.QtCore import QEvent, Qt
 from PySide6.QtGui import QCloseEvent, QPixmap
 from PySide6.QtWidgets import QWidget

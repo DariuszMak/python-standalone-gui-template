@@ -1,7 +1,7 @@
-import structlog
 from typing import Any
 
 import pandas as pd
+import structlog
 
 from src.app.weather_forecast.client import build_openmeteo_client
 from src.app.weather_forecast.params import API_URL, build_request_params

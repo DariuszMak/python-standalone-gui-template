@@ -1,8 +1,8 @@
-import structlog
 from datetime import datetime
 from pathlib import Path
 
 import httpx
+import structlog
 from fastapi import APIRouter, Response
 from fastapi.responses import FileResponse
 

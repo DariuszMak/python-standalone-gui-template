@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import structlog
 import time
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
 import panel as pn
+import structlog
 
 from src.ui.panel_ui.settings import TICK_MS
 from src.ui.panel_ui.time_panel.clock_figure import build_clock_figure, hand_endpoint

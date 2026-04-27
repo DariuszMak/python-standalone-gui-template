@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import structlog
-
 from typing import TYPE_CHECKING
+
+import structlog
 
 from src.ui.shared.controller.update_logic import update_clock_hands
 from src.ui.shared.helpers import calculate_clock_hands_angles

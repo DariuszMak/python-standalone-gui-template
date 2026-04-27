@@ -1,8 +1,9 @@
-import structlog
 import platform
 import shutil
 import subprocess  # noqa: S404
 from pathlib import Path
+
+import structlog
 
 from src import STATIC_CATALOGUE_NAME
 

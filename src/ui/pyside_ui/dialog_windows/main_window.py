@@ -1,7 +1,7 @@
 import asyncio
-import structlog
 import platform  # fixed: import module, not string
 
+import structlog
 from PySide6.QtCore import QEasingCurve, QEvent, QObject, QPropertyAnimation, Qt, QTimer
 from PySide6.QtGui import QCloseEvent, QGuiApplication, QKeyEvent, QResizeEvent
 from PySide6.QtWidgets import QSystemTrayIcon

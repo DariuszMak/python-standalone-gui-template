@@ -1,7 +1,8 @@
-import structlog
-import subprocess  # noqa: S404
 import os
+import subprocess  # noqa: S404
 from enum import StrEnum
+
+import structlog
 
 logger = structlog.get_logger(__name__)
 

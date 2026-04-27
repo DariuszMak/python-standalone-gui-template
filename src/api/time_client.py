@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import structlog
 from datetime import datetime
 
 import httpx
+import structlog
 
 from src.api.models import ServerTimeResponse
 
