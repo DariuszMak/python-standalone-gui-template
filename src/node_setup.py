@@ -1,6 +1,6 @@
 import platform
 import shutil
-import subprocess
+import subprocess  # noqa: S404
 from pathlib import Path
 
 import structlog
