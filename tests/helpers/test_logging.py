@@ -39,10 +39,7 @@ def test_logging_setup_adds_handlers(tmp_path: Path) -> None:
     logger = logging.getLogger()
 
     assert any(isinstance(h, logging.FileHandler) for h in logger.handlers)
-    assert any(
-        isinstance(h, logging.StreamHandler) and not isinstance(h, logging.FileHandler)
-        for h in logger.handlers
-    )
+    assert any(isinstance(h, logging.StreamHandler) and not isinstance(h, logging.FileHandler) for h in logger.handlers)
 
 
 def test_logging_writes_to_file(tmp_path: Path) -> None:
