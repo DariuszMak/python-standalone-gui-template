@@ -7,7 +7,6 @@ def logging_setup(level: int = logging.INFO, log_file: str = "app.log") -> None:
     logger = logging.getLogger()
     logger.setLevel(level)
 
-    # 🔴 IMPORTANT: clear handlers (pytest preconfigures logging)
     logger.handlers.clear()
 
     formatter = logging.Formatter("%(message)s")
