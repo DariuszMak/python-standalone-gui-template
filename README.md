@@ -184,7 +184,7 @@ Start-Process wsl -ArgumentList @(
      export PANEL_PORT=$LINUX_PANEL_PORT && \
      export REACT_HOST=$LINUX_REACT_HOST && \
      export REACT_PORT=$LINUX_REACT_PORT && \
-     export LOG_FILE=$LINUX_LOG_FILE && \
+     export LOG_FILE=$(pwd)/linux_app.log && \
      ./releases/linux/GUI_client'
 )
 Start-Sleep -Seconds 30 ; 
