@@ -1,18 +1,21 @@
 import logging
-import os
 
 import structlog
 
 from src.helpers.config.config import Config
 
 
-def logging_setup(level: int = logging.INFO, config: Config | None = None) -> None:
+def logging_setup(
+    level: int = logging.INFO,
+    log_file: str | None = None,
+) -> None:
     logger = logging.getLogger()
     logger.setLevel(level)
 
     logger.handlers.clear()
 
-    log_file = config.log_file if config else "app.log"
+    if log_file is None:
+        log_file = Config().log_file
 
     formatter = logging.Formatter("%(message)s")
 

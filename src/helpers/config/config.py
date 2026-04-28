@@ -13,7 +13,6 @@ class Config(EnvLoaderMixin):
     react_port: int = 8002
     log_file: str = "app.log"
 
-
     @property
     def api_base_url(self) -> str:
         return f"http://{self.api_host}:{self.api_port}"
