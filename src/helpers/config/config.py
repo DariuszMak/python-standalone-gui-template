@@ -11,6 +11,8 @@ class Config(EnvLoaderMixin):
     panel_port: int = 8001
     react_host: str = "127.0.0.1"
     react_port: int = 8002
+    log_file: str = "app.log"
+
 
     @property
     def api_base_url(self) -> str:
