@@ -172,6 +172,10 @@ rm -r -fo .\dist, .\build ;
 
 ########## RUN APPLICATIONS LOCALLY
 
+sudo rm app.log ; 
+sudo touch app.log ; 
+sudo chmod 666 app.log ; 
+
 Start-Process wsl -ArgumentList @(
     'bash', '-c',
     'export DISPLAY=$(grep nameserver /etc/resolv.conf | awk "{print \$2}"):0 && \
