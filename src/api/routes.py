@@ -29,22 +29,33 @@ async def ping() -> dict[str, str]:
 async def current_time() -> dict[str, str]:
     async with httpx.AsyncClient(timeout=2.0) as client:
         for url in TIME_API_URLS:
+            log = logger.bind(url=url)
             try:
-                logger.info("Gathering time from Internet: %s", url)
+                log.info("fetching_external_time")
                 resp = await client.get(url)
                 resp.raise_for_status()
+
                 data = resp.json()
                 datetime_str = data.get("iso8601") or data.get("datetime")
+
                 if datetime_str:
                     dt = datetime.fromisoformat(datetime_str).astimezone()
+                    log.info("external_time_received", timestamp=dt.isoformat())
                     return {"datetime": dt.isoformat()}
-            except httpx.HTTPError:
+
+            except httpx.HTTPError as e:
+                log.warning("time_api_request_failed", error=str(e))
                 continue
-    return {"datetime": datetime.now().astimezone().isoformat()}
+
+    local_dt = datetime.now().astimezone().isoformat()
+    logger.info("falling_back_to_local_time", timestamp=local_dt)
+    return {"datetime": local_dt}
 
 
 @router.get("/{full_path:path}", include_in_schema=False)
 async def ignore_noise(full_path: str) -> Response:
     if full_path.startswith(".well-known") or full_path.endswith(".map"):
         return Response(status_code=204)
+
+    logger.debug("unhandled_path_requested", path=full_path)
     return Response(status_code=404)

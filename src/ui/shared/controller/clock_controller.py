@@ -26,6 +26,7 @@ class ClockController:
         )
 
         self._clock_hands = ClockHands(0.0, 0.0, 0.0)
+        logger.debug("clock_controller_initialized", start_time=start_time.isoformat())
 
     def update(self, now: datetime) -> None:
         duration = now - self._start_time
@@ -34,11 +35,14 @@ class ClockController:
         self._clock_hands = update_clock_hands(self._clock_hands, target, self._strategies)
 
     def reset(self, new_start_time: datetime) -> None:
+        log = logger.bind(new_start_time=new_start_time.isoformat())
+        log.info("resetting_clock_controller")
+
         self._start_time = new_start_time
         self._clock_hands = ClockHands(0.0, 0.0, 0.0)
 
-        for strategy in self._strategies:
+        for i, strategy in enumerate(self._strategies):
             try:
                 strategy.reset()
             except Exception as e:
-                logger.warning("Strategy reset failed: %s", e)
+                log.warning("strategy_reset_failed", strategy_index=i, error=str(e))

@@ -30,17 +30,20 @@ class ClockWidget:
         self._fig, self._sources = build_clock_figure(size)
         self._pane: pn.pane.Bokeh = pn.pane.Bokeh(self._fig, sizing_mode="fixed")  # type: ignore
 
+        logger.info("initializing_clock_widget", size=size, tick_ms=TICK_MS)
         self._cb: PeriodicCallback = pn.state.add_periodic_callback(self._tick, period=TICK_MS)
 
         pn.state.on_session_destroyed(self._on_session_destroyed)
 
     def _on_session_destroyed(self, _session_context: object) -> None:
+        logger.info("session_destroyed_stopping_clock")
         self.stop()
 
     def panel(self) -> pn.pane.Bokeh:
         return self._pane
 
     def set_current_datetime(self, dt: datetime) -> None:
+        logger.info("resetting_clock_anchor", new_time=dt.isoformat())
         self._server_anchor = dt
         self._wall_anchor_mono = time.monotonic()
         self._controller.reset(dt)
@@ -48,9 +51,10 @@ class ClockWidget:
     def stop(self) -> None:
         if self._cb is not None:
             try:
+                logger.debug("stopping_periodic_callback")
                 self._cb.stop()  # type: ignore[no-untyped-call]
-            except Exception as exc:
-                logger.debug("Failed to stop periodic callback", exc_info=exc)
+            except Exception as e:
+                logger.exception("failed_to_stop_callback", error=str(e))
 
     def _current_datetime(self) -> datetime:
         elapsed = time.monotonic() - self._wall_anchor_mono
@@ -72,8 +76,9 @@ class ClockWidget:
         self._sources["minute"].data = {"x": [cx, ex_m], "y": [cy, ey_m]}
         self._sources["second"].data = {"x": [cx, ex_s], "y": [cy, ey_s]}
 
+        formatted_time = format_datetime(now)
         self._sources["time_text"].data = {
             "x": [0.0],
             "y": [-0.55],
-            "text": [format_datetime(now)],
+            "text": [formatted_time],
         }
