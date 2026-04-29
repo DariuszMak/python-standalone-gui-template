@@ -197,7 +197,7 @@ newman run collections\Python_GUI_API.postman_collection.json --environment coll
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Linux.postman_environment.json ; 
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Linux.postman_environment.json ; 
 
-##### Windows runtime uses no .env file, just default values!!!
+##### Windows runtime uses no .env file, just default values
 
 Start-Process .\releases\windows\GUI_client.exe ; 
 Start-Sleep -Seconds 40 ; 
