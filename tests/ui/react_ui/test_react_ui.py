@@ -49,15 +49,18 @@ def test_run_react_ui_calls_uvicorn(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_start_react_ui_in_background(monkeypatch: pytest.MonkeyPatch) -> None:
-    class DummyConfig:
-        panel_host = "localhost"
-        react_port = 7777
+    monkeypatch.setenv("PANEL_HOST", "localhost")
+    monkeypatch.setenv("REACT_PORT", "7777")
 
-    dummy_config = DummyConfig()
     started: dict[str, Any] = {}
 
     class DummyThread:
-        def __init__(self, target: Callable[..., Any], args: tuple[Any, ...], daemon: bool) -> None:
+        def __init__(
+            self,
+            target: Callable[..., Any],
+            args: tuple[Any, ...],
+            daemon: bool,
+        ) -> None:
             started["target"] = target
             started["args"] = args
             started["daemon"] = daemon
@@ -65,11 +68,15 @@ def test_start_react_ui_in_background(monkeypatch: pytest.MonkeyPatch) -> None:
         def start(self) -> None:
             started["started"] = True
 
-    monkeypatch.setattr("src.ui.react_ui.app.Config.from_env", lambda: dummy_config)
     monkeypatch.setattr(threading, "Thread", DummyThread)
 
     start_react_ui_in_background()
 
-    assert started["args"] == ("localhost", 7777, dummy_config)
+    config = started["args"][2]
+
+    assert started["args"] == ("localhost", 7777, config)
     assert started["daemon"] is True
     assert started["started"] is True
+
+    assert config.panel_host == "localhost"
+    assert config.react_port == 7777
