@@ -199,6 +199,7 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 
 #####
 
+wsl unix2dos thorough.env ; 
 Start-Process .\releases\windows\GUI_client.exe ; 
 Start-Sleep -Seconds 40 ; 
 Start-Process "http://127.0.0.1:8000/openapi.json" ; 
