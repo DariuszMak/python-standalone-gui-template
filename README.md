@@ -172,7 +172,6 @@ rm -r -fo .\dist, .\build ;
 
 ########## RUN APPLICATIONS LOCALLY
 
-wsl dos2unix thorough.env ; 
 Start-Process wsl -ArgumentList @(
     'bash', '-c',
     'export DISPLAY=$(grep nameserver /etc/resolv.conf | awk "{print \$2}"):0 && \
