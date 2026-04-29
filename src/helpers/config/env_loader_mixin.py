@@ -1,26 +1,20 @@
 import os
 from dataclasses import fields
-from typing import Any
-
 
 class EnvLoaderMixin:
-    @classmethod
-    def from_env(cls: type) -> Any:
-        kwargs = {}
-
-        for field in fields(cls):
+    def __post_init__(self) -> None:
+        for field in fields(self):
             env_name = field.name.upper()
             raw_value = os.getenv(env_name)
 
             if raw_value is None:
-                kwargs[field.name] = field.default
                 continue
 
             if field.type is int:
-                kwargs[field.name] = int(raw_value)
+                value = int(raw_value)
             elif field.type is bool:
-                kwargs[field.name] = raw_value.lower() in {"1", "true", "yes"}
+                value = raw_value.lower() in {"1", "true", "yes"}
             else:
-                kwargs[field.name] = raw_value
+                value = raw_value
 
-        return cls(**kwargs)
+            object.__setattr__(self, field.name, value)
