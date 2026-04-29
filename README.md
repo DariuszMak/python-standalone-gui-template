@@ -172,7 +172,6 @@ rm -r -fo .\dist, .\build ;
 
 ########## RUN APPLICATIONS LOCALLY
 
-wsl bash -c "touch app_linux.log && chmod 666 app_linux.log" ; 
 wsl dos2unix thorough.env ; 
 Start-Process wsl -ArgumentList @(
     'bash', '-c',
