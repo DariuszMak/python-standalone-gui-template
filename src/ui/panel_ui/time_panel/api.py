@@ -6,7 +6,7 @@ from src.helpers.config.config import Config
 
 
 async def fetch_time() -> str:
- 
+
     config = Config()
 
     async with httpx.AsyncClient(timeout=2.0) as client:
