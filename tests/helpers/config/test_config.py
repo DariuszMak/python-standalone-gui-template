@@ -42,7 +42,7 @@ def test_config_custom_values() -> None:
     assert config.react_base_url == "http://react.example.com:6000"
 
 
-def test_config_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_config_initialization(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("API_HOST", "env.example.com")
     monkeypatch.setenv("API_PORT", "8080")
     monkeypatch.setenv("PANEL_HOST", "panel.env.example.com")
@@ -65,7 +65,7 @@ def test_config_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     assert config.react_base_url == "http://react.env.example.com:7070"
 
 
-def test_config_from_env_partial(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_config_initialization_partial(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("API_HOST", raising=False)
     monkeypatch.setenv("API_PORT", "9090")
 
