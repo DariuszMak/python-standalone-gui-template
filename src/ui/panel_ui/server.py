@@ -7,7 +7,7 @@ from src.ui.panel_ui.time_panel.layout import create_layout
 
 
 def run_panel() -> None:
-    config = Config.from_env()
+    config = Config()
 
     serve(
         {

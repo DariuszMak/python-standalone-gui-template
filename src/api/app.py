@@ -23,7 +23,7 @@ app.include_router(router)
 
 
 def run_api() -> None:
-    config = Config.from_env()
+    config = Config()
 
     uvicorn_config = uvicorn.Config(
         app,

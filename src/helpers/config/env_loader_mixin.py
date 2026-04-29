@@ -1,6 +1,7 @@
 import os
 from dataclasses import fields
 
+
 class EnvLoaderMixin:
     def __post_init__(self) -> None:
         for field in fields(self):

@@ -34,7 +34,7 @@ class MainWindow(DraggableMainWindow):
         self._is_closing = False
         self._server_time_task: asyncio.Task[None] | None = None
 
-        config = Config.from_env()
+        config = Config()
         self._time_client = TimeClient(config.api_base_url)
 
         self._tray: TrayManager | None

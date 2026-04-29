@@ -50,7 +50,7 @@ def test_config_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("REACT_HOST", "react.env.example.com")
     monkeypatch.setenv("REACT_PORT", "7070")
 
-    config = Config.from_env()
+    config = Config()
 
     assert config.api_host == "env.example.com"
     assert config.api_port == 8080
@@ -75,7 +75,7 @@ def test_config_from_env_partial(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("REACT_HOST", raising=False)
     monkeypatch.setenv("REACT_PORT", "6060")
 
-    config = Config.from_env()
+    config = Config()
 
     assert config.api_host == "127.0.0.1"
     assert config.api_port == 9090

@@ -14,7 +14,7 @@ from src.helpers.config.config import Config
 
 
 def create_app(config: Config | None = None) -> FastAPI:
-    cfg = config or Config.from_env()
+    cfg = config or Config()
 
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
         static_dir = Path(sys._MEIPASS) / STATIC_CATALOGUE_NAME
@@ -56,14 +56,14 @@ app = create_app()
 
 
 def run_react_ui(host: str | None = None, port: int | None = None, config: Config | None = None) -> None:
-    cfg = config or Config.from_env()
+    cfg = config or Config()
     host_str: str = str(host or os.getenv("REACT_HOST") or "127.0.0.1")
     port_int: int = port or int(os.getenv("REACT_PORT", "8000"))
     uvicorn.run(create_app(cfg), host=host_str, port=port_int, log_level="info")
 
 
 def start_react_ui_in_background() -> None:
-    config: Config = Config.from_env()
+    config: Config = Config()
     host: str = config.panel_host or "127.0.0.1"
     port: int = config.react_port or 8000
 
