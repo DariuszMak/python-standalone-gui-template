@@ -1,10 +1,15 @@
 import os
 from dataclasses import MISSING, fields
+from typing import Any, Protocol, cast
+
+
+class DataclassInstance(Protocol):
+    __dataclass_fields__: dict[str, Any]
 
 
 class EnvLoaderMixin:
     def __post_init__(self) -> None:
-        for field in fields(self):
+        for field in fields(cast("Any", self)):
             env_name = field.name.upper()
             raw_value = os.getenv(env_name)
 
@@ -23,6 +28,7 @@ class EnvLoaderMixin:
             if current_value != default_value:
                 continue
 
+            value: Any
             if field.type is int:
                 value = int(raw_value)
             elif field.type is bool:
