@@ -10,6 +10,7 @@ logger = structlog.get_logger(__name__)
 class TimeProvider(ABC):
     @abstractmethod
     async def fetch_time(self) -> datetime | None:
+        pass
 
 
 class HttpTimeProvider(TimeProvider):
