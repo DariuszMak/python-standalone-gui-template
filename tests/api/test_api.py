@@ -3,9 +3,9 @@ from datetime import UTC, datetime
 import httpx
 import pytest
 from fastapi.testclient import TestClient
-from src.api.routes import set_time_sync_context
 
 from src.api.app import app
+from src.api.routes import set_time_sync_context
 from src.api.time_providers import (
     AisenseApiProvider,
     GettimeApiProvider,
