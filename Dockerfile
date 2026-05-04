@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1
-
 ARG PYTHON_VERSION
 FROM python:${PYTHON_VERSION}-slim
 
@@ -26,8 +24,9 @@ RUN apt-get update && apt-get install -y \
     libqt5network5 \
     dos2unix \
     curl \
-    && pip install uv \
     && rm -rf /var/lib/apt/lists/*
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 
 RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && apt-get install -y nodejs \
