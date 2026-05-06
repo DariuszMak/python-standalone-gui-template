@@ -92,6 +92,16 @@ uv run python src\node_setup.py ;
 .\src\ui\react_ui\frontend\frontend_test.ps1 ; 
 uv run pytest tests/ --cov=src -vv ; 
 
+########## UPDATE DIAGRAMS
+
+uv run pydeps src\main.py --noshow -T svg -o images\structure_runner_clustered.svg --max-bacon 100 --max-module-depth 100 --rankdir LR --cluster ; 
+uv run pydeps src\main.py --noshow -T svg -o images\structure_runner.svg --max-bacon 2 --max-module-depth 100 --rankdir LR ; 
+uv run pydeps src\main.py --noshow -T svg -o images\structure_runner_pylib.svg --max-bacon 2 --max-module-depth 100 --rankdir LR --pylib ; 
+
+uv run pydeps src --noshow -T svg -o images\structure_module_clustered.svg --max-bacon 100 --max-module-depth 100 --rankdir LR --cluster ; 
+uv run pydeps src --noshow -T svg -o images\structure_module.svg --max-bacon 2 --max-module-depth 100 --rankdir LR ; 
+uv run pydeps src --noshow -T svg -o images\structure_module_pylib.svg --max-bacon 2 --max-module-depth 100 --rankdir LR --pylib ; 
+
 ########## RUN APPLICATION LOCALLY
 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
