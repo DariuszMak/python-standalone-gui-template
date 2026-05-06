@@ -23,6 +23,12 @@
   </tr>
 </table>
 
+### Project structure diagram:
+
+<p align="center">
+  <img src="images/structure_module.svg" alt="Project Structure Diagram" width="600">
+</p>
+
 ## Requirements
 
 - [UV](https://github.com/astral-sh/uv) package manager
