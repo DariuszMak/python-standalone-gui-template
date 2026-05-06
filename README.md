@@ -1,6 +1,6 @@
 # Python Standalone GUI template
 
-### Executable files do download for Windows and Linux:
+### Executable files do download for Windows and Linux
 
 <table>
   <tr>
@@ -23,7 +23,7 @@
   </tr>
 </table>
 
-### Project structure diagram:
+### Project structure diagram
 
 <p align="center">
   <img src="images/structure_module.svg" alt="Project Structure Diagram" width="600">
@@ -35,11 +35,11 @@
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
 
-## Local development (Windows PowerShell):
+## Local development (Windows PowerShell)
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
 
-## Fast native Windows development:
+## Fast native Windows development
 
 ```commandline
 deactivate ; 
@@ -117,7 +117,7 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Dev_Windows.postman_environment.json ; 
 ```
 
-## Thorough setup from scratch for Windows and Linux enviroment:
+## Thorough setup from scratch for Windows and Linux enviroment
 
 ```commandline
 deactivate ; 
@@ -230,7 +230,7 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 uv sync --dev --locked --no-cache ; 
 ```
 
-## Edit `ui` forms with QT Designer:
+## Edit `ui` forms with QT Designer
 
 ```commandline
 uv run pyside6-designer src\ui\pyside_ui\forms\main_window.ui ; 
