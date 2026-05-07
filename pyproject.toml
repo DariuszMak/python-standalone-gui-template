@@ -227,15 +227,15 @@ omit = ["tests/*"]
 output = "coverage.xml"
 
 [tool.importlinter]
-root_package = "my_package"
+root_package = "src"
 
 [[tool.importlinter.contracts]]
 name = "Layered architecture"
 type = "layers"
 layers = [
-    "my_package.high_level",
-    "my_package.services",
-    "my_package.domain",
-    "my_package.data_access",
+    "src.high_level",
+    "src.services",
+    "src.domain",
+    "src.data_access",
 ]
-containers = ["my_package"]
+containers = ["src"]
