@@ -102,6 +102,24 @@ Start-Process .\htmlcov\index.html ;
 # uv run pydeps src --noshow -T svg -o images\structure_module.svg --max-bacon 2 --max-module-depth 100 --rankdir LR ; 
 # uv run pydeps src --noshow -T svg -o images\structure_module_pylib.svg --max-bacon 2 --max-module-depth 100 --rankdir LR --pylib ; 
 
+$files = Get-ChildItem "images" -Filter "*.svg"
+
+foreach ($file in $files) {
+
+    $svg = Get-Content $file.FullName -Raw
+    $svg = $svg -replace 'fill="white"', 'fill="#1e1e1e"'
+    $svg = $svg -replace 'fill="blue"', 'fill="#2b2b2b"'
+    $svg = $svg -replace 'fill="#ffffff"', 'fill="#2b2b2b"'
+    $svg = $svg -replace 'stroke="black"', 'stroke="#888888"'
+    $svg = $svg -replace 'fill="black"', 'fill="#e6e6e6"'
+    $svg = $svg -replace '<polygon fill="#?white"', '<polygon fill="#1e1e1e"'
+    if ($svg -notmatch 'background-color') {
+        $svg = $svg -replace '<svg', '<svg style="background-color:#1e1e1e"'
+    }
+    Set-Content -Path $file.FullName -Value $svg -Encoding UTF8
+    Write-Host "Converted: $($file.Name)"
+}
+
 ########## RUN APPLICATION LOCALLY
 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
