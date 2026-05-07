@@ -110,7 +110,7 @@ foreach ($file in $files) {
     $svg = $svg -replace '<svg', '<svg style="background-color:#141414"'
     $svg = $svg -replace 'fill="blue"', 'fill="#5a5a5a"'
     $svg = $svg -replace 'fill="#ffffff"', 'fill="#2e2e2e"'
-    $svg = $svg -replace 'stroke="black"', 'stroke="#5f5f5f"'
+    $svg = $svg -replace 'stroke="black"', 'stroke="#ffffff"'
     $svg = $svg -replace 'stroke="#000000"', 'stroke="#5f5f5f"'
     $svg = $svg -replace '<text([^>]*)fill="[^"]+"', '<text$1fill="#e0e0e0"'
     $svg = $svg -replace '<g class="cluster">', '<g class="cluster" style="opacity:0.85"'
