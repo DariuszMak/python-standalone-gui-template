@@ -226,6 +226,7 @@ omit = ["tests/*"]
 [tool.coverage.xml]
 output = "coverage.xml"
 
+
 [tool.importlinter]
 root_package = "src"
 
@@ -233,9 +234,34 @@ root_package = "src"
 name = "Layered architecture"
 type = "layers"
 layers = [
-    "src.high_level",
-    "src.services",
-    "src.domain",
-    "src.data_access",
+    "src.ui",       # Top: User Interfaces
+    "src.app",      # Mid: Orchestration (weather_forecast)
+    "src.api",      # Mid: Data Fetching (time_client, models)
+    "src.helpers"   # Base: Utility functions (logging, config)
 ]
 containers = ["src"]
+
+[[tool.importlinter.contracts]]
+name = "UI Framework Independence"
+type = "independence"
+modules = [
+    "src.ui.pyside_ui",
+    "src.ui.react_ui",
+    "src.ui.panel_ui"
+]
+
+[[tool.importlinter.contracts]]
+name = "Helpers must be side-effect free and independent"
+type = "forbidden"
+source_modules = ["src.helpers"]
+forbidden_modules = [
+    "src.ui",
+    "src.app",
+    "src.api"
+]
+
+[[tool.importlinter.contracts]]
+name = "API is independent of UI"
+type = "forbidden"
+source_modules = ["src.api"]
+forbidden_modules = ["src.ui"]
