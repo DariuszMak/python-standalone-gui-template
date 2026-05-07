@@ -107,14 +107,14 @@ $files = Get-ChildItem "images" -Filter "*.svg"
 foreach ($file in $files) {
 
     $svg = Get-Content $file.FullName -Raw
-    $svg = $svg -replace 'fill="white"', 'fill="#1e1e1e"'
-    $svg = $svg -replace 'fill="blue"', 'fill="#2b2b2b"'
-    $svg = $svg -replace 'fill="#ffffff"', 'fill="#2b2b2b"'
+    $svg = $svg -replace 'fill="white"', 'fill="#575757"'
+    $svg = $svg -replace 'fill="blue"', 'fill="#0054b4"'
+    $svg = $svg -replace 'fill="#ffffff"', 'fill="#5f5f5f"'
     $svg = $svg -replace 'stroke="black"', 'stroke="#888888"'
-    $svg = $svg -replace 'fill="black"', 'fill="#e6e6e6"'
-    $svg = $svg -replace '<polygon fill="#?white"', '<polygon fill="#1e1e1e"'
+    $svg = $svg -replace 'fill="black"', 'fill="#f7f7f7"'
+    $svg = $svg -replace '<polygon fill="#?white"', '<polygon fill="#8a8a8a"'
     if ($svg -notmatch 'background-color') {
-        $svg = $svg -replace '<svg', '<svg style="background-color:#1e1e1e"'
+        $svg = $svg -replace '<svg', '<svg style="background-color:#0576ba"'
     }
     Set-Content -Path $file.FullName -Value $svg -Encoding UTF8
     Write-Host "Converted: $($file.Name)"
