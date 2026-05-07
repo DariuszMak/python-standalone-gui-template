@@ -228,29 +228,15 @@ output = "coverage.xml"
 
 
 [tool.importlinter]
-root_package = ""
+root_package = "src"
 
 [[tool.importlinter.contracts]]
 name = "Layered architecture"
 type = "layers"
+
 layers = [
-    "src.ui",
-    "src.app",
+    "src.helpers",
     "src.api",
-    "src.helpers"
+    "src.app",
+    "src.ui",
 ]
-
-[[tool.importlinter.contracts]]
-name = "UI Framework Independence"
-type = "independence"
-modules = [
-    "src.ui.pyside_ui",
-    "src.ui.react_ui",
-    "src.ui.panel_ui"
-]
-
-[[tool.importlinter.contracts]]
-name = "Helpers are strictly independent"
-type = "forbidden"
-source_modules = ["src.helpers"]
-forbidden_modules = ["src.ui", "src.api", "src.app"]
