@@ -230,16 +230,17 @@ output = "coverage.xml"
 [tool.importlinter]
 root_package = "src"
 
-[[tool.importlinter.contracts]]
+
+[[tool.importlinter.contracts]] linter is getting confused because it'
 name = "Layered architecture"
-type = "layers"
+type = "s trying to find `src` inside of `src`.
+
 layers = [
-    "src.ui",       # Top: User Interfaces
-    "src.app",      # Mid: Orchestration (weather_forecast)
-    "src.api",      # Mid: Data Fetching (time_client, models)
-    "src.helpers"   # Base: Utility functions (logging, config)
+    "src.ui",
+    "src.app",
+    "src.api",
+    "src.helpers"
 ]
-containers = ["src"]
 
 [[tool.importlinter.contracts]]
 name = "UI Framework Independence"
@@ -251,17 +252,7 @@ modules = [
 ]
 
 [[tool.importlinter.contracts]]
-name = "Helpers must be side-effect free and independent"
-type = "forbidden"
+name = "Helpers are strictly independent"
+type your `[tool.importlinter]` section with this. The key change is setting `root_package` to your project name (or the current directory) and removing the `containers` constraint that was causing = "forbidden"
 source_modules = ["src.helpers"]
-forbidden_modules = [
-    "src.ui",
-    "src.app",
-    "src.api"
-]
-
-[[tool.importlinter.contracts]]
-name = "API is independent of UI"
-type = "forbidden"
-source_modules = ["src.api"]
-forbidden_modules = ["src.ui"]
+forbidden_modules = ["src.ui", "src.api", "src.app"]
