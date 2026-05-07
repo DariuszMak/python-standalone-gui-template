@@ -228,13 +228,11 @@ output = "coverage.xml"
 
 
 [tool.importlinter]
-root_package = "src"
+root_package = ""
 
-
-[[tool.importlinter.contracts]] linter is getting confused because it'
+[[tool.importlinter.contracts]]
 name = "Layered architecture"
-type = "s trying to find `src` inside of `src`.
-
+type = "layers"
 layers = [
     "src.ui",
     "src.app",
@@ -253,6 +251,6 @@ modules = [
 
 [[tool.importlinter.contracts]]
 name = "Helpers are strictly independent"
-type your `[tool.importlinter]` section with this. The key change is setting `root_package` to your project name (or the current directory) and removing the `containers` constraint that was causing = "forbidden"
+type = "forbidden"
 source_modules = ["src.helpers"]
 forbidden_modules = ["src.ui", "src.api", "src.app"]
