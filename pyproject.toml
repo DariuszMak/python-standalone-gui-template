@@ -34,6 +34,7 @@ dev = [
     "ruff>=0.11.13",
     "setuptools>=80.9.0",
     "vulture>=2.16",
+    "import-linter>=2.11",
 ]
 
 [tool.mypy]
@@ -224,3 +225,17 @@ omit = ["tests/*"]
 
 [tool.coverage.xml]
 output = "coverage.xml"
+
+[tool.importlinter]
+root_package = "my_package"
+
+[[tool.importlinter.contracts]]
+name = "Layered architecture"
+type = "layers"
+layers = [
+    "my_package.high_level",
+    "my_package.services",
+    "my_package.domain",
+    "my_package.data_access",
+]
+containers = ["my_package"]

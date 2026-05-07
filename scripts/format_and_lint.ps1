@@ -15,3 +15,5 @@ uv run mypy --strict tests src --exclude 'moc_.*\.py|files_rc\.py'
 # uv run mypy --explicit-package-bases tests src --exclude 'moc_.*\.py|files_rc\.py'
 # uv run mypy --explicit-package-bases --check-untyped-defs tests src --exclude 'moc_.*\.py|files_rc\.py'
 # uv run mypy --strict tests src
+
+uv run lint-imports --config pyproject.toml
