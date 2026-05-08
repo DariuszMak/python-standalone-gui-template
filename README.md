@@ -100,7 +100,7 @@ Start-Process .\htmlcov\index.html ;
 
 ```
 docker run --rm `
-  --network host `
+  --network python-standalone-gui-template_default `
   --env-file .sonar.env `
   -v "${PWD}:/usr/src" `
   sonarsource/sonar-scanner-cli
