@@ -104,7 +104,8 @@ docker run --rm `
   -v "${PWD}:/usr/src" `
   sonarsource/sonar-scanner-cli
 
-# click on the link at the end of the analysis
+# click on the link at the end of the analysis at the end of report
+# click on the link that shows the conifguration notes at the end of report
 
 ########## UPDATE DIAGRAMS
 
