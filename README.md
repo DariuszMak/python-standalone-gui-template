@@ -95,8 +95,8 @@ Start-Process .\htmlcov\index.html ;
 
 # Run: `docker compose up -d sonarqube sonardb ; `
 
-# Go to `http://127.0.0.1:9000`
 # Login as `admin` with `admin` password, then change the password to `Admin1@Admin1@`
+# Go to `http://127.0.0.1:9000/account/security` -> `Generate Tokens` -> `Global Analysis Token`, create one
 
 ```
 docker run --rm `
