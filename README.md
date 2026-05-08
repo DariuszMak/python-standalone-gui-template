@@ -92,20 +92,22 @@ uv run python src\node_setup.py ;
 uv run pytest tests/ --cov=src --cov-report=html --cov-report=xml --cov-config=.coveragerc -vv ; 
 Start-Process .\htmlcov\index.html ; 
 
-# docker compose up -d sonarqube sonardb ; 
+# Run: `docker compose up -d sonarqube sonardb ; `
 
-# login as `admin` with `admin` password, then change the password to `Admin1@Admin1@`
-# go to `http://127.0.0.1:9000/account/security` -> `Generate Tokens` -> global, create one
+# Login as `admin` with `admin` password, then change the password to `Admin1@Admin1@`
+# Go to `http://127.0.0.1:9000/account/security` -> `Generate Tokens` -> global, create one
 
+```
 docker run --rm `
   --network host `
   -e SONAR_HOST_URL="http://localhost:9000" `
   -e SONAR_TOKEN="<TOKEN>" `
   -v "${PWD}:/usr/src" `
   sonarsource/sonar-scanner-cli
+```
 
-# click on the link at the end of the analysis at the end of report
-# click on the link that shows the conifguration notes at the end of report
+# Click on the link at the end of the analysis at the end of report
+# Click on the link that shows the conifguration notes at the end of report
 
 ########## UPDATE DIAGRAMS
 
