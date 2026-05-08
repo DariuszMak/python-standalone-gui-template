@@ -92,6 +92,13 @@ uv run python src\node_setup.py ;
 uv run pytest tests/ --cov=src --cov-report=html --cov-report=xml -vv ; 
 Start-Process .\htmlcov\index.html ; 
 
+docker run --rm `
+  --network host `
+  -e SONAR_HOST_URL="http://localhost:9000" `
+  -e SONAR_LOGIN="admin" `
+  -v "${PWD}:/usr/src" `
+  sonarsource/sonar-scanner-cli
+
 ########## UPDATE DIAGRAMS
 
 # uv run pydeps src\main.py --noshow -T svg -o images\structure_runner_clustered.svg --max-bacon 100 --max-module-depth 100 --rankdir LR --cluster ; 
