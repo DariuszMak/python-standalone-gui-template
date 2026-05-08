@@ -101,7 +101,7 @@ Start-Process .\htmlcov\index.html ;
 docker run --rm `
   --network host `
   -e SONAR_HOST_URL="http://localhost:9000" `
-  -e SONAR_TOKEN="<TOKEN>" `
+  -e SONAR_TOKEN="sqa_20ca1cbe401bf02b1b9a90e97fbb049c4872d10f" `
   -v "${PWD}:/usr/src" `
   sonarsource/sonar-scanner-cli
 ```
