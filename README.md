@@ -93,21 +93,107 @@ uv run python src\node_setup.py ;
 uv run pytest tests/ --cov=src --cov-report=html --cov-report=xml --cov-config=.coveragerc -vv ; 
 Start-Process .\htmlcov\index.html ; 
 
-# Run: `docker compose up -d sonarqube sonardb ; `
+########## SONARQUBE
 
-# Login as `admin` with `admin` password, then change the password to `Admin1@Admin1@`
-# Go to `http://127.0.0.1:9000/account/security` -> `Generate Tokens` -> `Global Analysis Token`, create one
+# Start SonarQube + DB
+docker compose up -d sonarqube sonardb
 
-```
-docker run --rm `
-  --network python-standalone-gui-template_default `
-  --env-file .sonar.env `
-  -v "${PWD}:/usr/src" `
-  sonarsource/sonar-scanner-cli
-```
+Write-Host "Waiting for SonarQube to start..."
 
-# Click on the link at the end of the analysis at the end of report
-# Click on the link that shows the conifguration notes at the end of report
+# Wait until SonarQube API responds
+do {
+    Start-Sleep -Seconds 5
+
+    try {
+        $status = Invoke-RestMethod `
+            -Uri "http://127.0.0.1:9000/api/system/status" `
+            -Method Get
+    }
+    catch {
+        $status = $null
+    }
+
+} until ($status.status -eq "UP")
+
+Write-Host "SonarQube is UP"
+
+# Default credentials
+$oldPassword = "admin"
+$newPassword = "Admin1@Admin1@"
+
+$pair = "admin:$oldPassword"
+$encoded = [Convert]::ToBase64String(
+    [Text.Encoding]::ASCII.GetBytes($pair)
+)
+
+$headers = @{
+    Authorization = "Basic $encoded"
+}
+
+# Change admin password
+Invoke-RestMethod `
+    -Uri "http://127.0.0.1:9000/api/users/change_password" `
+    -Method Post `
+    -Headers $headers `
+    -Body @{
+        login = "admin"
+        previousPassword = $oldPassword
+        password = $newPassword
+    }
+
+Write-Host "Password changed"
+
+# Authenticate with new password
+$newPair = "admin:$newPassword"
+$newEncoded = [Convert]::ToBase64String(
+    [Text.Encoding]::ASCII.GetBytes($newPair)
+)
+
+$newHeaders = @{
+    Authorization = "Basic $newEncoded"
+}
+
+# Generate token
+$tokenName = "global-analysis-token"
+
+$tokenResponse = Invoke-RestMethod `
+    -Uri "http://127.0.0.1:9000/api/user_tokens/generate" `
+    -Method Post `
+    -Headers $newHeaders `
+    -Body @{
+        name = $tokenName
+        type = "GLOBAL_ANALYSIS_TOKEN"
+    }
+
+$token = $tokenResponse.token
+
+Write-Host "Generated token:"
+Write-Host $token
+
+# Create .sonar.env dynamically
+@"
+SONAR_HOST_URL=http://host.docker.internal:9000
+SONAR_TOKEN=$token
+"@ | Out-File -Encoding utf8 ".sonar.env"
+
+# Run scanner
+$scannerOutput = docker run --rm `
+    --network python-standalone-gui-template_default `
+    --env-file .sonar.env `
+    -v "${PWD}:/usr/src" `
+    sonarsource/sonar-scanner-cli 2>&1
+
+$scannerOutput
+
+# Extract report URL
+$reportUrl = ($scannerOutput | Select-String "http://.*dashboard.*").Matches.Value | Select-Object -First 1
+
+if ($reportUrl) {
+    Write-Host "Opening report:"
+    Write-Host $reportUrl
+
+    Start-Process $reportUrl
+}
 
 ########## UPDATE DIAGRAMS
 
