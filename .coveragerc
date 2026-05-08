@@ -1,0 +1,9 @@
+[run]
+relative_files = True
+source = src
+
+[paths]
+source =
+    src
+    /usr/src/src
+    C:/Users/admin/Documents/Repos/python-standalone-gui-template/src

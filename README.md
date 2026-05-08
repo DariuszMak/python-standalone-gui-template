@@ -89,7 +89,7 @@ uv run python src\node_setup.py ;
 .\src\ui\react_ui\frontend\frontend_format_and_lint.ps1 ; 
 
 .\src\ui\react_ui\frontend\frontend_test.ps1 ; 
-uv run pytest tests/ --cov=src --cov-report=html --cov-report=xml -vv ; 
+uv run pytest tests/ --cov=src --cov-report=html --cov-report=xml --cov-config=.coveragerc -vv ; 
 Start-Process .\htmlcov\index.html ; 
 
 # docker compose up -d sonarqube sonardb ; 
