@@ -48,6 +48,7 @@ docker system df ;
 docker stop $(docker ps -a -q) ; 
 docker rm -f $(docker ps -a -q) ; 
 docker system prune --volumes -a -f ; 
+docker volume rm -f $(docker volume ls -q) ; 
 docker system df ; 
 
 $ports = 8000, 8001, 8002, 9000
