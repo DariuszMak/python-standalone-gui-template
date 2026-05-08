@@ -8,7 +8,11 @@ uv run pip-audit
 uv run ruff check tests src --exclude 'moc_.*\.py|files_rc\.py'
 uv run ruff format --check tests src --exclude 'moc_.*\.py|files_rc\.py'
 
+uv run ruff check tests src --output-format json > ruff-report.json
+
+
 uv run vulture src tests --exclude "src/ui/pyside_ui/forms" --min-confidence 80
+
 
 uv run mypy --strict tests src --exclude 'moc_.*\.py|files_rc\.py'
 
