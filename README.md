@@ -92,6 +92,8 @@ uv run python src\node_setup.py ;
 uv run pytest tests/ --cov=src --cov-report=html --cov-report=xml -vv ; 
 Start-Process .\htmlcov\index.html ; 
 
+# docker compose up -d sonarqube sonardb ; 
+
 docker run --rm `
   --network host `
   -e SONAR_HOST_URL="http://localhost:9000" `
