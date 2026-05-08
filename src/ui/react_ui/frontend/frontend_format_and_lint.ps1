@@ -8,4 +8,6 @@ npx --yes tsc --noEmit
 npx --yes vite build
 npx knip
 
+npm run coverage
+
 Pop-Location
