@@ -94,7 +94,7 @@ Start-Process .\htmlcov\index.html ;
 
 # docker compose up -d sonarqube sonardb ; 
 
-# login, change password to Admin1@Admin1@
+# login as `admin` with `admin` password, then change the password to `Admin1@Admin1@`
 # go to `http://127.0.0.1:9000/account/security` -> `Generate Tokens` -> global, create one
 
 docker run --rm `
@@ -103,6 +103,8 @@ docker run --rm `
   -e SONAR_TOKEN="sqa_20ca1cbe401bf02b1b9a90e97fbb049c4872d10f" `
   -v "${PWD}:/usr/src" `
   sonarsource/sonar-scanner-cli
+
+# click on the link at the end of the analysis
 
 ########## UPDATE DIAGRAMS
 
