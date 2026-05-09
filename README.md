@@ -186,13 +186,16 @@ SONAR_HOST_URL=http://host.docker.internal:9000
 SONAR_TOKEN=$token
 "@ | Out-File -Encoding utf8 ".sonar.env"
 
+(Get-Content coverage/lcov.info) `
+-replace '\\','/' `
+| Set-Content coverage/lcov.info
+
 # Run scanner
 $scannerOutput = docker run --rm `
     --network python-standalone-gui-template_default `
     --env-file .sonar.env `
     -v "${PWD}:/usr/src" `
     sonarsource/sonar-scanner-cli 2>&1
-
 $scannerOutput
 
 # Extract report URL
