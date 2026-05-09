@@ -188,16 +188,6 @@ SONAR_HOST_URL=http://host.docker.internal:9000
 SONAR_TOKEN=$token
 "@ | Out-File -Encoding utf8 ".sonar.env"
 
-(Get-Content src\ui\react_ui\frontend\coverage\lcov.info) `
--replace '\\','/' `
-| Set-Content src\ui\react_ui\frontend\coverage\lcov.info
-
-$content = Get-Content src\ui\react_ui\frontend\coverage\lcov.info -Raw
-$content = $content.Replace('SF:src/', 'SF:src/ui/react_ui/frontend/src/')
-Set-Content src\ui\react_ui\frontend\coverage\lcov.info $content
-
-Get-Content src\ui\react_ui\frontend\coverage\lcov.info | Select-String "^SF:"
-
 # Run scanner
 $scannerOutput = docker run --rm `
     --network python-standalone-gui-template_default `
