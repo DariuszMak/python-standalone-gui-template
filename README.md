@@ -190,6 +190,10 @@ SONAR_TOKEN=$token
 -replace '\\','/' `
 | Set-Content src\ui\react_ui\frontend\coverage\lcov.info
 
+$content = Get-Content src\ui\react_ui\frontend\coverage\lcov.info -Raw
+$content = $content.Replace('SF:src/', 'SF:src/ui/react_ui/frontend/src/')
+Set-Content src\ui\react_ui\frontend\coverage\lcov.info $content
+
 Get-Content src\ui\react_ui\frontend\coverage\lcov.info | Select-String "^SF:"
 
 # Run scanner
