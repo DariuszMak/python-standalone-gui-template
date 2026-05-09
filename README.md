@@ -46,6 +46,8 @@
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
 
+Login in SonarQube as `admin` with password `Admin1@Admin1@`.
+
 ## Fast native Windows development
 
 ```commandline
