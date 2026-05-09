@@ -23,10 +23,18 @@
   </tr>
 </table>
 
-### Project structure diagram
+### Project structure diagrams
+
+##### Modular perspective
 
 <p align="center">
   <img src="images/structure_module.svg" alt="Project Structure Diagram" width="600">
+</p>
+
+##### Library dependencies perspective
+
+<p align="center">
+  <img src="images/structure_module_clustered.svg" alt="Project Structure Diagram" width="600">
 </p>
 
 ## Requirements
