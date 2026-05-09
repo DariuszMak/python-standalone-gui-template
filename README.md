@@ -186,9 +186,11 @@ SONAR_HOST_URL=http://host.docker.internal:9000
 SONAR_TOKEN=$token
 "@ | Out-File -Encoding utf8 ".sonar.env"
 
-(Get-Content coverage/lcov.info) `
+(Get-Content src\ui\react_ui\frontend\coverage\lcov.info) `
 -replace '\\','/' `
-| Set-Content coverage/lcov.info
+| Set-Content src\ui\react_ui\frontend\coverage\lcov.info
+
+Get-Content src\ui\react_ui\frontend\coverage\lcov.info | Select-String "^SF:"
 
 # Run scanner
 $scannerOutput = docker run --rm `
