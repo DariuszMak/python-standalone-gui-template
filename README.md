@@ -204,14 +204,14 @@ $scannerOutput = docker run --rm `
     sonarsource/sonar-scanner-cli 2>&1
 $scannerOutput
 
-# Extract report URL
-$reportUrl = ($scannerOutput | Select-String "http://.*dashboard.*").Matches.Value | Select-Object -First 1
+$reportUrls = ($scannerOutput |
+    Select-String "http://\S+") |
+    ForEach-Object { $_.Matches.Value }
 
-if ($reportUrl) {
-    Write-Host "Opening report:"
-    Write-Host $reportUrl
-
-    Start-Process $reportUrl
+foreach ($url in $reportUrls) {
+    Write-Host "Opening:"
+    Write-Host $url
+    Start-Process $url
 }
 
 ########## UPDATE DIAGRAMS
