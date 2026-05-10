@@ -83,6 +83,8 @@ uv cache clean ;
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
 
+#####
+
 uv python install 3.11 ; 
 uv python pin 3.11 ; 
 uv sync --dev --no-cache ; 
@@ -154,6 +156,8 @@ uv cache clean ;
 
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
+
+#####
 
 uv python install 3.11 ; 
 uv python pin 3.11 ; 
@@ -348,11 +352,15 @@ uv cache clean ;
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
 
+#####
+
 docker-compose run --build app ; 
 
 uv python install 3.11 ; 
 uv python pin 3.11 ; 
 uv sync --dev --no-cache --locked ; 
+
+#####
 
 .venv\Scripts\Activate.ps1 ; 
 $env:UV_ENV_FILE = ".dev.env" ; 
