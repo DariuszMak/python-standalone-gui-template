@@ -122,7 +122,7 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Dev_Windows.postman_environment.json ; 
 ```
 
-## Full code analysis
+## Full static analysis
 
 ```commandline
 deactivate ; 
