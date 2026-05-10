@@ -266,10 +266,12 @@ SONAR_TOKEN=$token
 
 # Run scanner
 $scannerOutput = docker run --rm `
-    --network python-standalone-gui-template_default `
+    --network sonar-network `
     --env-file .sonar.env `
     -v "${PWD}:/usr/src" `
+    -w /usr/src `
     sonarsource/sonar-scanner-cli 2>&1
+
 $scannerOutput
 
 $reportUrls = ($scannerOutput |
