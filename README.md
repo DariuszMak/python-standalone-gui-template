@@ -46,8 +46,6 @@
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
 
-Login in SonarQube as `admin` with password `Admin1@Admin1@`.
-
 ## Fast native Windows development
 
 ```commandline
@@ -124,6 +122,8 @@ newman run collections\Python_GUI_UI.postman_collection.json --environment colle
 
 ## Full static analysis
 
+Login in SonarQube as `admin` with password `Admin1@Admin1@`.
+
 ```commandline
 deactivate ; 
 clear ; 
@@ -181,7 +181,7 @@ uv run pytest tests/ --cov=src --cov-report=html --cov-report=xml --cov-config=.
 Start-Process src\ui\react_ui\frontend\coverage\index.html ; 
 Start-Process .\htmlcov\index.html ; 
 
-########## SONARQUBE
+########## SONARQUBE 
 
 # Start SonarQube + DB
 docker compose up -d sonarqube sonardb
