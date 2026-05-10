@@ -51,6 +51,11 @@ Login in SonarQube as `admin` with password `Admin1@Admin1@`.
 ## Fast native Windows development
 
 ```commandline
+```
+
+## Thorough code analysis
+
+```commandline
 deactivate ; 
 clear ; 
 
