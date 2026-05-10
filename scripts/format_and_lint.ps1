@@ -3,16 +3,13 @@ uv run ruff check --fix src tests --exclude 'moc_.*\.py|files_rc\.py'
 uv run ruff check --fix --unsafe-fixes src tests --exclude 'moc_.*\.py|files_rc\.py'
 uv run ruff check --fix --select I src tests --exclude 'moc_.*\.py|files_rc\.py'
 
-
 uv run pip-audit
 uv run ruff check src tests --exclude 'moc_.*\.py|files_rc\.py'
 uv run ruff format --check src tests --exclude 'moc_.*\.py|files_rc\.py'
 
 uv run ruff check src tests --output-format json > ruff-report.json
 
-
 uv run vulture src tests --exclude "src/ui/pyside_ui/forms" --min-confidence 80
-
 
 uv run mypy --strict src tests --exclude 'moc_.*\.py|files_rc\.py'
 
