@@ -32,17 +32,16 @@ const createMockContext = (): CanvasRenderingContext2D =>
     rotate: vi.fn(),
   }) as unknown as CanvasRenderingContext2D;
 
-const createMediaQueryList = (matches: boolean): MediaQueryList =>
-  ({
-    matches,
-    media: "",
-    onchange: null,
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  });
+const createMediaQueryList = (matches: boolean): MediaQueryList => ({
+  matches,
+  media: "",
+  onchange: null,
+  addListener: vi.fn(),
+  removeListener: vi.fn(),
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
+  dispatchEvent: vi.fn(),
+});
 
 describe("renderClock", () => {
   let context: MockContext;
@@ -68,7 +67,9 @@ describe("renderClock", () => {
   });
 
   it("renders without throwing", () => {
-    expect(() => { renderClock(canvas, new Date(), "12:00:00"); }).not.toThrow();
+    expect(() => {
+      renderClock(canvas, new Date(), "12:00:00");
+    }).not.toThrow();
   });
 
   it("clears canvas before drawing", () => {
