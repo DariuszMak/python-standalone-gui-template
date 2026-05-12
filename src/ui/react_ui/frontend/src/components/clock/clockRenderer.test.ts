@@ -42,9 +42,9 @@ describe("renderClock", () => {
   let matchMediaSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
-    matchMediaSpy = vi.spyOn(window, "matchMedia").mockImplementation(
-      () => createMediaQueryList(false),
-    );
+    matchMediaSpy = vi
+      .spyOn(window, "matchMedia")
+      .mockImplementation(() => createMediaQueryList(false));
   });
 
   afterEach(() => {
@@ -72,10 +72,10 @@ describe("renderClock", () => {
     };
 
     expect(() =>
-      renderClock(canvas, ctx, {
+      { renderClock(canvas, ctx, {
         hands,
         now: new Date(),
-      }),
+      }); },
     ).not.toThrow();
   });
 
@@ -155,14 +155,14 @@ describe("renderClock", () => {
     const ctx = createMockContext();
 
     expect(() =>
-      renderClock(canvas, ctx, {
+      { renderClock(canvas, ctx, {
         hands: {
           second: 0,
           minute: 0,
           hour: 0,
         },
         now: new Date(),
-      }),
+      }); },
     ).not.toThrow();
   });
 });
