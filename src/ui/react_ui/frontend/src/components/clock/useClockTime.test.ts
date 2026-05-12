@@ -13,7 +13,7 @@ describe("useClockTime", () => {
       json: async () => ({
         datetime: "2025-01-01T12:00:00.000Z",
       }),
-    } as Response);
+    });
 
     const { result } = renderHook(() => useClockTime());
 
@@ -40,7 +40,7 @@ describe("useClockTime", () => {
       json: async () => ({
         datetime: "2025-01-01T15:30:00.000Z",
       }),
-    } as Response);
+    });
 
     const { result } = renderHook(() => useClockTime());
 
@@ -59,7 +59,7 @@ describe("useClockTime", () => {
     vi.spyOn(global, "fetch").mockResolvedValue({
       ok: false,
       status: 500,
-    } as Response);
+    });
 
     const { result } = renderHook(() => useClockTime());
 

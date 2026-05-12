@@ -64,10 +64,10 @@ describe("renderClock", () => {
     };
 
     expect(() =>
-      renderClock(canvas, ctx, {
+      { renderClock(canvas, ctx, {
         hands,
         now: new Date(),
-      }),
+      }); },
     ).not.toThrow();
   });
 
@@ -154,14 +154,14 @@ describe("renderClock", () => {
     const ctx = createMockContext();
 
     expect(() =>
-      renderClock(canvas, ctx, {
+      { renderClock(canvas, ctx, {
         hands: {
           second: 0,
           minute: 0,
           hour: 0,
         },
         now: new Date(),
-      }),
+      }); },
     ).not.toThrow();
   });
 });
