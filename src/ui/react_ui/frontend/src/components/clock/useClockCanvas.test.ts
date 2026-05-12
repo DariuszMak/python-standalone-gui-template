@@ -10,7 +10,7 @@ describe("useClockCanvas", () => {
       return 1;
     });
 
-    vi.spyOn(window, "cancelAnimationFrame").mockImplementation(() => {});
+    vi.spyOn(window, "cancelAnimationFrame").mockImplementation(() => undefined);
   });
 
   it("returns canvas ref", () => {
