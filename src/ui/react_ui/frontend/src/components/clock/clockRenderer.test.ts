@@ -1,7 +1,7 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import { renderClock } from "./clockRenderer";
 
-type MockContext = {
+interface MockContext {
   clearRect: ReturnType<typeof vi.fn>;
   beginPath: ReturnType<typeof vi.fn>;
   arc: ReturnType<typeof vi.fn>;
@@ -14,7 +14,7 @@ type MockContext = {
   restore: ReturnType<typeof vi.fn>;
   translate: ReturnType<typeof vi.fn>;
   rotate: ReturnType<typeof vi.fn>;
-};
+}
 
 const createMockContext = (): CanvasRenderingContext2D =>
   ({
@@ -42,7 +42,7 @@ const createMediaQueryList = (matches: boolean): MediaQueryList =>
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn(),
-  }) as unknown as MediaQueryList;
+  });
 
 describe("renderClock", () => {
   let context: MockContext;
@@ -68,9 +68,7 @@ describe("renderClock", () => {
   });
 
   it("renders without throwing", () => {
-    expect(() =>
-      renderClock(canvas, new Date(), "12:00:00"),
-    ).not.toThrow();
+    expect(() => { renderClock(canvas, new Date(), "12:00:00"); }).not.toThrow();
   });
 
   it("clears canvas before drawing", () => {
@@ -96,9 +94,7 @@ describe("renderClock", () => {
   });
 
   it("handles dark mode", () => {
-    window.matchMedia = vi
-      .fn()
-      .mockImplementation(() => createMediaQueryList(true));
+    window.matchMedia = vi.fn().mockImplementation(() => createMediaQueryList(true));
 
     renderClock(canvas, new Date(), "12:00:00");
 
