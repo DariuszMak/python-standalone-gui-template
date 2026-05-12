@@ -62,6 +62,8 @@ describe("renderClock", () => {
       now: new Date(),
     });
 
-    expect(ctx.clearRect).toHaveBeenCalled();
+    const clearRectMock = ctx.clearRect as unknown as ReturnType<typeof vi.fn>;
+
+    expect(clearRectMock).toHaveBeenCalled();
   });
 });

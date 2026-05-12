@@ -10,9 +10,10 @@ describe("useClockTime", () => {
   it("loads time successfully", async () => {
     vi.spyOn(window, "fetch").mockResolvedValue({
       ok: true,
-      json: async () => ({
-        datetime: "2025-01-01T12:00:00.000Z",
-      }),
+      json: () =>
+        Promise.resolve({
+          datetime: "2025-01-01T12:00:00.000Z",
+        }),
     } as Response);
 
     const { result } = renderHook(() => useClockTime());
@@ -37,9 +38,10 @@ describe("useClockTime", () => {
   it("reload updates datetime", async () => {
     vi.spyOn(window, "fetch").mockResolvedValue({
       ok: true,
-      json: async () => ({
-        datetime: "2025-01-01T15:30:00.000Z",
-      }),
+      json: () =>
+        Promise.resolve({
+          datetime: "2025-01-01T15:30:00.000Z",
+        }),
     } as Response);
 
     const { result } = renderHook(() => useClockTime());
