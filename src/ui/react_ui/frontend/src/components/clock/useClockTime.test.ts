@@ -8,12 +8,12 @@ describe("useClockTime", () => {
   });
 
   it("loads time successfully", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue({
+    vi.spyOn(window, "fetch").mockResolvedValue({
       ok: true,
       json: async () => ({
         datetime: "2025-01-01T12:00:00.000Z",
       }),
-    });
+    } as Response);
 
     const { result } = renderHook(() => useClockTime());
 
@@ -25,7 +25,7 @@ describe("useClockTime", () => {
   });
 
   it("handles fetch failure", async () => {
-    vi.spyOn(global, "fetch").mockRejectedValue(new Error("network"));
+    vi.spyOn(window, "fetch").mockRejectedValue(new Error("network"));
 
     const { result } = renderHook(() => useClockTime());
 
@@ -35,12 +35,12 @@ describe("useClockTime", () => {
   });
 
   it("reload updates datetime", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue({
+    vi.spyOn(window, "fetch").mockResolvedValue({
       ok: true,
       json: async () => ({
         datetime: "2025-01-01T15:30:00.000Z",
       }),
-    });
+    } as Response);
 
     const { result } = renderHook(() => useClockTime());
 
@@ -56,10 +56,10 @@ describe("useClockTime", () => {
   });
 
   it("reload handles HTTP error", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue({
+    vi.spyOn(window, "fetch").mockResolvedValue({
       ok: false,
       status: 500,
-    });
+    } as Response);
 
     const { result } = renderHook(() => useClockTime());
 

@@ -25,17 +25,25 @@ function createMockContext(): CanvasRenderingContext2D {
   } as unknown as CanvasRenderingContext2D;
 }
 
+function createMediaQueryList(matches: boolean): MediaQueryList {
+  return {
+    matches,
+    media: "",
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  };
+}
+
 describe("renderClock", () => {
   let matchMediaSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     matchMediaSpy = vi.spyOn(window, "matchMedia").mockImplementation(
-      () =>
-        ({
-          matches: false,
-          addEventListener: vi.fn(),
-          removeEventListener: vi.fn(),
-        }) as MediaQueryList,
+      () => createMediaQueryList(false),
     );
   });
 
@@ -63,12 +71,12 @@ describe("renderClock", () => {
       hour: 3,
     };
 
-    expect(() => {
+    expect(() =>
       renderClock(canvas, ctx, {
         hands,
         now: new Date(),
-      });
-    }).not.toThrow();
+      }),
+    ).not.toThrow();
   });
 
   it("clears canvas before drawing", () => {
@@ -136,14 +144,7 @@ describe("renderClock", () => {
   });
 
   it("handles dark mode", () => {
-    matchMediaSpy.mockImplementation(
-      () =>
-        ({
-          matches: true,
-          addEventListener: vi.fn(),
-          removeEventListener: vi.fn(),
-        }) as MediaQueryList,
-    );
+    matchMediaSpy.mockImplementation(() => createMediaQueryList(true));
 
     const canvas = document.createElement("canvas");
 
@@ -153,7 +154,7 @@ describe("renderClock", () => {
 
     const ctx = createMockContext();
 
-    expect(() => {
+    expect(() =>
       renderClock(canvas, ctx, {
         hands: {
           second: 0,
@@ -161,7 +162,7 @@ describe("renderClock", () => {
           hour: 0,
         },
         now: new Date(),
-      });
-    }).not.toThrow();
+      }),
+    ).not.toThrow();
   });
 });
