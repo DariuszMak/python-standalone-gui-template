@@ -1,10 +1,23 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import { renderClock } from "./clockRenderer";
-import type { ClockHands } from "../clockHelpers";
 
-function createMockContext(): CanvasRenderingContext2D {
-  return {
-    scale: vi.fn(),
+type MockContext = {
+  clearRect: ReturnType<typeof vi.fn>;
+  beginPath: ReturnType<typeof vi.fn>;
+  arc: ReturnType<typeof vi.fn>;
+  fill: ReturnType<typeof vi.fn>;
+  stroke: ReturnType<typeof vi.fn>;
+  moveTo: ReturnType<typeof vi.fn>;
+  lineTo: ReturnType<typeof vi.fn>;
+  fillText: ReturnType<typeof vi.fn>;
+  save: ReturnType<typeof vi.fn>;
+  restore: ReturnType<typeof vi.fn>;
+  translate: ReturnType<typeof vi.fn>;
+  rotate: ReturnType<typeof vi.fn>;
+};
+
+const createMockContext = (): CanvasRenderingContext2D =>
+  ({
     clearRect: vi.fn(),
     beginPath: vi.fn(),
     arc: vi.fn(),
@@ -13,20 +26,14 @@ function createMockContext(): CanvasRenderingContext2D {
     moveTo: vi.fn(),
     lineTo: vi.fn(),
     fillText: vi.fn(),
-    setTransform: vi.fn(),
+    save: vi.fn(),
+    restore: vi.fn(),
+    translate: vi.fn(),
+    rotate: vi.fn(),
+  }) as unknown as CanvasRenderingContext2D;
 
-    strokeStyle: "",
-    fillStyle: "",
-    lineWidth: 0,
-    lineCap: "round",
-    font: "",
-    textAlign: "center",
-    textBaseline: "middle",
-  } as unknown as CanvasRenderingContext2D;
-}
-
-function createMediaQueryList(matches: boolean): MediaQueryList {
-  return {
+const createMediaQueryList = (matches: boolean): MediaQueryList =>
+  ({
     matches,
     media: "",
     onchange: null,
@@ -35,134 +42,66 @@ function createMediaQueryList(matches: boolean): MediaQueryList {
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn(),
-  };
-}
+  }) as unknown as MediaQueryList;
 
 describe("renderClock", () => {
-  let matchMediaSpy: ReturnType<typeof vi.spyOn>;
+  let context: MockContext;
+  let canvas: HTMLCanvasElement;
 
   beforeEach(() => {
-    matchMediaSpy = vi
-      .spyOn(window, "matchMedia")
-      .mockImplementation(() => createMediaQueryList(false));
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: vi.fn().mockImplementation(() => createMediaQueryList(false)),
+    });
+
+    context = createMockContext() as unknown as MockContext;
+
+    canvas = {
+      width: 300,
+      height: 300,
+      getContext: vi.fn(() => context),
+    } as unknown as HTMLCanvasElement;
   });
 
   afterEach(() => {
-    matchMediaSpy.mockRestore();
+    vi.restoreAllMocks();
   });
 
   it("renders without throwing", () => {
-    const canvas = document.createElement("canvas");
-
-    Object.defineProperty(canvas, "clientWidth", {
-      value: 300,
-    });
-
-    Object.defineProperty(window, "devicePixelRatio", {
-      value: 1,
-      configurable: true,
-    });
-
-    const ctx = createMockContext();
-
-    const hands: ClockHands = {
-      second: 10,
-      minute: 20,
-      hour: 3,
-    };
-
     expect(() =>
-      { renderClock(canvas, ctx, {
-        hands,
-        now: new Date(),
-      }); },
+      renderClock(canvas, new Date(), "12:00:00"),
     ).not.toThrow();
   });
 
   it("clears canvas before drawing", () => {
-    const canvas = document.createElement("canvas");
+    renderClock(canvas, new Date(), "12:00:00");
 
-    Object.defineProperty(canvas, "clientWidth", {
-      value: 300,
-    });
-
-    const ctx = createMockContext();
-
-    renderClock(canvas, ctx, {
-      hands: {
-        second: 1,
-        minute: 1,
-        hour: 1,
-      },
-      now: new Date(),
-    });
-
-    expect(ctx.clearRect).toHaveBeenCalled();
+    expect(context.clearRect).toHaveBeenCalled();
   });
 
   it("draws clock hands", () => {
-    const canvas = document.createElement("canvas");
+    renderClock(canvas, new Date(), "12:00:00");
 
-    Object.defineProperty(canvas, "clientWidth", {
-      value: 300,
-    });
-
-    const ctx = createMockContext();
-
-    renderClock(canvas, ctx, {
-      hands: {
-        second: 30,
-        minute: 15,
-        hour: 6,
-      },
-      now: new Date(),
-    });
-
-    expect(ctx.lineTo).toHaveBeenCalled();
-    expect(ctx.stroke).toHaveBeenCalled();
+    expect(context.lineTo).toHaveBeenCalled();
   });
 
   it("draws time label", () => {
-    const canvas = document.createElement("canvas");
+    renderClock(canvas, new Date(), "12:00:00");
 
-    Object.defineProperty(canvas, "clientWidth", {
-      value: 300,
-    });
-
-    const ctx = createMockContext();
-
-    renderClock(canvas, ctx, {
-      hands: {
-        second: 0,
-        minute: 0,
-        hour: 0,
-      },
-      now: new Date(2025, 0, 1, 12, 34, 56, 789),
-    });
-
-    expect(ctx.fillText).toHaveBeenCalled();
+    expect(context.fillText).toHaveBeenCalledWith(
+      "12:00:00",
+      expect.any(Number),
+      expect.any(Number),
+    );
   });
 
   it("handles dark mode", () => {
-    matchMediaSpy.mockImplementation(() => createMediaQueryList(true));
+    window.matchMedia = vi
+      .fn()
+      .mockImplementation(() => createMediaQueryList(true));
 
-    const canvas = document.createElement("canvas");
+    renderClock(canvas, new Date(), "12:00:00");
 
-    Object.defineProperty(canvas, "clientWidth", {
-      value: 300,
-    });
-
-    const ctx = createMockContext();
-
-    expect(() =>
-      { renderClock(canvas, ctx, {
-        hands: {
-          second: 0,
-          minute: 0,
-          hour: 0,
-        },
-        now: new Date(),
-      }); },
-    ).not.toThrow();
+    expect(window.matchMedia).toHaveBeenCalled();
   });
 });
