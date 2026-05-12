@@ -68,24 +68,24 @@ describe("renderClock", () => {
 
   it("renders without throwing", () => {
     expect(() => {
-      renderClock(canvas, new Date(), "12:00:00");
+      renderClock(canvas, mockContext, new Date(), "12:00:00");
     }).not.toThrow();
   });
 
   it("clears canvas before drawing", () => {
-    renderClock(canvas, new Date(), "12:00:00");
+    renderClock(canvas, mockContext, new Date(), "12:00:00");
 
     expect(context.clearRect).toHaveBeenCalled();
   });
 
   it("draws clock hands", () => {
-    renderClock(canvas, new Date(), "12:00:00");
+    renderClock(canvas, mockContext, new Date(), "12:00:00");
 
     expect(context.lineTo).toHaveBeenCalled();
   });
 
   it("draws time label", () => {
-    renderClock(canvas, new Date(), "12:00:00");
+    renderClock(canvas, mockContext, new Date(), "12:00:00");
 
     expect(context.fillText).toHaveBeenCalledWith(
       "12:00:00",
@@ -97,7 +97,7 @@ describe("renderClock", () => {
   it("handles dark mode", () => {
     window.matchMedia = vi.fn().mockImplementation(() => createMediaQueryList(true));
 
-    renderClock(canvas, new Date(), "12:00:00");
+    renderClock(canvas, mockContext, new Date(), "12:00:00");
 
     expect(window.matchMedia).toHaveBeenCalled();
   });
