@@ -31,19 +31,33 @@ function mockCanvas() {
     moveTo: vi.fn(),
     lineTo: vi.fn(),
     fillText: vi.fn(),
-    get font() { return ""; },
+    get font() {
+      return "";
+    },
     set font(_v) {},
-    get fillStyle() { return ""; },
+    get fillStyle() {
+      return "";
+    },
     set fillStyle(_v) {},
-    get strokeStyle() { return ""; },
+    get strokeStyle() {
+      return "";
+    },
     set strokeStyle(_v) {},
-    get lineWidth() { return 1; },
+    get lineWidth() {
+      return 1;
+    },
     set lineWidth(_v) {},
-    get lineCap() { return "butt" as CanvasLineCap; },
+    get lineCap() {
+      return "butt" as CanvasLineCap;
+    },
     set lineCap(_v) {},
-    get textAlign() { return "start" as CanvasTextAlign; },
+    get textAlign() {
+      return "start" as CanvasTextAlign;
+    },
     set textAlign(_v) {},
-    get textBaseline() { return "alphabetic" as CanvasTextBaseline; },
+    get textBaseline() {
+      return "alphabetic" as CanvasTextBaseline;
+    },
     set textBaseline(_v) {},
   };
 
@@ -98,7 +112,7 @@ describe("clockRenderer – renderClock", () => {
     const hands = { second: 15, minute: 30, hour: 6 };
     const now = new Date(2025, 0, 1, 12, 30, 15, 0);
 
-    renderClock(canvas, ctx as CanvasRenderingContext2D, { hands, now });
+    renderClock(canvas, ctx, { hands, now });
     return { ctx, canvas };
   }
 
@@ -132,7 +146,7 @@ describe("clockRenderer – renderClock", () => {
     Object.defineProperty(window, "devicePixelRatio", { writable: true, value: 1 });
 
     const scaleSpy = ctx.scale as Mock;
-    renderClock(canvas, ctx as CanvasRenderingContext2D, {
+    renderClock(canvas, ctx, {
       hands: { second: 0, minute: 0, hour: 0 },
       now: new Date(),
     });
@@ -144,10 +158,14 @@ describe("clockRenderer – renderClock", () => {
     const { canvas, ctx } = mockCanvas();
     let sawRed = false;
     Object.defineProperty(ctx, "strokeStyle", {
-      set(v: string) { if (v === "#ff3333") sawRed = true; },
-      get() { return ""; },
+      set(v: string) {
+        if (v === "#ff3333") sawRed = true;
+      },
+      get() {
+        return "";
+      },
     });
-    renderClock(canvas, ctx as CanvasRenderingContext2D, {
+    renderClock(canvas, ctx, {
       hands: { second: 45, minute: 0, hour: 3 },
       now: new Date(),
     });
@@ -168,7 +186,10 @@ describe("useClockTime", () => {
   });
 
   it("starts in loading status", async () => {
-    vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {}))); // never resolves
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise(() => {})),
+    ); // never resolves
 
     const { useClockTime } = await import("../src/components/clock/useClockTime");
     const { renderHook } = await import("@testing-library/react");
@@ -194,36 +215,43 @@ describe("useClockTime", () => {
     const { renderHook } = await import("@testing-library/react");
 
     const { result } = renderHook(() => useClockTime());
-    await act(async () => { await vi.runAllTimersAsync(); });
-    await waitFor(() => expect(result.current.status).toBe("ok"));
+    await act(async () => {
+      await vi.runAllTimersAsync();
+    });
+    await waitFor(() => { expect(result.current.status).toBe("ok"); });
     expect(result.current.datetime).toBe(isoStr);
   });
 
   it("transitions to error when fetch rejects", async () => {
-    vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new Error("network down"))));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => Promise.reject(new Error("network down"))),
+    );
 
     const { useClockTime } = await import("../src/components/clock/useClockTime?err=1");
     const { renderHook } = await import("@testing-library/react");
 
     const { result } = renderHook(() => useClockTime());
-    await act(async () => { await vi.runAllTimersAsync(); });
-    await waitFor(() => expect(result.current.status).toBe("error"));
+    await act(async () => {
+      await vi.runAllTimersAsync();
+    });
+    await waitFor(() => { expect(result.current.status).toBe("error"); });
   });
 
   it("transitions to error when response is not ok", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn(() =>
-        Promise.resolve({ ok: false, status: 503 }),
-      ),
+      vi.fn(() => Promise.resolve({ ok: false, status: 503 })),
     );
 
     const { useClockTime } = await import("../src/components/clock/useClockTime?notok=1");
     const { renderHook } = await import("@testing-library/react");
 
     const { result } = renderHook(() => useClockTime());
-    await act(async () => { await vi.runAllTimersAsync(); });
-    await waitFor(() => expect(result.current.status).toBe("error"));
+    await act(async () => {
+      await vi.runAllTimersAsync();
+    });
+    await waitFor(() => { expect(result.current.status).toBe("error"); });
   });
 
   it("handleReload resets status to loading then ok", async () => {
@@ -242,10 +270,14 @@ describe("useClockTime", () => {
     const { renderHook } = await import("@testing-library/react");
 
     const { result } = renderHook(() => useClockTime());
-    await act(async () => { await vi.runAllTimersAsync(); });
-    await waitFor(() => expect(result.current.status).toBe("ok"));
+    await act(async () => {
+      await vi.runAllTimersAsync();
+    });
+    await waitFor(() => { expect(result.current.status).toBe("ok"); });
 
-    await act(async () => { await result.current.handleReload(); });
+    await act(async () => {
+      await result.current.handleReload();
+    });
     expect(result.current.status).toBe("ok");
     expect(result.current.datetime).toBe(isoStr);
   });
@@ -270,15 +302,22 @@ describe("useClockTime", () => {
     const { renderHook } = await import("@testing-library/react");
 
     const { result } = renderHook(() => useClockTime());
-    await act(async () => { await vi.runAllTimersAsync(); });
-    await waitFor(() => expect(result.current.status).toBe("ok"));
+    await act(async () => {
+      await vi.runAllTimersAsync();
+    });
+    await waitFor(() => { expect(result.current.status).toBe("ok"); });
 
-    await act(async () => { await result.current.handleReload(); });
+    await act(async () => {
+      await result.current.handleReload();
+    });
     expect(result.current.status).toBe("error");
   });
 
   it("exposes ref objects needed by useClockCanvas", async () => {
-    vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {})));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise(() => {})),
+    );
 
     const { useClockTime } = await import("../src/components/clock/useClockTime?refs=1");
     const { renderHook } = await import("@testing-library/react");
@@ -360,7 +399,7 @@ describe("useClockCanvas", () => {
     renderHook(() => {
       const ref = useClockCanvas(fakeRefs as any);
       // Inject canvas into the ref so the hook finds it
-      (ref as any).current = canvas;
+      (ref).current = canvas;
       return ref;
     });
 
@@ -397,7 +436,10 @@ describe("Clock component", () => {
       writable: true,
       value: vi.fn(() => ({ matches: false })),
     });
-    vi.stubGlobal("requestAnimationFrame", vi.fn(() => 1));
+    vi.stubGlobal(
+      "requestAnimationFrame",
+      vi.fn(() => 1),
+    );
     vi.stubGlobal("cancelAnimationFrame", vi.fn());
   });
 
@@ -407,7 +449,10 @@ describe("Clock component", () => {
   });
 
   it("renders heading and Reload button in loading state", async () => {
-    vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {})));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise(() => {})),
+    );
 
     const { Clock } = await import("../src/components/clock/Clock");
     render(React.createElement(Clock));
@@ -431,22 +476,32 @@ describe("Clock component", () => {
     const { Clock } = await import("../src/components/clock/Clock?ok=1");
     render(React.createElement(Clock));
 
-    await act(async () => { await vi.runAllTimersAsync(); });
+    await act(async () => {
+      await vi.runAllTimersAsync();
+    });
     await waitFor(() => expect(screen.getByText(isoStr)).toBeInTheDocument());
   });
 
   it("shows error message after failed fetch", async () => {
-    vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new Error("fail"))));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => Promise.reject(new Error("fail"))),
+    );
 
     const { Clock } = await import("../src/components/clock/Clock?err=1");
     render(React.createElement(Clock));
 
-    await act(async () => { await vi.runAllTimersAsync(); });
+    await act(async () => {
+      await vi.runAllTimersAsync();
+    });
     await waitFor(() => expect(screen.getByText(/failed to load time/i)).toBeInTheDocument());
   });
 
   it("Reload button is disabled while loading", async () => {
-    vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {})));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise(() => {})),
+    );
 
     const { Clock } = await import("../src/components/clock/Clock?loading=1");
     render(React.createElement(Clock));
@@ -469,11 +524,17 @@ describe("Clock component", () => {
     const { Clock } = await import("../src/components/clock/Clock?click=1");
     render(React.createElement(Clock));
 
-    await act(async () => { await vi.runAllTimersAsync(); });
-    await waitFor(() => expect(screen.getByRole("button", { name: /reload time/i })).not.toBeDisabled());
+    await act(async () => {
+      await vi.runAllTimersAsync();
+    });
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: /reload time/i })).not.toBeDisabled(),
+    );
 
     fireEvent.click(screen.getByRole("button", { name: /reload time/i }));
-    await act(async () => { await vi.runAllTimersAsync(); });
+    await act(async () => {
+      await vi.runAllTimersAsync();
+    });
 
     // fetch called at least twice (initial + reload)
     expect(fetchMock.mock.calls.length).toBeGreaterThanOrEqual(2);
@@ -489,9 +550,15 @@ describe("App component", () => {
       writable: true,
       value: vi.fn(() => ({ matches: false })),
     });
-    vi.stubGlobal("requestAnimationFrame", vi.fn(() => 1));
+    vi.stubGlobal(
+      "requestAnimationFrame",
+      vi.fn(() => 1),
+    );
     vi.stubGlobal("cancelAnimationFrame", vi.fn());
-    vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {})));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise(() => {})),
+    );
   });
 
   afterEach(() => {
@@ -519,12 +586,18 @@ describe("main.tsx bootstrap", () => {
     // Provide a #root element
     document.body.innerHTML = '<div id="root"></div>';
 
-    vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {})));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise(() => {})),
+    );
     Object.defineProperty(window, "matchMedia", {
       writable: true,
       value: vi.fn(() => ({ matches: false })),
     });
-    vi.stubGlobal("requestAnimationFrame", vi.fn(() => 1));
+    vi.stubGlobal(
+      "requestAnimationFrame",
+      vi.fn(() => 1),
+    );
     vi.stubGlobal("cancelAnimationFrame", vi.fn());
 
     // Dynamic import with cache-busting to re-execute the module
