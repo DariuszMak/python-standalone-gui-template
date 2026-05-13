@@ -1,41 +1,51 @@
-from typing import Any
+from typing import TYPE_CHECKING, cast
 
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtGui import QMouseEvent
-from PySide6.QtWidgets import QWidget
+
+if TYPE_CHECKING:
+    from PySide6.QtWidgets import QWidget
 
 
-class DraggableMixin(QWidget):
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
-
+class DraggableMixin:
+    def __init__(self) -> None:
         self._drag_active = False
         self._drag_position = QPoint()
 
     def _can_drag(self) -> bool:
         return True
 
-    def mousePressEvent(self, event: QMouseEvent) -> None:  # noqa: N802
+    def _handle_mouse_press(self, event: QMouseEvent) -> bool:
+        widget = cast("QWidget", self)
+
         if event.button() == Qt.MouseButton.LeftButton and self._can_drag():
-            if self.windowHandle() and self.windowHandle().startSystemMove():
-                return
+            window_handle = widget.windowHandle()
+
+            if window_handle is not None and window_handle.startSystemMove():
+                return True
 
             self._drag_active = True
-            self._drag_position = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
+            self._drag_position = event.globalPosition().toPoint() - widget.frameGeometry().topLeft()
+
             event.accept()
+            return True
 
-        super().mousePressEvent(event)
+        return False
 
-    def mouseMoveEvent(self, event: QMouseEvent) -> None:  # noqa: N802
+    def _handle_mouse_move(self, event: QMouseEvent) -> bool:
+        widget = cast("QWidget", self)
+
         if self._drag_active and event.buttons() & Qt.MouseButton.LeftButton:
-            self.move(event.globalPosition().toPoint() - self._drag_position)
+            widget.move(event.globalPosition().toPoint() - self._drag_position)
             event.accept()
+            return True
 
-        super().mouseMoveEvent(event)
+        return False
 
-    def mouseReleaseEvent(self, event: QMouseEvent) -> None:  # noqa: N802
+    def _handle_mouse_release(self, event: QMouseEvent) -> bool:
         if event.button() == Qt.MouseButton.LeftButton:
             self._drag_active = False
             event.accept()
+            return True
 
-        super().mouseReleaseEvent(event)
+        return False
