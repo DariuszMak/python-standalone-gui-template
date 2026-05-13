@@ -1,32 +1,14 @@
-from PySide6.QtCore import QPoint, Qt
-from PySide6.QtGui import QMouseEvent
 from PySide6.QtWidgets import QMainWindow, QWidget
 
+from src.ui.pyside_ui.dialog_windows.draggable_mixin import DraggableMixin
 
-class DraggableMainWindow(QMainWindow):
+
+class DraggableMainWindow(DraggableMixin, QMainWindow):
     def __init__(self, parent: QWidget | None = None) -> None:
-        super().__init__(parent)
-        self._drag_active = False
-        self._drag_position = QPoint()
+        QMainWindow.__init__(self, parent)
+        DraggableMixin.__init__(self)
+
         self._is_maximized = False
 
-    def mousePressEvent(self, event: QMouseEvent) -> None:  # noqa: N802
-        if event.button() == Qt.MouseButton.LeftButton and not self._is_maximized:
-            if self.windowHandle() and self.windowHandle().startSystemMove():
-                return
-            self._drag_active = True
-            self._drag_position = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
-            event.accept()
-        super().mousePressEvent(event)
-
-    def mouseMoveEvent(self, event: QMouseEvent) -> None:  # noqa: N802
-        if self._drag_active and event.buttons() & Qt.MouseButton.LeftButton:
-            self.move(event.globalPosition().toPoint() - self._drag_position)
-            event.accept()
-        super().mouseMoveEvent(event)
-
-    def mouseReleaseEvent(self, event: QMouseEvent) -> None:  # noqa: N802
-        if event.button() == Qt.MouseButton.LeftButton:
-            self._drag_active = False
-            event.accept()
-        super().mouseReleaseEvent(event)
+    def _can_drag(self) -> bool:
+        return not self._is_maximized
