@@ -1,11 +1,14 @@
+from typing import Any
+
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtGui import QMouseEvent
 from PySide6.QtWidgets import QWidget
 
 
 class DraggableMixin(QWidget):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+
         self._drag_active = False
         self._drag_position = QPoint()
 
