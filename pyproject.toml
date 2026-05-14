@@ -3,7 +3,7 @@ name = "python-standalone-gui-template"
 version = "1.0.0"
 description = "Simple template project for Python Standalone GUI Application"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 dependencies = [
     "fastapi>=0.135.1",
     "numpy>=2.4.4",
@@ -38,7 +38,7 @@ dev = [
 ]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.13"
 warn_return_any = true
 warn_unused_configs = true
 
@@ -75,7 +75,7 @@ exclude = [
 ]
 line-length = 120
 indent-width = 4
-# Assume Python 3.11
+# Assume Python 3.13
 target-version = "py311"
 
 [tool.ruff.lint]
