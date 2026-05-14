@@ -10,7 +10,7 @@ from src.helpers.logging_setup import logging_setup
 
 
 @pytest.fixture(autouse=True)
-def reset_logging() -> Generator[None, None, None]:
+def reset_logging() -> Generator[None]:
     logger = logging.getLogger()
     logger.handlers.clear()
     yield
