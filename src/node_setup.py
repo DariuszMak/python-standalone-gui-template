@@ -9,6 +9,7 @@ import structlog
 from src import STATIC_CATALOGUE_NAME
 
 logger = structlog.get_logger(__name__)
+
 REACT_DIR = Path(__file__).parent / "ui" / "react_ui"
 FRONTEND_DIR: Path = REACT_DIR / "frontend"
 STATIC_DIR: Path = REACT_DIR / STATIC_CATALOGUE_NAME
@@ -29,7 +30,10 @@ def run_command(command: list[str], cwd: Path | None = None) -> str:
 
     if process.returncode != 0:
         log.error(
-            "command_failed", exit_code=process.returncode, stdout=process.stdout.strip(), stderr=process.stderr.strip()
+            "command_failed",
+            exit_code=process.returncode,
+            stdout=process.stdout.strip(),
+            stderr=process.stderr.strip(),
         )
         raise RuntimeError(f"Command {' '.join(command)} failed")
 
@@ -38,6 +42,7 @@ def run_command(command: list[str], cwd: Path | None = None) -> str:
 
 def install_dependencies() -> None:
     node_modules: Path = FRONTEND_DIR / "node_modules"
+
     if node_modules.exists():
         logger.info("skip_install", reason="node_modules_exists", path=str(node_modules))
         return
@@ -49,6 +54,31 @@ def build_frontend() -> None:
     run_command([NPM_CMD, "run", "build"], cwd=FRONTEND_DIR)
 
 
+def ensure_directory(path: Path) -> None:
+    path.mkdir(parents=True, exist_ok=True)
+
+
+def copy_directory_contents(source: Path, destination_root: Path) -> None:
+    for sub_item in source.rglob("*"):
+        target_path: Path = destination_root / sub_item.relative_to(DIST_DIR)
+
+        if sub_item.is_dir():
+            ensure_directory(target_path)
+        else:
+            shutil.copy2(sub_item, target_path)
+
+
+def copy_item(item: Path, destination: Path) -> None:
+    if item.is_dir():
+        if destination.exists():
+            copy_directory_contents(item, STATIC_DIR)
+        else:
+            shutil.copytree(item, destination)
+        return
+
+    shutil.copy2(item, destination)
+
+
 def copy_dist_to_static() -> None:
     log = logger.bind(source=str(DIST_DIR), target=str(STATIC_DIR))
     log.info("syncing_dist_to_static")
@@ -58,19 +88,7 @@ def copy_dist_to_static() -> None:
         return
 
     for item in DIST_DIR.iterdir():
-        dest: Path = STATIC_DIR / item.name
-        if item.is_dir():
-            if dest.exists():
-                for sub_item in item.rglob("*"):
-                    target_path: Path = STATIC_DIR / sub_item.relative_to(DIST_DIR)
-                    if sub_item.is_dir():
-                        target_path.mkdir(parents=True, exist_ok=True)
-                    else:
-                        shutil.copy2(sub_item, target_path)
-            else:
-                shutil.copytree(item, dest)
-        else:
-            shutil.copy2(item, dest)
+        copy_item(item, STATIC_DIR / item.name)
 
     log.info("sync_complete")
 
