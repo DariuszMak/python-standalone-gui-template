@@ -84,8 +84,8 @@ git clean -x -d -f ;
 
 #####
 
-uv python install 3.13 ; 
-uv python pin 3.13 ; 
+uv python install 3.15 ; 
+uv python pin 3.15 ; 
 uv sync --dev --no-cache ; 
 uv lock ; 
 
@@ -161,8 +161,8 @@ git clean -x -d -f ;
 
 #####
 
-uv python install 3.13 ; 
-uv python pin 3.13 ; 
+uv python install 3.15 ; 
+uv python pin 3.15 ; 
 uv sync --dev --no-cache ; 
 uv lock ; 
 
@@ -366,8 +366,8 @@ git clean -x -d -f ;
 
 docker-compose run --build app ; 
 
-uv python install 3.13 ; 
-uv python pin 3.13 ; 
+uv python install 3.15 ; 
+uv python pin 3.15 ; 
 uv sync --dev --no-cache --locked ; 
 
 #####
