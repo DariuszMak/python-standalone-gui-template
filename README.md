@@ -59,7 +59,7 @@ docker system prune --volumes -a -f ;
 docker volume rm -f $(docker volume ls -q) ; 
 docker system df ; 
 
-$ports = 8000, 8001, 8002, 8003, 8004, 8005, 5433, 9000
+$ports = 8000, 8001, 8002, 8003, 8004, 8005, 5433
 
 foreach ($port in $ports) {
     $conns = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
@@ -135,7 +135,7 @@ docker system prune --volumes -a -f ;
 docker volume rm -f $(docker volume ls -q) ; 
 docker system df ; 
 
-$ports = 8000, 8001, 8002, 8003, 8004, 8005, 5433, 9000
+$ports = 8000, 8001, 8002, 8003, 8004, 8005, 5433
 
 foreach ($port in $ports) {
     $conns = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
@@ -332,7 +332,7 @@ docker system prune --volumes -a -f ;
 docker volume rm -f $(docker volume ls -q) ; 
 docker system df ; 
 
-$ports = 8000, 8001, 8002, 8003, 8004, 8005, 5433, 9000
+$ports = 8000, 8001, 8002, 8003, 8004, 8005, 5433
 
 foreach ($port in $ports) {
     $conns = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
