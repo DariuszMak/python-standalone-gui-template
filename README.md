@@ -281,7 +281,6 @@ $reportUrls = ($scannerOutput |
     ForEach-Object { $_.Matches.Value }
 
 foreach ($url in $reportUrls) {
-
     $localUrl = $url `
         -replace "http://sonarqube:9000", "http://127.0.0.1:9000" `
         -replace "http://host.docker.internal:9000", "http://127.0.0.1:9000"
