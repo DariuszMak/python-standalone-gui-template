@@ -1,4 +1,5 @@
 import logging
+
 import structlog
 
 from src.helpers.config.config import Config
@@ -10,16 +11,10 @@ def logging_setup(
 ) -> None:
     log_file = log_file or Config().log_file
 
-    
-    
-    
     root_logger = logging.getLogger()
     root_logger.setLevel(level)
     root_logger.handlers.clear()
 
-    
-    
-    
     formatter = structlog.stdlib.ProcessorFormatter(
         processor=structlog.processors.JSONRenderer(),
         foreign_pre_chain=[
@@ -29,16 +24,10 @@ def logging_setup(
         ],
     )
 
-    
-    
-    
     console_handler = logging.StreamHandler()
     console_handler.setLevel(level)
     console_handler.setFormatter(formatter)
 
-    
-    
-    
     file_handler = logging.FileHandler(log_file)
     file_handler.setLevel(level)
     file_handler.setFormatter(formatter)
@@ -46,9 +35,6 @@ def logging_setup(
     root_logger.addHandler(console_handler)
     root_logger.addHandler(file_handler)
 
-    
-    
-    
     structlog.configure(
         processors=[
             structlog.stdlib.filter_by_level,
