@@ -108,21 +108,82 @@ Start-Process .\htmlcov\index.html ;
 
 ########## RUN APPLICATION LOCALLY
 
+Write-Host "Starting Elasticsearch + Kibana..." ; 
+
 docker compose up -d elasticsearch kibana ; 
+
+Write-Host "Waiting for Elasticsearch..." ; 
+
+do {
+    Start-Sleep -Seconds 5
+
+    try {
+        $es = Invoke-RestMethod `
+            -Uri "http://127.0.0.1:9200" `
+            -Method Get
+    }
+    catch {
+        $es = $null
+    }
+
+} until ($es.cluster_name)
+
+Write-Host "Elasticsearch is UP" ; 
+
+Write-Host "Waiting for Kibana..." ; 
+
+do {
+    Start-Sleep -Seconds 5
+
+    try {
+        $kibana = Invoke-RestMethod `
+            -Uri "http://127.0.0.1:5601/api/status" `
+            -Headers @{ "kbn-xsrf" = "true" } `
+            -Method Get
+    }
+    catch {
+        $kibana = $null
+    }
+
+} until ($kibana.status.overall.level -eq "available")
+
+Write-Host "Kibana is UP" ; 
+
 Start-Process "http://127.0.0.1:9200" ; 
 Start-Process "http://127.0.0.1:5601" ; 
 
+
+Write-Host "Starting application..." ; 
+
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
-Start-Sleep -Seconds 20 ; 
+
+Write-Host "Waiting for API..."
+
+do {
+    Start-Sleep -Seconds 3
+
+    try {
+        $api = Invoke-RestMethod `
+            -Uri "http://127.0.0.1:8000/openapi.json" `
+            -Method Get
+    }
+    catch {
+        $api = $null
+    }
+
+} until ($api)
+
+Write-Host "API is UP"
+
+newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Dev_Windows.postman_environment.json ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Dev_Windows.postman_environment.json ; 
+
 Start-Process "http://127.0.0.1:8000/openapi.json" ; 
 Start-Process "http://127.0.0.1:8000/redoc" ; 
 Start-Process "http://127.0.0.1:8000/docs" ; 
 Start-Process "http://127.0.0.1:8001" ; 
 Start-Process "http://127.0.0.1:8002" ; 
-
-newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Dev_Windows.postman_environment.json ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Dev_Windows.postman_environment.json ; 
 ```
 
 ## Full static analysis
