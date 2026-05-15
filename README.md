@@ -109,6 +109,8 @@ Start-Process .\htmlcov\index.html ;
 ########## RUN APPLICATION LOCALLY
 
 docker compose up -d elasticsearch kibana ; 
+Start-Process "http://127.0.0.1:9200" ; 
+Start-Process "http://127.0.0.1:5601" ; 
 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 Start-Sleep -Seconds 20 ; 
