@@ -1,5 +1,4 @@
 import logging
-
 import structlog
 
 from src.helpers.config.config import Config
@@ -9,40 +8,57 @@ def logging_setup(
     level: int = logging.INFO,
     log_file: str | None = None,
 ) -> None:
-    logger = logging.getLogger()
-    logger.setLevel(level)
+    log_file = log_file or Config().log_file
 
-    logger.handlers.clear()
+    
+    
+    
+    root_logger = logging.getLogger()
+    root_logger.setLevel(level)
+    root_logger.handlers.clear()
 
-    if log_file is None:
-        log_file = Config().log_file
+    
+    
+    
+    formatter = structlog.stdlib.ProcessorFormatter(
+        processor=structlog.processors.JSONRenderer(),
+        foreign_pre_chain=[
+            structlog.stdlib.add_log_level,
+            structlog.stdlib.add_logger_name,
+            structlog.processors.TimeStamper(fmt="iso"),
+        ],
+    )
 
-    formatter = logging.Formatter("%(message)s")
-
+    
+    
+    
     console_handler = logging.StreamHandler()
     console_handler.setLevel(level)
     console_handler.setFormatter(formatter)
 
+    
+    
+    
     file_handler = logging.FileHandler(log_file)
     file_handler.setLevel(level)
     file_handler.setFormatter(formatter)
 
-    logger.addHandler(console_handler)
-    logger.addHandler(file_handler)
+    root_logger.addHandler(console_handler)
+    root_logger.addHandler(file_handler)
 
+    
+    
+    
     structlog.configure(
         processors=[
             structlog.stdlib.filter_by_level,
-            structlog.processors.TimeStamper(fmt="%Y-%m-%d %H:%M:%S"),
             structlog.stdlib.add_log_level,
             structlog.stdlib.add_logger_name,
-            structlog.stdlib.PositionalArgumentsFormatter(),
+            structlog.processors.TimeStamper(fmt="iso"),
             structlog.processors.StackInfoRenderer(),
             structlog.processors.format_exc_info,
-            structlog.processors.UnicodeDecoder(),
-            structlog.processors.JSONRenderer(),
+            structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
         ],
         logger_factory=structlog.stdlib.LoggerFactory(),
-        wrapper_class=structlog.stdlib.BoundLogger,
         cache_logger_on_first_use=True,
     )
