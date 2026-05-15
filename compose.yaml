@@ -41,6 +41,18 @@ services:
     networks:
       - sonar-network
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.18.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+
 volumes:
   sonarqube_data:
   sonarqube_logs:
