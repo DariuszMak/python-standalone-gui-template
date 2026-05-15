@@ -108,6 +108,8 @@ Start-Process .\htmlcov\index.html ;
 
 ########## RUN APPLICATION LOCALLY
 
+docker compose up -d elasticsearch kibana ; 
+
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 Start-Sleep -Seconds 20 ; 
 Start-Process "http://127.0.0.1:8000/openapi.json" ; 
