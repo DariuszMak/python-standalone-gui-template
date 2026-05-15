@@ -48,3 +48,8 @@ def logging_setup(
         logger_factory=structlog.stdlib.LoggerFactory(),
         cache_logger_on_first_use=True,
     )
+    
+    structlog.contextvars.bind_contextvars(
+        service="python_gui",
+        env="dev",
+    )
