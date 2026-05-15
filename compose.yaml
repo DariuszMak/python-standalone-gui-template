@@ -53,7 +53,7 @@ services:
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
 
-   kibana:
+  kibana:
     image: docker.elastic.co/kibana/kibana:8.18.1
     container_name: kibana
     depends_on:
