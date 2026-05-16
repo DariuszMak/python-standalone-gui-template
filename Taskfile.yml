@@ -1,0 +1,168 @@
+version: '3'
+
+vars:
+  PYTHON_VERSION: 3.13
+
+  API_PORT_WINDOWS: 8000
+  API_PORT_LINUX: 8003
+
+  KIBANA_PORT: 5601
+  ES_PORT: 9200
+
+tasks:
+
+  # =========================================================
+  # CLEANUP
+  # =========================================================
+
+  cleanup:
+    desc: Full project cleanup (docker, git, ports, caches)
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/cleanup.ps1
+
+  # =========================================================
+  # ENVIRONMENT
+  # =========================================================
+
+  dev-env:
+    desc: Setup uv environment (Python, sync, lock)
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/dev_uv_environment.ps1
+
+  static-tests:
+    desc: Static analysis + unit tests
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/static_analysis_and_tests.ps1
+
+  # =========================================================
+  # INFRASTRUCTURE
+  # =========================================================
+
+  kibana-elastic:
+    desc: Start Elastic + Kibana stack
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/kibana_elastic.ps1
+
+  sonarqube:
+    desc: Run SonarQube analysis pipeline
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/sonarqube.ps1
+
+  generate-diagrams:
+    desc: Generate project diagrams
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/generate_diagrams.ps1
+
+  # =========================================================
+  # WINDOWS DEV FLOW
+  # =========================================================
+
+  dev-windows:
+    desc: Fast native Windows development flow
+    deps:
+      - cleanup
+    cmds:
+      - task: dev-env
+      - task: static-tests
+
+      - task: kibana-elastic
+
+      - powershell -Command "Start-Process uv -ArgumentList 'run','python','src\main.py'"
+
+      - powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1
+      - powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1
+
+  # =========================================================
+  # FULL STATIC ANALYSIS FLOW
+  # =========================================================
+
+  analyze-full:
+    desc: Full static analysis + SonarQube + diagrams
+    deps:
+      - cleanup
+    cmds:
+      - task: dev-env
+      - task: static-tests
+      - task: sonarqube
+      - task: generate-diagrams
+
+  # =========================================================
+  # BUILD / RELEASE
+  # =========================================================
+
+  build-release:
+    desc: Build both Linux + Windows releases
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/build_release.ps1
+
+  # =========================================================
+  # LINUX / WSL FLOW
+  # =========================================================
+
+  run-linux:
+    desc: Run Linux GUI in WSL
+    cmds:
+      - powershell -Command "Start-Process wsl -ArgumentList @(
+          'bash','-c',
+          'export DISPLAY=$(grep nameserver /etc/resolv.conf | awk \"{print \\$2}\"):0 && \
+           export QT_QPA_PLATFORM=wayland && \
+           set -a && source thorough.env && set +a && \
+           export API_HOST=$LINUX_API_HOST && \
+           export API_PORT=$LINUX_API_PORT && \
+           export PANEL_HOST=$LINUX_PANEL_HOST && \
+           export PANEL_PORT=$LINUX_PANEL_PORT && \
+           export REACT_HOST=$LINUX_REACT_HOST && \
+           export REACT_PORT=$LINUX_REACT_PORT && \
+           export LOG_FILE=$LINUX_LOG_FILE && \
+           ./releases/linux/GUI_client'
+        )"
+
+  wait-linux-api:
+    desc: Wait for Linux API
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/wait_for_linux_api.ps1
+
+  test-linux-api:
+    desc: Test Linux API
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/test_linux_api.ps1
+
+  # =========================================================
+  # WINDOWS RELEASE FLOW
+  # =========================================================
+
+  run-windows-release:
+    desc: Run Windows built executable
+    cmds:
+      - powershell -Command "Start-Process .\releases\windows\GUI_client.exe"
+
+  wait-windows-api:
+    desc: Wait for Windows API
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1
+
+  test-windows-api:
+    desc: Test Windows API
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1
+
+  # =========================================================
+  # THOROUGH FULL PIPELINE
+  # =========================================================
+
+  full-setup:
+    desc: Full setup from scratch (Windows + Linux + releases)
+    deps:
+      - cleanup
+    cmds:
+      - task: build-release
+
+      - task: run-linux
+      - task: wait-linux-api
+      - task: test-linux-api
+
+      - task: run-windows-release
+      - task: wait-windows-api
+      - task: test-windows-api
+
+      - powershell -Command "uv sync --dev --locked --no-cache"
