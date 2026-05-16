@@ -53,7 +53,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 
 #####
 
-.\tasks\uv_environment.ps1
+.\tasks\dev_uv_environment.ps1
 
 .\tasks\static_analysis_and_tests.ps1
 
@@ -77,7 +77,7 @@ Login in SonarQube as `admin` with password `Admin1@Admin1@`.
 
 #####
 
-.\tasks\uv_environment.ps1
+.\tasks\dev_uv_environment.ps1
 
 .\tasks\static_analysis_and_tests.ps1
 
