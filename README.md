@@ -49,38 +49,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 ## Fast native Windows development
 
 ```commandline
-deactivate ; 
-clear ; 
-
-docker system df ; 
-docker compose down -v --remove-orphans ; 
-docker stop $(docker ps -a -q) ; 
-docker rm -f $(docker ps -a -q) ; 
-docker system prune --volumes -a -f ; 
-docker volume rm -f $(docker volume ls -q) ; 
-docker system df ; 
-
-$ports = 8000, 8001, 8002, 8003, 8004, 8005, 5433
-
-foreach ($port in $ports) {
-    $conns = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
-    if ($conns) {
-        $conns | Select-Object -ExpandProperty OwningProcess -Unique |
-            Where-Object { $_ -gt 0 } |
-            ForEach-Object {
-                Write-Host "Port $port is used by PID $_. Killing..."
-                Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue
-            }
-    } else {
-        Write-Host "No process is using port $port."
-    }
-}
-
-uv self update ; 
-uv cache clean ; 
-
-git reset --hard HEAD ; 
-git clean -x -d -f ; 
+.\tasks\cleanup.ps1 ; 
 
 #####
 
@@ -189,38 +158,7 @@ Start-Process "http://127.0.0.1:8002" ;
 Login in SonarQube as `admin` with password `Admin1@Admin1@`.
 
 ```commandline
-deactivate ; 
-clear ; 
-
-docker system df ; 
-docker compose down -v --remove-orphans ; 
-docker stop $(docker ps -a -q) ; 
-docker rm -f $(docker ps -a -q) ; 
-docker system prune --volumes -a -f ; 
-docker volume rm -f $(docker volume ls -q) ; 
-docker system df ; 
-
-$ports = 8000, 8001, 8002, 8003, 8004, 8005, 5433
-
-foreach ($port in $ports) {
-    $conns = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
-    if ($conns) {
-        $conns | Select-Object -ExpandProperty OwningProcess -Unique |
-            Where-Object { $_ -gt 0 } |
-            ForEach-Object {
-                Write-Host "Port $port is used by PID $_. Killing..."
-                Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue
-            }
-    } else {
-        Write-Host "No process is using port $port."
-    }
-}
-
-uv self update ; 
-uv cache clean ; 
-
-git reset --hard HEAD ; 
-git clean -x -d -f ; 
+.\tasks\cleanup.ps1 ; 
 
 #####
 
@@ -372,38 +310,7 @@ Start-Process images\structure_module_clustered.svg ;
 ## Thorough setup from scratch for Windows and Linux enviroment
 
 ```commandline
-deactivate ; 
-clear ; 
-
-docker system df ; 
-docker compose down -v --remove-orphans ; 
-docker stop $(docker ps -a -q) ; 
-docker rm -f $(docker ps -a -q) ; 
-docker system prune --volumes -a -f ; 
-docker volume rm -f $(docker volume ls -q) ; 
-docker system df ; 
-
-$ports = 8000, 8001, 8002, 8003, 8004, 8005, 5433
-
-foreach ($port in $ports) {
-    $conns = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
-    if ($conns) {
-        $conns | Select-Object -ExpandProperty OwningProcess -Unique |
-            Where-Object { $_ -gt 0 } |
-            ForEach-Object {
-                Write-Host "Port $port is used by PID $_. Killing..."
-                Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue
-            }
-    } else {
-        Write-Host "No process is using port $port."
-    }
-}
-
-uv self update ; 
-uv cache clean ; 
-
-git reset --hard HEAD ; 
-git clean -x -d -f ; 
+.\tasks\cleanup.ps1 ; 
 
 #####
 
