@@ -53,6 +53,16 @@ services:
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
 
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.18.1
+    user: root
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - elasticsearch
+
   kibana:
     image: docker.elastic.co/kibana/kibana:8.18.1
     container_name: kibana
