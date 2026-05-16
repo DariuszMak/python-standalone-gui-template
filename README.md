@@ -145,19 +145,7 @@ Start-Process wsl -ArgumentList @(
      ./releases/linux/GUI_client'
 )
 
-do {
-    Start-Sleep -Seconds 3
-
-    try {
-        $api = Invoke-RestMethod `
-            -Uri "http://127.0.0.1:8003/openapi.json" `
-            -Method Get
-    }
-    catch {
-        $api = $null
-    }
-
-} until ($api)
+.\tasks\wait_for_linux_api.ps1
 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Linux.postman_environment.json ; 
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Linux.postman_environment.json ; 
