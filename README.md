@@ -108,11 +108,7 @@ Start-Process .\htmlcov\index.html ;
 
 ########## RUN APPLICATION LOCALLY
 
-Write-Host "Starting Elasticsearch + Kibana..." ; 
-
 docker compose up -d elasticsearch kibana ; 
-
-Write-Host "Waiting for Elasticsearch..." ; 
 
 do {
     Start-Sleep -Seconds 5
@@ -127,10 +123,6 @@ do {
     }
 
 } until ($es.cluster_name)
-
-Write-Host "Elasticsearch is UP" ; 
-
-Write-Host "Waiting for Kibana..." ; 
 
 do {
     Start-Sleep -Seconds 5
@@ -147,17 +139,11 @@ do {
 
 } until ($kibana.status.overall.level -eq "available")
 
-Write-Host "Kibana is UP" ; 
-
 Start-Process "http://127.0.0.1:9200" ; 
 Start-Process "http://127.0.0.1:5601" ; 
 
 
-Write-Host "Starting application..." ; 
-
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
-
-Write-Host "Waiting for API..."
 
 do {
     Start-Sleep -Seconds 3
@@ -172,8 +158,6 @@ do {
     }
 
 } until ($api)
-
-Write-Host "API is UP"
 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json ; 
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Dev_Windows.postman_environment.json ; 
@@ -253,8 +237,6 @@ Start-Process .\htmlcov\index.html ;
 # Start SonarQube + DB
 docker compose up -d sonarqube sonardb
 
-Write-Host "Waiting for SonarQube to start..."
-
 # Wait until SonarQube API responds
 do {
     Start-Sleep -Seconds 5
@@ -270,9 +252,6 @@ do {
 
 } until ($status.status -eq "UP")
 
-Write-Host "SonarQube is UP"
-
-# Default credentials
 $oldPassword = "admin"
 $newPassword = "Admin1@Admin1@"
 
@@ -285,7 +264,6 @@ $headers = @{
     Authorization = "Basic $encoded"
 }
 
-# Change admin password
 Invoke-RestMethod `
     -Uri "http://127.0.0.1:9000/api/users/change_password" `
     -Method Post `
@@ -296,9 +274,6 @@ Invoke-RestMethod `
         password = $newPassword
     }
 
-Write-Host "Password changed"
-
-# Authenticate with new password
 $newPair = "admin:$newPassword"
 $newEncoded = [Convert]::ToBase64String(
     [Text.Encoding]::ASCII.GetBytes($newPair)
@@ -322,16 +297,11 @@ $tokenResponse = Invoke-RestMethod `
 
 $token = $tokenResponse.token
 
-Write-Host "Generated token:"
-Write-Host $token
-
-# Create .sonar.env dynamically
 @"
 SONAR_HOST_URL=http://sonarqube:9000
 SONAR_TOKEN=$token
 "@ | Out-File -Encoding utf8 ".sonar.env"
 
-# Run scanner
 $scannerOutput = docker run --rm `
     --network sonar-network `
     --env-file .sonar.env `
@@ -349,9 +319,6 @@ foreach ($url in $reportUrls) {
     $localUrl = $url `
         -replace "http://sonarqube:9000", "http://127.0.0.1:9000" `
         -replace "http://host.docker.internal:9000", "http://127.0.0.1:9000"
-
-    Write-Host "Opening:"
-    Write-Host $localUrl
 
     Start-Process $localUrl
 }
@@ -384,7 +351,6 @@ foreach ($file in $files) {
     $svg = $svg -replace '<g class="cluster">', '<g class="cluster" style="opacity:0.85"'
 
     Set-Content -Path $file.FullName -Value $svg -Encoding UTF8
-    Write-Host "Structure preserved: $($file.Name)"
 }
 
 Start-Process images\structure_module.svg ; 
