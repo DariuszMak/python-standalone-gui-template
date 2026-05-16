@@ -32,10 +32,10 @@ class DummyTrayIcon:
         self.messages = []
         self.activated = DummySignal()
 
-    def setIcon(self, icon) -> None:
+    def setIcon(self, icon) -> None:  # noqa: N802
         self.icon = icon
 
-    def setContextMenu(self, menu) -> None:
+    def setContextMenu(self, menu) -> None:  # noqa: N802
         self.context_menu = menu
 
     def show(self) -> None:
@@ -44,7 +44,7 @@ class DummyTrayIcon:
     def hide(self) -> None:
         self.hidden = True
 
-    def showMessage(self, title, message, icon, timeout) -> None:
+    def showMessage(self, title, message, icon, timeout) -> None:  # noqa: N802
         self.messages.append({
             "title": title,
             "message": message,
