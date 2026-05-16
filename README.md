@@ -63,7 +63,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 
-.\tasks\wait_for_api.ps1
+.\tasks\wait_for_windows_api.ps1
 
 .\tasks\test_windows_api.ps1
 ```
@@ -173,7 +173,7 @@ Start-Process "http://127.0.0.1:8005" ;
 
 Start-Process .\releases\windows\GUI_client.exe ; 
 
-.\tasks\wait_for_api.ps1
+.\tasks\wait_for_windows_api.ps1
  
 .\tasks\test_windows_api.ps1
 
