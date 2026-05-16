@@ -1,3 +1,5 @@
+from typing import Any
+
 import pytest
 from PySide6.QtCore import QEvent, Qt
 from PySide6.QtWidgets import QApplication, QWidget
@@ -8,7 +10,11 @@ from src.ui.pyside_ui.tray_manager import TrayManager
 
 
 class DummySignal:
-    def connect(self, *_args, **_kwargs) -> None:
+    def connect(
+        self,
+        *_args: Any,
+        **_kwargs: Any,
+    ) -> None:
         pass
 
 
@@ -24,18 +30,28 @@ class DummyTrayIcon:
     ActivationReason = DummyActivationReason
     MessageIcon = DummyMessageIcon
 
-    def __init__(self, *_args, **_kwargs) -> None:
-        self.context_menu = None
-        self.icon = None
-        self.visible = False
-        self.hidden = False
-        self.messages = []
+    def __init__(
+        self,
+        *_args: Any,
+        **_kwargs: Any,
+    ) -> None:
+        self.context_menu: Any = None
+        self.icon: Any = None
+        self.visible: bool = False
+        self.hidden: bool = False
+        self.messages: list[dict[str, Any]] = []
         self.activated = DummySignal()
 
-    def setIcon(self, icon) -> None:  # noqa: N802
+    def setIcon(  # noqa: N802
+        self,
+        icon: Any,
+    ) -> None:
         self.icon = icon
 
-    def setContextMenu(self, menu) -> None:  # noqa: N802
+    def setContextMenu(  # noqa: N802
+        self,
+        menu: Any,
+    ) -> None:
         self.context_menu = menu
 
     def show(self) -> None:
@@ -44,7 +60,13 @@ class DummyTrayIcon:
     def hide(self) -> None:
         self.hidden = True
 
-    def showMessage(self, title, message, icon, timeout) -> None:  # noqa: N802
+    def showMessage(  # noqa: N802
+        self,
+        title: str,
+        message: str,
+        icon: Any,
+        timeout: int,
+    ) -> None:
         self.messages.append({
             "title": title,
             "message": message,
@@ -151,9 +173,12 @@ def test_quit_hides_tray_and_quits(
         lambda: called.update({"quit": True}),
     )
 
+    tray_icon = tray_manager._tray_icon
+
     tray_manager.quit()
 
-    assert tray_manager._tray_icon.hidden is True
+    assert isinstance(tray_icon, DummyTrayIcon)
+    assert tray_icon.hidden is True
     assert called["quit"] is True
 
 
@@ -171,7 +196,9 @@ def test_icon_activated_hides_window(
         lambda: called.update({"hide": True}),
     )
 
-    tray_manager.icon_activated(DummyTrayIcon.ActivationReason.Trigger)
+    tray_manager.icon_activated(
+        DummyTrayIcon.ActivationReason.Trigger,  # type: ignore[arg-type]
+    )
 
     assert called["hide"] is True
 
@@ -190,7 +217,9 @@ def test_icon_activated_restores_window(
         lambda: called.update({"restore": True}),
     )
 
-    tray_manager.icon_activated(DummyTrayIcon.ActivationReason.Trigger)
+    tray_manager.icon_activated(
+        DummyTrayIcon.ActivationReason.Trigger,  # type: ignore[arg-type]
+    )
 
     assert called["restore"] is True
 
@@ -198,11 +227,15 @@ def test_icon_activated_restores_window(
 def test_notify_hidden_shows_message(
     tray_manager: TrayManager,
 ) -> None:
+    tray_icon = tray_manager._tray_icon
+
+    assert isinstance(tray_icon, DummyTrayIcon)
+
     tray_manager.notify_hidden()
 
-    assert len(tray_manager._tray_icon.messages) == 1
+    assert len(tray_icon.messages) == 1
 
-    message = tray_manager._tray_icon.messages[0]
+    message = tray_icon.messages[0]
 
     assert message["title"] == "Application"
 
@@ -216,6 +249,10 @@ def test_notify_hidden_shows_message(
 def test_tray_manager_initialization(
     tray_manager: TrayManager,
 ) -> None:
-    assert tray_manager._tray_icon.visible is True
+    tray_icon = tray_manager._tray_icon
 
-    assert tray_manager._tray_icon.context_menu is not None
+    assert isinstance(tray_icon, DummyTrayIcon)
+
+    assert tray_icon.visible is True
+
+    assert tray_icon.context_menu is not None
