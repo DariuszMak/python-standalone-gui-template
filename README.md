@@ -191,7 +191,7 @@ Start-Process "http://127.0.0.1:8000/openapi.json" ;
 Start-Process "http://127.0.0.1:8000/redoc" ; 
 Start-Process "http://127.0.0.1:8000/docs" ; 
 Start-Process "http://127.0.0.1:8001" ; 
-Start-Process "http://127.0.0.1:8002" ;
+Start-Process "http://127.0.0.1:8002" ; 
 
 #####
 
