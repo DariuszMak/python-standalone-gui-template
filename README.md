@@ -58,16 +58,10 @@ task dev-windows ;
 task analyze-full ; 
 ```
 
-### Full system setup (Windows + Linux)
+### Full release setup (Windows + Linux)
 
 ```commandline
-task full-setup ; 
-```
-
-### Build releases
-
-```commandline
-task build-release ; 
+task release-full-setup ; 
 ```
 
 ## Edit `ui` forms with QT Designer

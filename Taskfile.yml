@@ -150,7 +150,7 @@ tasks:
   # THOROUGH FULL PIPELINE
   # =========================================================
 
-  full-setup:
+  release-full-setup:
     desc: Full setup from scratch (Windows + Linux + releases)
     deps:
       - cleanup
