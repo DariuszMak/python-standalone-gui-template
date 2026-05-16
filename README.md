@@ -246,9 +246,9 @@ uv run pytest tests/ --cov=src --cov-report=html --cov-report=xml --cov-config=.
 Start-Process src\ui\react_ui\frontend\coverage\index.html ; 
 Start-Process .\htmlcov\index.html ; 
 
-########## SONARQUBE 
+########## SONARQUBE
 
-docker compose up -d sonarqube sonardb
+docker compose up -d sonarqube sonardb ; 
 
 do {
     Start-Sleep -Seconds 5
