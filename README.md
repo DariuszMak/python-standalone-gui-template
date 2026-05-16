@@ -46,87 +46,28 @@
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
 
-## Fast native Windows development
+### Fast Windows dev
 
 ```commandline
-.\tasks\cleanup.ps1 ; 
-
-#####
-
-.\tasks\dev_uv_environment.ps1
-
-.\tasks\static_analysis_and_tests.ps1
-
-########## RUN APPLICATION LOCALLY
-
-.\tasks\kibana_elastic.ps1
-
-Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
-
-.\tasks\wait_for_windows_api.ps1
-
-.\tasks\test_windows_api.ps1
+task dev-windows ; 
 ```
 
-## Full static analysis
-
-Login in SonarQube as `admin` with password `Admin1@Admin1@`.
+### Full analysis
 
 ```commandline
-.\tasks\cleanup.ps1 ; 
-
-#####
-
-.\tasks\dev_uv_environment.ps1
-
-.\tasks\static_analysis_and_tests.ps1
-
-.\tasks\sonarqube.ps1
-
-.\tasks\generate_diagrams.ps1
+task analyze-full ; 
 ```
 
-## Thorough setup from scratch for Windows and Linux enviroment
+### Full system setup (Windows + Linux)
 
 ```commandline
-.\tasks\cleanup.ps1 ; 
+task full-setup ; 
+```
 
-#####
+### Build releases
 
-.\tasks\build_release.ps1
-
-########## RUN APPLICATIONS LOCALLY
-
-Start-Process wsl -ArgumentList @(
-    'bash', '-c',
-    'export DISPLAY=$(grep nameserver /etc/resolv.conf | awk "{print \$2}"):0 && \
-     export QT_QPA_PLATFORM=wayland && \
-     set -a && source thorough.env && set +a && \
-     export API_HOST=$LINUX_API_HOST && \
-     export API_PORT=$LINUX_API_PORT && \
-     export PANEL_HOST=$LINUX_PANEL_HOST && \
-     export PANEL_PORT=$LINUX_PANEL_PORT && \
-     export REACT_HOST=$LINUX_REACT_HOST && \
-     export REACT_PORT=$LINUX_REACT_PORT && \
-     export LOG_FILE=$LINUX_LOG_FILE && \
-     ./releases/linux/GUI_client'
-)
-
-.\tasks\wait_for_linux_api.ps1
-
-.\tasks\test_linux_api.ps1
-
-##### Windows runtime uses no .env file, just default values
-
-Start-Process .\releases\windows\GUI_client.exe ; 
-
-.\tasks\wait_for_windows_api.ps1
- 
-.\tasks\test_windows_api.ps1
-
-#####
-
-uv sync --dev --locked --no-cache ; 
+```commandline
+task build-release ; 
 ```
 
 ## Edit `ui` forms with QT Designer
