@@ -63,19 +63,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 
-do {
-    Start-Sleep -Seconds 3
-
-    try {
-        $api = Invoke-RestMethod `
-            -Uri "http://127.0.0.1:8000/openapi.json" `
-            -Method Get
-    }
-    catch {
-        $api = $null
-    }
-
-} until ($api)
+.\tasks\wait_for_api.ps1
 
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json ; 
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Dev_Windows.postman_environment.json ; 
@@ -193,19 +181,7 @@ Start-Process "http://127.0.0.1:8005" ;
 
 Start-Process .\releases\windows\GUI_client.exe ; 
 
-do {
-    Start-Sleep -Seconds 3
-
-    try {
-        $api = Invoke-RestMethod `
-            -Uri "http://127.0.0.1:8000/openapi.json" `
-            -Method Get
-    }
-    catch {
-        $api = $null
-    }
-
-} until ($api)
+.\tasks\wait_for_api.ps1
  
 newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json ; 
 newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Windows.postman_environment.json ; 
