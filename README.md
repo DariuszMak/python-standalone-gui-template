@@ -139,6 +139,20 @@ do {
 
 } until ($kibana.status.overall.level -eq "available")
 
+do {
+    Start-Sleep -Seconds 5
+
+    try {
+        $indices = Invoke-RestMethod `
+            -Uri "http://127.0.0.1:9200/_cat/indices?format=json" `
+            -Method Get
+    }
+    catch {
+        $indices = $null
+    }
+
+} until ($indices.index -contains "filebeat-*")
+
 Start-Process "http://127.0.0.1:9200" ; 
 Start-Process "http://127.0.0.1:5601" ; 
 
