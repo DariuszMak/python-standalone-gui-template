@@ -147,15 +147,7 @@ Start-Process wsl -ArgumentList @(
 
 .\tasks\wait_for_linux_api.ps1
 
-newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Linux.postman_environment.json ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Linux.postman_environment.json ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Linux.postman_environment.json ; 
-
-Start-Process "http://127.0.0.1:8003/openapi.json" ; 
-Start-Process "http://127.0.0.1:8003/redoc" ; 
-Start-Process "http://127.0.0.1:8003/docs" ; 
-Start-Process "http://127.0.0.1:8004" ; 
-Start-Process "http://127.0.0.1:8005" ; 
+.\tasks\test_linux_api.ps1
 
 ##### Windows runtime uses no .env file, just default values
 
