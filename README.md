@@ -108,7 +108,7 @@ Start-Process .\htmlcov\index.html ;
 
 ########## RUN APPLICATION LOCALLY
 
-docker compose up -d elasticsearch kibana ; 
+docker compose up -d elasticsearch filebeat kibana ; 
 
 do {
     Start-Sleep -Seconds 5
