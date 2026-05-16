@@ -446,28 +446,58 @@ Start-Process wsl -ArgumentList @(
      export LOG_FILE=$LINUX_LOG_FILE && \
      ./releases/linux/GUI_client'
 )
-Start-Sleep -Seconds 30 ; 
+
+do {
+    Start-Sleep -Seconds 3
+
+    try {
+        $api = Invoke-RestMethod `
+            -Uri "http://127.0.0.1:8003/openapi.json" `
+            -Method Get
+    }
+    catch {
+        $api = $null
+    }
+
+} until ($api)
+
+newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Linux.postman_environment.json ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Linux.postman_environment.json ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Linux.postman_environment.json ; 
+
 Start-Process "http://127.0.0.1:8003/openapi.json" ; 
 Start-Process "http://127.0.0.1:8003/redoc" ; 
 Start-Process "http://127.0.0.1:8003/docs" ; 
 Start-Process "http://127.0.0.1:8004" ; 
 Start-Process "http://127.0.0.1:8005" ; 
-newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Linux.postman_environment.json ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Linux.postman_environment.json ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Linux.postman_environment.json ; 
 
 ##### Windows runtime uses no .env file, just default values
 
 Start-Process .\releases\windows\GUI_client.exe ; 
-Start-Sleep -Seconds 40 ; 
+
+do {
+    Start-Sleep -Seconds 3
+
+    try {
+        $api = Invoke-RestMethod `
+            -Uri "http://127.0.0.1:8000/openapi.json" `
+            -Method Get
+    }
+    catch {
+        $api = $null
+    }
+
+} until ($api)
+ 
+newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Windows.postman_environment.json ; 
+newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Windows.postman_environment.json ; 
+
 Start-Process "http://127.0.0.1:8000/openapi.json" ; 
 Start-Process "http://127.0.0.1:8000/redoc" ; 
 Start-Process "http://127.0.0.1:8000/docs" ; 
 Start-Process "http://127.0.0.1:8001" ; 
-Start-Process "http://127.0.0.1:8002" ; 
-newman run collections\Python_GUI_API.postman_collection.json --environment collections\environments_API\API_Windows.postman_environment.json ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\Panel_UI_Windows.postman_environment.json ; 
-newman run collections\Python_GUI_UI.postman_collection.json --environment collections\environments_UI\React_UI_Windows.postman_environment.json ; 
+Start-Process "http://127.0.0.1:8002" ;
 
 #####
 
