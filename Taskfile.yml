@@ -12,7 +12,11 @@ tasks:
   cleanup:
     desc: Full project cleanup (docker, git, ports, caches)
     cmds:
-      - powershell -ExecutionPolicy Bypass -File tasks/cleanup.ps1
+      - powershell -ExecutionPolicy Bypass -File tasks/cleanup.ps1      
+      - uv self update 
+      - uv cache clean
+      - git reset --hard HEAD
+      - git clean -x -d -f
 
   # =========================================================
   # ENVIRONMENT

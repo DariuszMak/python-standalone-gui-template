@@ -24,9 +24,3 @@ foreach ($port in $ports) {
         Write-Host "No process is using port $port."
     }
 }
-
-uv self update ; 
-uv cache clean ; 
-
-git reset --hard HEAD ; 
-git clean -x -d -f ; 
