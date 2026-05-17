@@ -46,74 +46,23 @@
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
 
-### Fast native Windows development
+
+### Fast Windows dev
 
 ```commandline
-.\tasks\cleanup.ps1 ; 
-
-#####
-
-.\tasks\dev_uv_environment.ps1
-
-.\tasks\static_analysis_and_tests.ps1
-
-########## RUN APPLICATION LOCALLY
-
-.\tasks\kibana_elastic.ps1
-
-.\tasks\run_windows_dev_application.ps1
-
-.\tasks\wait_for_windows_api.ps1
-
-.\tasks\test_windows_api.ps1
+task dev-windows ; 
 ```
 
-### Full static analysis
-
-Login in SonarQube as `admin` with password `Admin1@Admin1@`.
+### Full analysis
 
 ```commandline
-.\tasks\cleanup.ps1 ; 
-
-#####
-
-.\tasks\dev_uv_environment.ps1
-
-.\tasks\static_analysis_and_tests.ps1
-
-.\tasks\sonarqube.ps1
-
-.\tasks\generate_diagrams.ps1
+task analyze-full ; 
 ```
 
-### Thorough setup from scratch for Windows and Linux enviroment
+### Full release setup (Windows + Linux)
 
 ```commandline
-.\tasks\cleanup.ps1 ; 
-
-#####
-
-.\tasks\build_release.ps1
-
-########## RUN APPLICATIONS LOCALLY
-
-.\tasks\run_linux_application.ps1
-
-.\tasks\wait_for_linux_api.ps1
-
-.\tasks\test_linux_api.ps1
-
-##### Windows runtime uses no .env file, just default values
-
-.\tasks\run_windows_application.ps1
-
-.\tasks\wait_for_windows_api.ps1
- 
-.\tasks\test_windows_api.ps1
-
-#####
-
-uv sync --dev --locked --no-cache ; 
+task release-full-setup ; 
 ```
 
 ### Edit `ui` forms with QT Designer
