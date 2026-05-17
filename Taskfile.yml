@@ -58,7 +58,7 @@ tasks:
 
       - task: kibana-elastic
 
-      - powershell -Command "Start-Process uv -ArgumentList 'run','python','src\main.py'"
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/dev_uv_environment.ps1'
 
       - 'powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1'
       - 'powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1'
@@ -93,15 +93,7 @@ tasks:
   run-linux:
     desc: Run Linux GUI in WSL
     cmds:
-      - wsl bash -lc "
-        set -e;
-        source thorough.env;
-
-        export DISPLAY=\$(grep nameserver /etc/resolv.conf | awk '{print \$2}'):0;
-        export QT_QPA_PLATFORM=wayland;
-
-        ./releases/linux/GUI_client"
-
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/run_linux_application.ps1'
 
   wait-linux-api:
     desc: Wait for Linux API
@@ -120,7 +112,8 @@ tasks:
   run-windows-release:
     desc: Run Windows built executable
     cmds:
-      - powershell -Command "Start-Process .\releases\windows\GUI_client.exe"
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/run_windows_application.ps1'
+
 
   wait-windows-api:
     desc: Wait for Windows API
