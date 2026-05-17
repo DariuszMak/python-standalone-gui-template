@@ -18,8 +18,8 @@ tasks:
   dev-env:
     desc: Setup uv environment (Python, sync, lock)
     cmds:
-      - powershell -ExecutionPolicy Bypass -Command "$env:UV_ENV_FILE='.dev.env' ; .venv\Scripts\Activate.ps1 ; "
       - powershell -ExecutionPolicy Bypass -File tasks/dev_uv_environment.ps1
+      - powershell -ExecutionPolicy Bypass -Command "$env:UV_ENV_FILE='.dev.env' ; .venv\Scripts\Activate.ps1 ; "
 
   static-tests:
     desc: Static analysis + unit tests
