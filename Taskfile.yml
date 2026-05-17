@@ -48,7 +48,7 @@ tasks:
   # WINDOWS DEV FLOW
   # =========================================================
 
-  dev-windows:
+  full-dev-windows:
     desc: Fast native Windows development flow
     deps:
       - cleanup
