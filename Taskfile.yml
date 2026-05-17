@@ -1,5 +1,8 @@
 version: '3'
 
+env:
+  UV_ENV_FILE: .dev.env
+
 tasks:
 
   # =========================================================
@@ -19,7 +22,6 @@ tasks:
     desc: Setup uv environment (Python, sync, lock)
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/dev_uv_environment.ps1
-      - $env:UV_ENV_FILE='.dev.env'
       - powershell -ExecutionPolicy Bypass -File .venv\Scripts\Activate.ps1
 
   static-tests:
