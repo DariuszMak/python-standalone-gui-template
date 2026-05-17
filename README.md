@@ -46,7 +46,7 @@
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
 
-## Fast native Windows development
+### Fast native Windows development
 
 ```commandline
 .\tasks\cleanup.ps1 ; 
@@ -68,7 +68,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 .\tasks\test_windows_api.ps1
 ```
 
-## Full static analysis
+### Full static analysis
 
 Login in SonarQube as `admin` with password `Admin1@Admin1@`.
 
@@ -86,7 +86,7 @@ Login in SonarQube as `admin` with password `Admin1@Admin1@`.
 .\tasks\generate_diagrams.ps1
 ```
 
-## Thorough setup from scratch for Windows and Linux enviroment
+### Thorough setup from scratch for Windows and Linux enviroment
 
 ```commandline
 .\tasks\cleanup.ps1 ; 
@@ -116,14 +116,14 @@ Login in SonarQube as `admin` with password `Admin1@Admin1@`.
 uv sync --dev --locked --no-cache ; 
 ```
 
-## Edit `ui` forms with QT Designer
+### Edit `ui` forms with QT Designer
 
 ```commandline
 uv run pyside6-designer src\ui\pyside_ui\forms\main_window.ui ; 
 uv run pyside6-designer src\ui\pyside_ui\forms\warning_dialog.ui ; 
 ```
 
-### GUI files specification
+#### GUI files specification
 
 <mark>.qrc</mark> - resources file edited in QT Designer
 
