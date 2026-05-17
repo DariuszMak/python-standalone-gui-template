@@ -40,6 +40,7 @@
 ## Requirements
 
 - [UV](https://github.com/astral-sh/uv) package manager
+- [Task](https://taskfile.dev/docs/installation) runner
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
 ## Local development (Windows PowerShell)
