@@ -61,7 +61,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 
 .\tasks\kibana_elastic.ps1
 
-Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
+.\tasks\run_windows_dev_application.ps1
 
 .\tasks\wait_for_windows_api.ps1
 
