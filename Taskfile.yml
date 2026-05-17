@@ -61,7 +61,7 @@ tasks:
       - task: static-tests
       - task: kibana-elastic
 
-      - powershell -ExecutionPolicy Bypass -File ./tasks/run_windows_dev_application.ps1
+      - powershell -ExecutionPolicy Bypass -File tasks/run_windows_dev_application.ps1
       - powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1
       - powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1
 
@@ -96,7 +96,7 @@ tasks:
     desc: Run Linux GUI in WSL
     cmds:
       - docker-compose run app sh -c "dos2unix tasks/run_linux_application.ps1" ; 
-      - powershell -ExecutionPolicy Bypass -File ./tasks/run_linux_application.ps1
+      - powershell -ExecutionPolicy Bypass -File /tasks/run_linux_application.ps1
 
   wait-linux-api:
     desc: Wait for Linux API
@@ -115,7 +115,7 @@ tasks:
   run-windows-release:
     desc: Run Windows built executable
     cmds:
-      - powershell -ExecutionPolicy Bypass -File ./tasks/run_windows_application.ps1
+      - powershell -ExecutionPolicy Bypass -File tasks/run_windows_application.ps1
 
 
   wait-windows-api:
