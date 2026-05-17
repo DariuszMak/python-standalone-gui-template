@@ -50,7 +50,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 ### Fast Windows dev
 
 ```commandline
-task dev-windows ; 
+task full-dev-windows ; 
 ```
 
 ### Full analysis
