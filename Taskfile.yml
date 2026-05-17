@@ -1,35 +1,154 @@
 version: '3'
 
 tasks:
-  dev-windows:
-    desc: Fast native Windows development
+
+  # =========================================================
+  # CLEANUP
+  # =========================================================
+
+  cleanup:
+    desc: Full project cleanup (docker, git, ports, caches)
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/cleanup.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/dev_uv_environment.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/static_analysis_and_tests.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/kibana_elastic.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/run_windows_dev_application.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/wait_for_windows_api.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/test_windows_api.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File tasks/cleanup.ps1'
+
+  # =========================================================
+  # ENVIRONMENT
+  # =========================================================
+
+  dev-env:
+    desc: Setup uv environment (Python, sync, lock)
+    cmds:
+      - 'powershell -ExecutionPolicy Bypass -File tasks/dev_uv_environment.ps1'
+
+  static-tests:
+    desc: Static analysis + unit tests
+    cmds:
+      - 'powershell -ExecutionPolicy Bypass -File tasks/static_analysis_and_tests.ps1'
+
+  # =========================================================
+  # INFRASTRUCTURE
+  # =========================================================
+
+  kibana-elastic:
+    desc: Start Elastic + Kibana stack
+    cmds:
+      - 'powershell -ExecutionPolicy Bypass -File tasks/kibana_elastic.ps1'
+
+  sonarqube:
+    desc: Run SonarQube analysis pipeline
+    cmds:
+      - 'powershell -ExecutionPolicy Bypass -File tasks/sonarqube.ps1'
+
+  generate-diagrams:
+    desc: Generate project diagrams
+    cmds:
+      - 'powershell -ExecutionPolicy Bypass -File tasks/generate_diagrams.ps1'
+
+  # =========================================================
+  # WINDOWS DEV FLOW
+  # =========================================================
+
+  dev-windows:
+    desc: Fast native Windows development flow
+    deps:
+      - cleanup
+    cmds:
+      - task: dev-env
+      - task: static-tests
+
+      - task: kibana-elastic
+
+      - powershell -Command "Start-Process uv -ArgumentList 'run','python','src\main.py'"
+
+      - 'powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1'
+
+  # =========================================================
+  # FULL STATIC ANALYSIS FLOW
+  # =========================================================
 
   analyze-full:
-    desc: Full static analysis with SonarQube and diagrams
+    desc: Full static analysis + SonarQube + diagrams
+    deps:
+      - cleanup
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/cleanup.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/dev_uv_environment.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/static_analysis_and_tests.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/sonarqube.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/generate_diagrams.ps1'
+      - task: dev-env
+      - task: static-tests
+      - task: sonarqube
+      - task: generate-diagrams
+
+  # =========================================================
+  # BUILD / RELEASE
+  # =========================================================
+
+  build-release:
+    desc: Build both Linux + Windows releases
+    cmds:
+      - 'powershell -ExecutionPolicy Bypass -File tasks/build_release.ps1'
+
+  # =========================================================
+  # LINUX / WSL FLOW
+  # =========================================================
+
+  run-linux:
+    desc: Run Linux GUI in WSL
+    cmds:
+      - wsl bash -lc "
+        set -e;
+        source thorough.env;
+
+        export DISPLAY=\$(grep nameserver /etc/resolv.conf | awk '{print \$2}'):0;
+        export QT_QPA_PLATFORM=wayland;
+
+        ./releases/linux/GUI_client"
+
+
+  wait-linux-api:
+    desc: Wait for Linux API
+    cmds:
+      - 'powershell -ExecutionPolicy Bypass -File tasks/wait_for_linux_api.ps1'
+
+  test-linux-api:
+    desc: Test Linux API
+    cmds:
+      - 'powershell -ExecutionPolicy Bypass -File tasks/test_linux_api.ps1'
+
+  # =========================================================
+  # WINDOWS RELEASE FLOW
+  # =========================================================
+
+  run-windows-release:
+    desc: Run Windows built executable
+    cmds:
+      - powershell -Command "Start-Process .\releases\windows\GUI_client.exe"
+
+  wait-windows-api:
+    desc: Wait for Windows API
+    cmds:
+      - 'powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1'
+
+  test-windows-api:
+    desc: Test Windows API
+    cmds:
+      - 'powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1'
+
+  # =========================================================
+  # THOROUGH FULL PIPELINE
+  # =========================================================
 
   release-full-setup:
-    desc: Thorough setup from scratch for Windows and Linux environment
+    desc: Full setup from scratch (Windows + Linux + releases)
+    deps:
+      - cleanup
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/cleanup.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/build_release.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/run_linux_application.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/wait_for_linux_api.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/test_linux_api.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/run_windows_application.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/wait_for_windows_api.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/test_windows_api.ps1'
-      - 'uv sync --dev --locked --no-cache'
+      - task: build-release
+
+      - task: run-linux
+      - task: wait-linux-api
+      - task: test-linux-api
+
+      - task: run-windows-release
+      - task: wait-windows-api
+      - task: test-windows-api
+
+      - powershell -Command "uv sync --dev --locked --no-cache"
