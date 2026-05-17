@@ -9,7 +9,7 @@ tasks:
   cleanup:
     desc: Full project cleanup (docker, git, ports, caches)
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File tasks/cleanup.ps1'
+      - powershell -ExecutionPolicy Bypass -File tasks/cleanup.ps1
 
   # =========================================================
   # ENVIRONMENT
@@ -18,12 +18,12 @@ tasks:
   dev-env:
     desc: Setup uv environment (Python, sync, lock)
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File tasks/dev_uv_environment.ps1'
+      - powershell -ExecutionPolicy Bypass -File tasks/dev_uv_environment.ps1
 
   static-tests:
     desc: Static analysis + unit tests
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File tasks/static_analysis_and_tests.ps1'
+      - powershell -ExecutionPolicy Bypass -File tasks/static_analysis_and_tests.ps1
 
   # =========================================================
   # INFRASTRUCTURE
@@ -32,17 +32,17 @@ tasks:
   kibana-elastic:
     desc: Start Elastic + Kibana stack
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File tasks/kibana_elastic.ps1'
+      - powershell -ExecutionPolicy Bypass -File tasks/kibana_elastic.ps1
 
   sonarqube:
     desc: Run SonarQube analysis pipeline
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File tasks/sonarqube.ps1'
+      - powershell -ExecutionPolicy Bypass -File tasks/sonarqube.ps1
 
   generate-diagrams:
     desc: Generate project diagrams
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File tasks/generate_diagrams.ps1'
+      - powershell -ExecutionPolicy Bypass -File tasks/generate_diagrams.ps1
 
   # =========================================================
   # WINDOWS DEV FLOW
@@ -58,10 +58,10 @@ tasks:
 
       - task: kibana-elastic
 
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/dev_uv_environment.ps1'
+      - powershell -ExecutionPolicy Bypass -File ./tasks/dev_uv_environment.ps1
 
-      - 'powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1'
-      - 'powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1'
+      - powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1
+      - powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1
 
   # =========================================================
   # FULL STATIC ANALYSIS FLOW
@@ -84,7 +84,7 @@ tasks:
   build-release:
     desc: Build both Linux + Windows releases
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File tasks/build_release.ps1'
+      - powershell -ExecutionPolicy Bypass -File tasks/build_release.ps1
 
   # =========================================================
   # LINUX / WSL FLOW
@@ -94,17 +94,17 @@ tasks:
     desc: Run Linux GUI in WSL
     cmds:
       - docker-compose run app sh -c "dos2unix tasks/run_linux_application.ps1" ; 
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/run_linux_application.ps1'
+      - powershell -ExecutionPolicy Bypass -File ./tasks/run_linux_application.ps1
 
   wait-linux-api:
     desc: Wait for Linux API
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File tasks/wait_for_linux_api.ps1'
+      - powershell -ExecutionPolicy Bypass -File tasks/wait_for_linux_api.ps1
 
   test-linux-api:
     desc: Test Linux API
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File tasks/test_linux_api.ps1'
+      - powershell -ExecutionPolicy Bypass -File tasks/test_linux_api.ps1
 
   # =========================================================
   # WINDOWS RELEASE FLOW
@@ -113,18 +113,18 @@ tasks:
   run-windows-release:
     desc: Run Windows built executable
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File ./tasks/run_windows_application.ps1'
+      - powershell -ExecutionPolicy Bypass -File ./tasks/run_windows_application.ps1
 
 
   wait-windows-api:
     desc: Wait for Windows API
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1'
+      - powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1
 
   test-windows-api:
     desc: Test Windows API
     cmds:
-      - 'powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1'
+      - powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1
 
   # =========================================================
   # THOROUGH FULL PIPELINE
