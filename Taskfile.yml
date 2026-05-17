@@ -4,32 +4,32 @@ tasks:
   dev-windows:
     desc: Fast native Windows development
     cmds:
-      - powershell -ExecutionPolicy Bypass -File .\tasks\cleanup.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\dev_uv_environment.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\static_analysis_and_tests.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\kibana_elastic.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\run_windows_dev_application.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\wait_for_windows_api.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\test_windows_api.ps1
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/cleanup.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/dev_uv_environment.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/static_analysis_and_tests.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/kibana_elastic.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/run_windows_dev_application.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/wait_for_windows_api.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/test_windows_api.ps1'
 
   analyze-full:
     desc: Full static analysis with SonarQube and diagrams
     cmds:
-      - powershell -ExecutionPolicy Bypass -File .\tasks\cleanup.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\dev_uv_environment.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\static_analysis_and_tests.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\sonarqube.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\generate_diagrams.ps1
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/cleanup.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/dev_uv_environment.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/static_analysis_and_tests.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/sonarqube.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/generate_diagrams.ps1'
 
   release-full-setup:
     desc: Thorough setup from scratch for Windows and Linux environment
     cmds:
-      - powershell -ExecutionPolicy Bypass -File .\tasks\cleanup.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\build_release.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\run_linux_application.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\wait_for_linux_api.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\test_linux_api.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\run_windows_application.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\wait_for_windows_api.ps1
-      - powershell -ExecutionPolicy Bypass -File .\tasks\test_windows_api.ps1
-      - uv sync --dev --locked --no-cache
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/cleanup.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/build_release.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/run_linux_application.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/wait_for_linux_api.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/test_linux_api.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/run_windows_application.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/wait_for_windows_api.ps1'
+      - 'powershell -ExecutionPolicy Bypass -File ./tasks/test_windows_api.ps1'
+      - 'uv sync --dev --locked --no-cache'
