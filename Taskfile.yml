@@ -5,18 +5,10 @@ env:
 
 tasks:
 
-  # =========================================================
-  # CLEANUP
-  # =========================================================
-
   cleanup:
     desc: Full project cleanup (docker, git, ports, caches)
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/cleanup.ps1
-
-  # =========================================================
-  # ENVIRONMENT
-  # =========================================================
 
   dev-env:
     desc: Setup uv environment (Python, sync, lock)
@@ -28,10 +20,6 @@ tasks:
     desc: Static analysis + unit tests
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/static_analysis_and_tests.ps1
-
-  # =========================================================
-  # INFRASTRUCTURE
-  # =========================================================
 
   kibana-elastic:
     desc: Start Elastic + Kibana stack
@@ -48,10 +36,6 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/generate_diagrams.ps1
 
-  # =========================================================
-  # WINDOWS DEV FLOW
-  # =========================================================
-
   full-dev-windows:
     desc: Fast native Windows development flow
     deps:
@@ -65,10 +49,6 @@ tasks:
       - powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1
       - powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1
 
-  # =========================================================
-  # FULL STATIC ANALYSIS FLOW
-  # =========================================================
-
   analyze-full:
     desc: Full static analysis + SonarQube + diagrams
     deps:
@@ -79,18 +59,10 @@ tasks:
       - task: sonarqube
       - task: generate-diagrams
 
-  # =========================================================
-  # BUILD / RELEASE
-  # =========================================================
-
   build-release:
     desc: Build both Linux + Windows releases
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/build_release.ps1
-
-  # =========================================================
-  # LINUX / WSL FLOW
-  # =========================================================
 
   run-linux:
     desc: Run Linux GUI in WSL
@@ -108,15 +80,10 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/test_linux_api.ps1
 
-  # =========================================================
-  # WINDOWS RELEASE FLOW
-  # =========================================================
-
   run-windows-release:
     desc: Run Windows built executable
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/run_windows_application.ps1
-
 
   wait-windows-api:
     desc: Wait for Windows API
@@ -127,10 +94,6 @@ tasks:
     desc: Test Windows API
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1
-
-  # =========================================================
-  # THOROUGH FULL PIPELINE
-  # =========================================================
 
   release-full-setup:
     desc: Full setup from scratch (Windows + Linux + releases)
