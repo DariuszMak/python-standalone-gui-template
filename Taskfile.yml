@@ -36,6 +36,7 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/generate_diagrams.ps1
 
+
   full-dev-windows:
     desc: Fast native Windows development flow
     deps:
@@ -49,6 +50,7 @@ tasks:
       - powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1
       - powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1
 
+
   analyze-full:
     desc: Full static analysis + SonarQube + diagrams
     deps:
@@ -58,6 +60,7 @@ tasks:
       - task: static-tests
       - task: sonarqube
       - task: generate-diagrams
+
 
   build-release:
     desc: Build both Linux + Windows releases
@@ -94,6 +97,7 @@ tasks:
     desc: Test Windows API
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1
+
 
   release-full-setup:
     desc: Full setup from scratch (Windows + Linux + releases)
