@@ -105,7 +105,7 @@ Login in SonarQube as `admin` with password `Admin1@Admin1@`.
 
 ##### Windows runtime uses no .env file, just default values
 
-Start-Process .\releases\windows\GUI_client.exe ; 
+.\tasks\run_windows_application.ps1
 
 .\tasks\wait_for_windows_api.ps1
  
